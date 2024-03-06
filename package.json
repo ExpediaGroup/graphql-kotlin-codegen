@@ -1,5 +1,5 @@
 {
-  "name": "graphql-kotlin-codegen",
+  "name": "@expediagroup/graphql-kotlin-codegen",
   "packageManager": "bun@1.0.30",
   "main": "dist/plugin.js",
   "types": "dist/plugin.d.ts",
