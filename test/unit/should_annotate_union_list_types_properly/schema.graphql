@@ -1,0 +1,17 @@
+"A description for MyType1"
+type MyType1 {
+  field: String
+}
+
+type MyType2 {
+  field: String
+}
+
+"A description for MyUnion"
+union MyUnion = MyType1 | MyType2
+
+type MyUnionListType {
+  "A description for field"
+  field: [MyUnion!]
+  field2: [MyUnion]
+}

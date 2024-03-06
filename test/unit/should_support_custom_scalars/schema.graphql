@@ -1,0 +1,13 @@
+scalar URL
+
+type MyScalarType {
+  field: URL
+  field2: URL!
+}
+
+scalar CustomScalar
+
+type MyCustomScalarType {
+  field: CustomScalar
+  field2: CustomScalar!
+}

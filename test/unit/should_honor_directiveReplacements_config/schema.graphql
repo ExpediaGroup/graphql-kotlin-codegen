@@ -1,0 +1,9 @@
+directive @directive1 on OBJECT | UNION
+
+"A description for MyDirectiveType"
+type MyDirectiveType @directive1 {
+  field: String
+}
+
+"A description for MyDirectiveUnion"
+union MyDirectiveUnion @directive1 = MyDirectiveType

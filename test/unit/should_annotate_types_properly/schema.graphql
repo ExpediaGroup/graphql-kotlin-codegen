@@ -1,0 +1,14 @@
+"""
+"
+A "description" for MyType
+It can be multiline
+"""
+type MyType {
+  username: String
+  "A description for email"
+  email: String
+  """
+  A \`weird\` description for name
+  """
+  name: String
+}

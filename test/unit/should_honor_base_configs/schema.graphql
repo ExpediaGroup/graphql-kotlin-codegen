@@ -1,0 +1,6 @@
+"A description for MyEnum"
+enum MyEnum {
+  THIS
+  "A description for THAT"
+  THAT
+}

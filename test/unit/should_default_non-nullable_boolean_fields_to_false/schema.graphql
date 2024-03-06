@@ -1,0 +1,4 @@
+type MyBooleanType {
+  field: Boolean!
+  field2: Boolean
+}

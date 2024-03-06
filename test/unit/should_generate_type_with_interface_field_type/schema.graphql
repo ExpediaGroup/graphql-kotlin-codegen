@@ -1,0 +1,10 @@
+"A description for MyInterface"
+interface MyInterface {
+  field: String
+  field2: String!
+}
+
+type MyInterfaceFieldType {
+  field: MyInterface
+  field2: MyInterface!
+}

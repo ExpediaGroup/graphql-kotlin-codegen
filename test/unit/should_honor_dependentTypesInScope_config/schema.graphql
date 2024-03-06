@@ -1,0 +1,26 @@
+type MyTypeInOnlyTypes {
+  field: TypeInScope!
+  field2: TypeOutOfScope!
+}
+
+type TypeInScope {
+  field: String
+  unionInScopeField: UnionInScope
+  unionOutOfScopeField: UnionOutOfScope
+}
+
+type TypeOutOfScope {
+  field: String
+}
+
+union UnionInScope = Type1
+
+union UnionOutOfScope = Type2
+
+type Type1 {
+  field: String
+}
+
+type Type2 {
+  field: String
+}

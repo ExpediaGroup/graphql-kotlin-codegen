@@ -1,0 +1,72 @@
+type MyType {
+  typeField: MyNestedType!
+  typeListField: [ListType!]!
+  enumField: MyEnum!
+  unionField: MyUnion!
+  unionImplementationField: UnionImplementation!
+  interfaceField: MyInterface1!
+  interfaceImplementationField: MyImplementedInterface!
+}
+
+type MyNestedType {
+  field: String
+}
+
+type ListType {
+  field: [NestedListType!]
+}
+
+type NestedListType {
+  field: String
+}
+
+enum MyEnum {
+  THIS
+  THAT
+}
+
+union MyUnion = MyType1 | MyType2
+type MyType1 {
+  field: String
+}
+
+type MyType2 {
+  field: String
+}
+
+union MyUnion2 = UnionImplementation
+type UnionImplementation {
+  field: String
+}
+
+interface MyInterface1 {
+  field: String
+}
+interface MyInterfaceToImplement {
+  field: String
+}
+
+type MyImplementedInterface implements MyInterfaceToImplement {
+  field: String
+}
+
+input MyInput {
+  field: MyNestedInput!
+}
+
+input MyNestedInput {
+  field: String
+}
+
+type TypeToOmit {
+  field: String
+}
+
+union MyStandaloneUnion = StandaloneUnionType
+type StandaloneUnionType {
+  field: StandaloneNestedType
+}
+
+type StandaloneNestedType {
+  field: String
+}

@@ -1,0 +1,14 @@
+type MyExtraFieldArgsType {
+  myField: String
+  fieldWithArgs(arg: String!): String!
+}
+
+type MyIncludedExtraFieldArgsType {
+  myField: String
+  myOtherField: String
+}
+
+type MyOtherType {
+  myField(arg: String!): String!
+  myOtherField: String
+}

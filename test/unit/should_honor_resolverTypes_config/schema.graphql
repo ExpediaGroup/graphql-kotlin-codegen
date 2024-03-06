@@ -1,0 +1,24 @@
+type MyResolverType {
+  nullableField: String
+  nonNullableField: String!
+  nullableResolver(arg: String!): String
+  nonNullableResolver(arg: String!): String!
+}
+
+type MyIncludedResolverType {
+  nullableField: String
+  nonNullableField: String!
+}
+
+type MyExcludedResolverType {
+  nullableField: String
+  nonNullableField: String!
+}
+
+interface MyIncludedInterface {
+  field: String
+}
+
+interface MyExcludedInterface {
+  field: String
+}

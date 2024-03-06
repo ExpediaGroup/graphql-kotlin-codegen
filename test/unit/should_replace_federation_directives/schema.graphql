@@ -1,0 +1,13 @@
+directive @extends on OBJECT
+directive @external on FIELD_DEFINITION
+directive @key(fields: FieldSet!) repeatable on OBJECT | INTERFACE
+scalar FieldSet
+
+type FederatedType @extends @key(fields: "some field") {
+  field: String! @external
+}
+
+type FederatedTypeResolver @extends @key(fields: "some other field") {
+  field(arg: String!): String!
+  field2: String @external
+}

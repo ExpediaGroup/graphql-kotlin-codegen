@@ -1,0 +1,7 @@
+overwrite: true
+schema:
+  - "test/**/*.graphql"
+generates:
+  test/integration/Types.kt:
+    plugins:
+      - "dist/plugin.js"

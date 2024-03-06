@@ -1,0 +1,28 @@
+type Query {
+  nullableField: FieldType
+  nonNullableField: FieldType!
+  nullableResolver(arg: String!): String
+  nonNullableResolver(arg: MyInputType!): String!
+}
+
+input MyInputType {
+  field: String
+}
+
+interface MyFieldInterface {
+  field1: String
+  field2: String!
+  nullableListResolver(arg1: Int, arg2: Int!): [String]
+  nonNullableListResolver(arg1: Int!, arg2: Int): [String!]!
+}
+
+type FieldType implements MyFieldInterface {
+  field1: String
+  field2: String!
+  booleanField1: Boolean
+  booleanField2: Boolean!
+  integerField1: Int
+  integerField2: Int!
+  nullableListResolver(arg1: Int, arg2: Int!): [String]
+  nonNullableListResolver(arg1: Int!, arg2: Int): [String!]!
+}

@@ -1,0 +1,87 @@
+---
+sidebar_position: 2
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Getting Started
+
+GraphQL Kotlin Codegen is a plugin for [graphql-codegen](https://the-guild.dev/graphql/codegen) that generates Kotlin code from
+[Schema Definition Language (SDL)](https://www.apollographql.com/tutorials/lift-off-part1/03-schema-definition-language-sdl).
+This Kotlin code is meant to be consumed by services using [GraphQL Kotlin](https://opensource.expediagroup.com/graphql-kotlin/docs/) and allows SDL to drive the implementation of your schema.
+In essence, it unlocks a schema-first approach to [code-first GraphQL](https://www.apollographql.com/blog/schema-first-vs-code-only-graphql).
+
+## Installation
+
+<Tabs
+defaultValue="npm"
+values={[
+  { value: 'npm' },
+  {  value: 'yarn' },
+  {  value: 'pnpm' },
+  {  value: 'bun' },
+]
+}>
+
+<TabItem value="npm">
+```shell
+npm install -D graphql-kotlin-codegen
+```
+</TabItem>
+<TabItem value="yarn">
+```shell
+yarn add -D graphql-kotlin-codegen
+```
+</TabItem>
+<TabItem value="pnpm">
+```shell
+pnpm add -D graphql-kotlin-codegen
+```
+</TabItem>
+<TabItem value="bun">
+```shell
+bun add -d graphql-kotlin-codegen
+```
+</TabItem>
+</Tabs>
+
+The configuration is a superset of the [existing configuration](https://the-guild.dev/graphql/codegen/docs/config-reference/codegen-config#configuration-options) in graphql-codegen.
+
+## Usage
+
+Example `codegen.yml`:
+
+```yaml
+schema:
+  - "path/to/**/*.graphql"
+generates:
+  output/Types.kt:
+    plugins:
+      - graphql-kotlin-codegen:
+          namingConvention: "keep" # graphql-codegen config
+          packageName: "com.example" # graphql-kotlin-codegen config
+```
+
+Example `codegen.ts`:
+
+```typescript
+import { CodegenConfig } from "@graphql-codegen/cli";
+import { GraphQLKotlinCodegenConfig } from "graphql-kotlin-codegen";
+
+export default {
+  schema: "path/to/**/*.graphql",
+  generates: {
+    "output/Types.kt": {
+      plugins: [
+        {
+          "graphql-kotlin-codegen": {
+            namingConvention: "keep", // graphql-codegen config
+            packageName: "com.example", // graphql-kotlin-codegen config
+          } satisfies GraphQLKotlinCodegenConfig,
+        },
+      ],
+    },
+  },
+} satisfies CodegenConfig;
+```

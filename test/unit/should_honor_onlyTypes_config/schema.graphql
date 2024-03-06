@@ -1,0 +1,33 @@
+type MyType {
+  username: String
+  "A description for email"
+  email: String
+  """
+  A \`weird\` description for name
+  """
+  name: String
+}
+
+"A description for MyEnum"
+enum MyEnum {
+  THIS
+  "A description for THAT"
+  THAT
+}
+
+enum ResultSort {
+  ASC
+  DESC
+}
+
+"A description for MyType1"
+type MyType1 {
+  field: String
+}
+
+type MyType2 {
+  field: String
+}
+
+"A description for MyUnion"
+union MyUnion = MyType1 | MyType2
