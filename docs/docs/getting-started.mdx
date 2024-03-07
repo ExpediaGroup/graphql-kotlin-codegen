@@ -26,22 +26,22 @@ values={[
 
 <TabItem value="npm">
 ```shell
-npm install -D graphql-kotlin-codegen
+npm install -D @expediagroup/graphql-kotlin-codegen
 ```
 </TabItem>
 <TabItem value="yarn">
 ```shell
-yarn add -D graphql-kotlin-codegen
+yarn add -D @expediagroup/graphql-kotlin-codegen
 ```
 </TabItem>
 <TabItem value="pnpm">
 ```shell
-pnpm add -D graphql-kotlin-codegen
+pnpm add -D @expediagroup/graphql-kotlin-codegen
 ```
 </TabItem>
 <TabItem value="bun">
 ```shell
-bun add -d graphql-kotlin-codegen
+bun add -d @expediagroup/graphql-kotlin-codegen
 ```
 </TabItem>
 </Tabs>
@@ -58,7 +58,7 @@ schema:
 generates:
   output/Types.kt:
     plugins:
-      - graphql-kotlin-codegen:
+      - /@expediagroup/graphql-kotlin-codegen:
           namingConvention: "keep" # graphql-codegen config
           packageName: "com.example" # graphql-kotlin-codegen config
 ```
@@ -67,7 +67,7 @@ Example `codegen.ts`:
 
 ```typescript
 import { CodegenConfig } from "@graphql-codegen/cli";
-import { GraphQLKotlinCodegenConfig } from "graphql-kotlin-codegen";
+import { GraphQLKotlinCodegenConfig } from "@expediagroup/graphql-kotlin-codegen";
 
 export default {
   schema: "path/to/**/*.graphql",
@@ -75,7 +75,7 @@ export default {
     "output/Types.kt": {
       plugins: [
         {
-          "graphql-kotlin-codegen": {
+          "@expediagroup/graphql-kotlin-codegen": {
             namingConvention: "keep", // graphql-codegen config
             packageName: "com.example", // graphql-kotlin-codegen config
           } satisfies GraphQLKotlinCodegenConfig,
