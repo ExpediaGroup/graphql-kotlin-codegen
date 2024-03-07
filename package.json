@@ -41,6 +41,7 @@
     "format-check": "prettier --check .",
     "integration": "bun run build && graphql-codegen && ./gradlew compileKotlin",
     "lint": "eslint .",
+    "prepack": "bun run build",
     "prepare": "husky",
     "test": "bun test"
   }
