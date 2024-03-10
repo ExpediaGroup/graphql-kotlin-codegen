@@ -14,7 +14,6 @@ limitations under the License.
 import { EnumTypeDefinitionNode, EnumValueDefinitionNode } from "graphql";
 import { indentMultiline } from "@graphql-codegen/visitor-plugin-common";
 import { buildAnnotations } from "../helpers/build-annotations";
-import { KotlinResolversVisitor } from "../visitor";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
 import { GraphQLKotlinCodegenConfig } from "../plugin";
 
@@ -27,14 +26,17 @@ export function buildEnumTypeDefinition(
   }
 
   const enumName = node.name.value;
-  const enumValues = indentMultiline((node.values ?? []).join(",\n") + ";", 2);
+  const enumValues =
+    node.values?.map((valueNode) => {
+      return buildEnumValueDefinition(valueNode, config);
+    }) ?? [];
 
   const annotations = buildAnnotations({
     config,
     definitionNode: node,
   });
   return `${annotations}enum class ${enumName}(val label: String) {
-${enumValues}
+${indentMultiline(enumValues.join(",\n") + ";", 2)}
 
     companion object {
         @JvmStatic
@@ -45,16 +47,13 @@ ${enumValues}
 }`;
 }
 
-export function buildEnumValueDefinition(
-  this: KotlinResolversVisitor,
+function buildEnumValueDefinition(
   node: EnumValueDefinitionNode,
+  config: GraphQLKotlinCodegenConfig,
 ) {
   const annotations = buildAnnotations({
-    config: this.config,
+    config,
     definitionNode: node,
   });
-  return `${annotations}${this.convertName(node, {
-    useTypesPrefix: false,
-    transformUnderscore: true,
-  })}("${node.name.value}")`;
+  return `${annotations}${config.convert(node)}("${node.name.value}")`;
 }

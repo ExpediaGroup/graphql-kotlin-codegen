@@ -14,17 +14,22 @@ limitations under the License.
 import { dirname, normalize } from "path";
 import {
   getCachedDocumentNodeFromSchema,
-  oldVisit,
   PluginFunction,
 } from "@graphql-codegen/plugin-helpers";
 import { buildPackageNameFromPath } from "@graphql-codegen/java-common";
-import { KotlinResolversVisitor } from "./visitor";
-import { RawConfig } from "@graphql-codegen/visitor-plugin-common";
+import { KotlinVisitor } from "./visitor";
+import {
+  ParsedConfig,
+  RawConfig,
+} from "@graphql-codegen/visitor-plugin-common";
 import { Input, safeParse } from "valibot";
 import { configSchema } from "./config";
 import { addDependentTypes } from "./helpers/add-dependent-types";
+import { visit } from "graphql";
 
-export type GraphQLKotlinCodegenConfig = RawConfig & Input<typeof configSchema>;
+export type GraphQLKotlinCodegenConfig = RawConfig &
+  ParsedConfig &
+  Input<typeof configSchema>;
 export const plugin: PluginFunction<GraphQLKotlinCodegenConfig> = (
   schema,
   _,
@@ -48,11 +53,9 @@ export const plugin: PluginFunction<GraphQLKotlinCodegenConfig> = (
   }
 
   addDependentTypes(config, schema);
-  const visitor = new KotlinResolversVisitor(config, schema);
+  const visitor = new KotlinVisitor(config, schema);
   const astNode = getCachedDocumentNodeFromSchema(schema);
-  const visitorResult: { definitions: unknown[] } = oldVisit(astNode, {
-    leave: visitor as Parameters<typeof oldVisit>[1]["leave"],
-  });
+  const { definitions } = visit(astNode, visitor);
   const packageName = `package ${
     config.packageName ?? buildPackageNameFromPath(relevantPath)
   }\n`;
@@ -62,7 +65,7 @@ export const plugin: PluginFunction<GraphQLKotlinCodegenConfig> = (
       .concat(config.extraImports ?? [])
       .map((annotation) => `import ${annotation}`)
       .join("\n") + "\n";
-  const typeDefinitions = visitorResult.definitions
+  const typeDefinitions = definitions
     .filter((d: unknown) => typeof d === "string" && d.length)
     .join("\n\n");
 

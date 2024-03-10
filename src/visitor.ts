@@ -11,14 +11,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {
-  BaseVisitor,
-  ParsedConfig,
-  RawConfig,
-} from "@graphql-codegen/visitor-plugin-common";
+import { BaseVisitor, RawConfig } from "@graphql-codegen/visitor-plugin-common";
 import {
   EnumTypeDefinitionNode,
-  EnumValueDefinitionNode,
   GraphQLSchema,
   InterfaceTypeDefinitionNode,
   InputObjectTypeDefinitionNode,
@@ -26,28 +21,21 @@ import {
   UnionTypeDefinitionNode,
 } from "graphql";
 import { GraphQLKotlinCodegenConfig } from "./plugin";
-import {
-  buildEnumTypeDefinition,
-  buildEnumValueDefinition,
-} from "./definitions/enum";
+import { buildEnumTypeDefinition } from "./definitions/enum";
 import { buildInterfaceDefinition } from "./definitions/interface";
 import { buildInputObjectDefinition } from "./definitions/input";
 import { buildObjectTypeDefinition } from "./definitions/object";
 import { buildUnionTypeDefinition } from "./definitions/union";
 
-export class KotlinResolversVisitor extends BaseVisitor<
+export class KotlinVisitor extends BaseVisitor<
   RawConfig,
-  GraphQLKotlinCodegenConfig & ParsedConfig
+  GraphQLKotlinCodegenConfig
 > {
   constructor(
     rawConfig: GraphQLKotlinCodegenConfig,
     protected _schema: GraphQLSchema,
   ) {
-    super(rawConfig, rawConfig as GraphQLKotlinCodegenConfig & ParsedConfig);
-  }
-
-  EnumValueDefinition(node: EnumValueDefinitionNode): string {
-    return buildEnumValueDefinition.bind(this)(node);
+    super(rawConfig, rawConfig);
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
