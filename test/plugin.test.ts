@@ -49,8 +49,7 @@ const testCases = await Promise.all(
     }
     return {
       testName,
-      config: (await import(`${absolutePath}/codegen.config.ts`))
-        .default as GraphQLKotlinCodegenConfig,
+      config: (await import(`${absolutePath}/codegen.config.ts`)).default,
     };
   }),
 );
