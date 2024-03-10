@@ -6,6 +6,8 @@
   "packageRules": [
     {
       "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "devDependencies",
       "automerge": true
     }
   ]
