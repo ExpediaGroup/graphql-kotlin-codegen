@@ -22,7 +22,7 @@
     "@graphql-codegen/java-common": "3.0.0",
     "@graphql-codegen/plugin-helpers": "5.0.3",
     "@graphql-codegen/visitor-plugin-common": "5.1.0",
-    "valibot": "0.29.0"
+    "valibot": "0.30.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
