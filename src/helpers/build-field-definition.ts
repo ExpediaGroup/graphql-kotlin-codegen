@@ -21,12 +21,12 @@ import {
 } from "graphql";
 import { isResolverType } from "./is-resolver-type";
 import { isExternalField } from "./is-external-field";
-import { GraphQLKotlinCodegenConfig } from "../plugin";
+import { CodegenConfig } from "../plugin";
 
 export function buildFieldDefinition(
   fieldNode: FieldDefinitionNode,
   definitionNode: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
-  config: GraphQLKotlinCodegenConfig,
+  config: CodegenConfig,
   completableFuture?: boolean,
 ) {
   const shouldUseFunction =

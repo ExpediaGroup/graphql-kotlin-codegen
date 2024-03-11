@@ -18,12 +18,12 @@ import {
   getDependentInterfaceNames,
   getDependentUnionNames,
 } from "./dependent-type-utils";
-import { GraphQLKotlinCodegenConfig } from "../plugin";
+import { CodegenConfig } from "../plugin";
 
 export function getDependentTypeNames(
   schema: GraphQLSchema,
   node: TypeDefinitionNode,
-  dependentTypesInScope: GraphQLKotlinCodegenConfig["dependentTypesInScope"],
+  dependentTypesInScope: CodegenConfig["dependentTypesInScope"],
 ): string[] {
   const namedTypes = getDependentFieldTypeNames(node, dependentTypesInScope)
     .concat(getDependentUnionNames(node))

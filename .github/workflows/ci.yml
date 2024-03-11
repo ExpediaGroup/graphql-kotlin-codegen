@@ -25,6 +25,9 @@ jobs:
       - name: Lint
         run: bun lint
 
+      - name: Type Check
+        run: bun tsc
+
       - name: Unit Tests
         run: bun test
 

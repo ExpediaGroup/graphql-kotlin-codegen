@@ -20,19 +20,16 @@ import {
   ObjectTypeDefinitionNode,
   UnionTypeDefinitionNode,
 } from "graphql";
-import { GraphQLKotlinCodegenConfig } from "./plugin";
+import { CodegenConfig } from "./plugin";
 import { buildEnumTypeDefinition } from "./definitions/enum";
 import { buildInterfaceDefinition } from "./definitions/interface";
 import { buildInputObjectDefinition } from "./definitions/input";
 import { buildObjectTypeDefinition } from "./definitions/object";
 import { buildUnionTypeDefinition } from "./definitions/union";
 
-export class KotlinVisitor extends BaseVisitor<
-  RawConfig,
-  GraphQLKotlinCodegenConfig
-> {
+export class KotlinVisitor extends BaseVisitor<RawConfig, CodegenConfig> {
   constructor(
-    rawConfig: GraphQLKotlinCodegenConfig,
+    rawConfig: CodegenConfig,
     protected _schema: GraphQLSchema,
   ) {
     super(rawConfig, rawConfig);

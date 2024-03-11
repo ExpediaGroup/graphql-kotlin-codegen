@@ -11,11 +11,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { GraphQLKotlinCodegenConfig } from "../plugin";
+import { CodegenConfig } from "../plugin";
 
 export function dependentTypeIsInScope(
   typeName: string,
-  config: GraphQLKotlinCodegenConfig,
+  config: CodegenConfig,
 ) {
   return (
     !config.dependentTypesInScope ||

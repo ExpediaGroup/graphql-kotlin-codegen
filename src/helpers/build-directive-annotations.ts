@@ -11,13 +11,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { GraphQLKotlinCodegenConfig } from "../plugin";
+import { CodegenConfig } from "../plugin";
 import { DefinitionNode, isDeprecatedDescription } from "./build-annotations";
 import { getFederationDirectiveReplacement } from "./get-federation-directive-replacement";
 
 export function buildDirectiveAnnotations(
   incomingNode: DefinitionNode,
-  config: GraphQLKotlinCodegenConfig,
+  config: CodegenConfig,
   description?: string,
 ) {
   const kind = incomingNode.kind;

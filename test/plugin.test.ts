@@ -1,5 +1,5 @@
 import { buildSchema } from "graphql";
-import { GraphQLKotlinCodegenConfig, plugin } from "../src/plugin";
+import { CodegenConfig, plugin } from "../src/plugin";
 import { describe, expect, it } from "bun:test";
 import { Types } from "@graphql-codegen/plugin-helpers";
 import * as glob from "glob";
@@ -9,7 +9,7 @@ function buildUnitTest({
   config,
 }: {
   testName: string;
-  config: GraphQLKotlinCodegenConfig;
+  config: CodegenConfig;
 }) {
   it(testName, async () => {
     const filePath = `./test/unit/${testName}`;
