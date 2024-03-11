@@ -12,11 +12,11 @@ limitations under the License.
 */
 
 import { Kind, TypeDefinitionNode, TypeNode } from "graphql";
-import { GraphQLKotlinCodegenConfig } from "../plugin";
+import { CodegenConfig } from "../plugin";
 
 export function getDependentFieldTypeNames(
   node: TypeDefinitionNode,
-  dependentTypesInScope: GraphQLKotlinCodegenConfig["dependentTypesInScope"],
+  dependentTypesInScope: CodegenConfig["dependentTypesInScope"],
 ) {
   return "fields" in node && node.fields
     ? node.fields

@@ -27,10 +27,12 @@ import { configSchema } from "./config";
 import { addDependentTypes } from "./helpers/add-dependent-types";
 import { visit } from "graphql";
 
-export type GraphQLKotlinCodegenConfig = RawConfig &
+export type GraphQLKotlinCodegenConfig = Partial<RawConfig & ParsedConfig> &
+  Input<typeof configSchema>;
+export type CodegenConfig = RawConfig &
   ParsedConfig &
   Input<typeof configSchema>;
-export const plugin: PluginFunction<GraphQLKotlinCodegenConfig> = (
+export const plugin: PluginFunction<CodegenConfig> = (
   schema,
   _,
   config,

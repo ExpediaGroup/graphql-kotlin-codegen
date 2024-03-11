@@ -12,11 +12,11 @@ limitations under the License.
 */
 
 import { TypeDefinitionNode } from "graphql";
-import { GraphQLKotlinCodegenConfig } from "../plugin";
+import { CodegenConfig } from "../plugin";
 
 export function shouldIncludeTypeDefinition(
   node: TypeDefinitionNode,
-  config: GraphQLKotlinCodegenConfig,
+  config: CodegenConfig,
 ) {
   return !config.onlyTypes || config.onlyTypes.includes(node.name.value);
 }

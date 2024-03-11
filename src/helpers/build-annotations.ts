@@ -19,7 +19,7 @@ import {
   TypeDefinitionNode,
 } from "graphql";
 import { buildDirectiveAnnotations } from "./build-directive-annotations";
-import { GraphQLKotlinCodegenConfig } from "../plugin";
+import { CodegenConfig } from "../plugin";
 import { TypeMetadata } from "./build-type-metadata";
 import { dependentTypeIsInScope } from "./dependent-type-is-in-scope";
 
@@ -35,7 +35,7 @@ export function buildAnnotations({
   definitionNode,
   resolvedType,
 }: {
-  config: GraphQLKotlinCodegenConfig;
+  config: CodegenConfig;
   inputDescription?: string;
   definitionNode?: DefinitionNode;
   resolvedType?: TypeMetadata;

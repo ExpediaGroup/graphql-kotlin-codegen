@@ -20,12 +20,12 @@ import { getDependentInterfaceNames } from "../helpers/dependent-type-utils";
 import { isResolverType } from "../helpers/is-resolver-type";
 import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { isExternalField } from "../helpers/is-external-field";
-import { GraphQLKotlinCodegenConfig } from "../plugin";
+import { CodegenConfig } from "../plugin";
 
 export function buildObjectTypeDefinition(
   node: ObjectTypeDefinitionNode,
   schema: GraphQLSchema,
-  config: GraphQLKotlinCodegenConfig,
+  config: CodegenConfig,
 ) {
   if (!shouldIncludeTypeDefinition(node, config)) {
     return "";
@@ -62,7 +62,7 @@ function getClassMembers({
 }: {
   node: ObjectTypeDefinitionNode;
   schema: GraphQLSchema;
-  config: GraphQLKotlinCodegenConfig;
+  config: CodegenConfig;
   completableFuture?: boolean;
 }) {
   const resolverType = isResolverType(node, config);

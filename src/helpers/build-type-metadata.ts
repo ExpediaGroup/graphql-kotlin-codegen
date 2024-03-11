@@ -22,7 +22,7 @@ import {
 import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
 import { wrapTypeWithModifiers } from "@graphql-codegen/java-common";
 import { dependentTypeIsInScope } from "./dependent-type-is-in-scope";
-import { GraphQLKotlinCodegenConfig } from "../plugin";
+import { CodegenConfig } from "../plugin";
 
 export interface TypeMetadata {
   typeName: string;
@@ -34,7 +34,7 @@ export interface TypeMetadata {
 export function buildTypeMetadata(
   typeNode: TypeNode,
   schema: GraphQLSchema,
-  config: GraphQLKotlinCodegenConfig,
+  config: CodegenConfig,
 ): TypeMetadata {
   const innerType = getBaseTypeNode(typeNode);
   const schemaType = schema.getType(innerType.name.value);

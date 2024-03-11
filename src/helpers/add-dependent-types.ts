@@ -11,13 +11,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { GraphQLKotlinCodegenConfig } from "../plugin";
+import { CodegenConfig } from "../plugin";
 import { getDependentTypeNames } from "./get-dependent-type-names";
 import { dependentTypeIsInScope } from "./dependent-type-is-in-scope";
 import { GraphQLSchema } from "graphql";
 
 export function addDependentTypes(
-  config: GraphQLKotlinCodegenConfig,
+  config: CodegenConfig,
   schema: GraphQLSchema,
 ) {
   if (config.onlyTypes && (config.includeDependentTypes ?? true)) {

@@ -14,11 +14,11 @@ limitations under the License.
 import { UnionTypeDefinitionNode } from "graphql";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
 import { buildDirectiveAnnotations } from "../helpers/build-directive-annotations";
-import { GraphQLKotlinCodegenConfig } from "../plugin";
+import { CodegenConfig } from "../plugin";
 
 export function buildUnionTypeDefinition(
   node: UnionTypeDefinitionNode,
-  config: GraphQLKotlinCodegenConfig,
+  config: CodegenConfig,
 ) {
   if (!shouldIncludeTypeDefinition(node, config)) {
     return "";
