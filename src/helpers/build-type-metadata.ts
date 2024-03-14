@@ -25,7 +25,7 @@ import { CodegenConfig } from "../plugin";
 
 export interface TypeMetadata {
   typeName: string;
-  annotation?: string;
+  unionAnnotation?: string;
   defaultValue: string;
   isNullable: boolean;
 }
@@ -59,10 +59,17 @@ export function buildTypeMetadata(
       typeName: buildListType(typeNode, scalarTypeName),
     };
   } else if (isUnionType(schemaType)) {
+    const shouldTreatUnionAsInterface =
+      config.externalUnionsAsInterfaces?.includes(schemaType.name);
     return {
       ...commonMetadata,
-      annotation: schemaType.name,
-      typeName: buildListType(typeNode, "Any"),
+      unionAnnotation: shouldTreatUnionAsInterface
+        ? undefined
+        : schemaType.name,
+      typeName: buildListType(
+        typeNode,
+        shouldTreatUnionAsInterface ? schemaType.name : "Any",
+      ),
     };
   } else {
     return {
