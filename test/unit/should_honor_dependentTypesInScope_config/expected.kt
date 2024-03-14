@@ -3,6 +3,7 @@ package com.kotlin.generated
 import com.expediagroup.graphql.generator.annotations.*
 import com.some.import.TypeOutOfScope
 import com.some.import.UnionOutOfScope
+import com.some.import.ExternalUnionAsInterface
 
 data class MyTypeInOnlyTypes(
     val field: TypeInScope,
@@ -14,7 +15,8 @@ data class TypeInScope(
     @UnionInScope
     val unionInScopeField: Any? = null,
     @UnionOutOfScope
-    val unionOutOfScopeField: Any? = null
+    val unionOutOfScopeField: Any? = null,
+    val externalUnionAsInterfaceField: ExternalUnionAsInterface? = null
 )
 
 @GraphQLUnion(

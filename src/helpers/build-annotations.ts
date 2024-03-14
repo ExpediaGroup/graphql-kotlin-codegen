@@ -55,8 +55,8 @@ export function buildAnnotations({
   const directiveAnnotations = definitionNode
     ? buildDirectiveAnnotations(definitionNode, config, description)
     : "";
-  const unionAnnotation = resolvedType?.annotation
-    ? `@${resolvedType.annotation}\n`
+  const unionAnnotation = resolvedType?.unionAnnotation
+    ? `@${resolvedType.unionAnnotation}\n`
     : "";
 
   const annotations = [

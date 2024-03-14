@@ -7,6 +7,7 @@ type TypeInScope {
   field: String
   unionInScopeField: UnionInScope
   unionOutOfScopeField: UnionOutOfScope
+  externalUnionAsInterfaceField: ExternalUnionAsInterface
 }
 
 type TypeOutOfScope {
@@ -16,6 +17,8 @@ type TypeOutOfScope {
 union UnionInScope = Type1
 
 union UnionOutOfScope = Type2
+
+union ExternalUnionAsInterface = Type1 | Type2
 
 type Type1 {
   field: String
