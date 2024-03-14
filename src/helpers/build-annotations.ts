@@ -21,7 +21,6 @@ import {
 import { buildDirectiveAnnotations } from "./build-directive-annotations";
 import { CodegenConfig } from "../plugin";
 import { TypeMetadata } from "./build-type-metadata";
-import { dependentTypeIsInScope } from "./dependent-type-is-in-scope";
 
 export type DefinitionNode =
   | TypeDefinitionNode
@@ -56,11 +55,9 @@ export function buildAnnotations({
   const directiveAnnotations = definitionNode
     ? buildDirectiveAnnotations(definitionNode, config, description)
     : "";
-  const unionAnnotation =
-    resolvedType?.baseType &&
-    dependentTypeIsInScope(resolvedType.baseType, config)
-      ? `@${resolvedType.baseType}\n`
-      : "";
+  const unionAnnotation = resolvedType?.annotation
+    ? `@${resolvedType.annotation}\n`
+    : "";
 
   const annotations = [
     unionAnnotation,

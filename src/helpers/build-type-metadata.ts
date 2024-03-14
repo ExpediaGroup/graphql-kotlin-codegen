@@ -21,12 +21,11 @@ import {
 } from "graphql";
 import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
 import { wrapTypeWithModifiers } from "@graphql-codegen/java-common";
-import { dependentTypeIsInScope } from "./dependent-type-is-in-scope";
 import { CodegenConfig } from "../plugin";
 
 export interface TypeMetadata {
   typeName: string;
-  baseType?: string;
+  annotation?: string;
   defaultValue: string;
   isNullable: boolean;
 }
@@ -48,7 +47,6 @@ export function buildTypeMetadata(
     defaultValue,
     isNullable,
   };
-  const defaultTypeName = schemaType.name;
 
   if (isScalarType(schemaType)) {
     const scalars = [...KOTLIN_SCALARS, ...(config.extraScalars ?? [])];
@@ -61,18 +59,15 @@ export function buildTypeMetadata(
       typeName: buildListType(typeNode, scalarTypeName),
     };
   } else if (isUnionType(schemaType)) {
-    const unionTypeName = dependentTypeIsInScope(defaultTypeName, config)
-      ? "Any"
-      : defaultTypeName;
     return {
       ...commonMetadata,
-      baseType: defaultTypeName,
-      typeName: buildListType(typeNode, unionTypeName),
+      annotation: schemaType.name,
+      typeName: buildListType(typeNode, "Any"),
     };
   } else {
     return {
       ...commonMetadata,
-      typeName: buildListType(typeNode, defaultTypeName),
+      typeName: buildListType(typeNode, schemaType.name),
     };
   }
 }

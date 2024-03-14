@@ -13,7 +13,8 @@ data class TypeInScope(
     val field: String? = null,
     @UnionInScope
     val unionInScopeField: Any? = null,
-    val unionOutOfScopeField: UnionOutOfScope? = null
+    @UnionOutOfScope
+    val unionOutOfScopeField: Any? = null
 )
 
 @GraphQLUnion(
