@@ -27,8 +27,8 @@
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
     "@total-typescript/ts-reset": "0.5.1",
-    "@typescript-eslint/eslint-plugin": "7.1.1",
-    "bun-types": "1.0.30",
+    "@typescript-eslint/eslint-plugin": "7.2.0",
+    "bun-types": "1.0.32",
     "eslint": "8.57.0",
     "husky": "9.0.11",
     "prettier": "3.2.5",
