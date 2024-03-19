@@ -11,4 +11,19 @@ type MyType {
   A \`weird\` description for name
   """
   name: String
+  "DEPRECATED: Use something else instead"
+  deprecated1: String
+  deprecated2: String @deprecated
+  deprecated3: String @deprecated(reason: "Deprecated directive works too")
+  "DEPRECATED: It only takes the first one"
+  deprecated4: String
+    @deprecated(reason: "when you have multiple deprecated annotations")
+  "DEPRECATED: It uses the GraphQLDescription annotation for union types"
+  deprecated5: MyUnion
+  deprecated6: MyUnion
+    @deprecated(
+      reason: "It uses the GraphQLDescription annotation for union types"
+    )
 }
+
+union MyUnion = MyType
