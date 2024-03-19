@@ -41,10 +41,13 @@ export function buildAnnotations({
 }) {
   const description =
     inputDescription ?? definitionNode?.description?.value ?? "";
-  const descriptionAnnotator = isDeprecatedDescription(description)
+  const descriptionAnnotator = isDeprecatedDescription(
+    description,
+    resolvedType,
+  )
     ? "@Deprecated"
     : "@GraphQLDescription";
-  const descriptionValue = isDeprecatedDescription(description)
+  const descriptionValue = isDeprecatedDescription(description, resolvedType)
     ? description.replace("DEPRECATED: ", "")
     : description;
   const trimmedDescription = trimDescription(descriptionValue);
@@ -53,7 +56,12 @@ export function buildAnnotations({
     : "";
 
   const directiveAnnotations = definitionNode
-    ? buildDirectiveAnnotations(definitionNode, config, description)
+    ? buildDirectiveAnnotations(
+        definitionNode,
+        config,
+        description,
+        resolvedType,
+      )
     : "";
   const unionAnnotation = resolvedType?.unionAnnotation
     ? `@${resolvedType.unionAnnotation}\n`
@@ -78,8 +86,13 @@ export function buildAnnotations({
   );
 }
 
-export function isDeprecatedDescription(description?: string) {
-  return description?.startsWith("DEPRECATED: ");
+export function isDeprecatedDescription(
+  description?: string,
+  resolvedType?: TypeMetadata,
+) {
+  return (
+    description?.startsWith("DEPRECATED: ") && !resolvedType?.unionAnnotation
+  );
 }
 
 function trimDescription(description: string) {

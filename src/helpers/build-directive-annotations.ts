@@ -14,11 +14,13 @@ limitations under the License.
 import { CodegenConfig } from "../plugin";
 import { DefinitionNode, isDeprecatedDescription } from "./build-annotations";
 import { getFederationDirectiveReplacement } from "./get-federation-directive-replacement";
+import { TypeMetadata } from "./build-type-metadata";
 
 export function buildDirectiveAnnotations(
   incomingNode: DefinitionNode,
   config: CodegenConfig,
   description?: string,
+  resolvedType?: TypeMetadata,
 ) {
   const kind = incomingNode.kind;
   const directives = incomingNode.directives ?? [];
@@ -30,12 +32,17 @@ export function buildDirectiveAnnotations(
         directiveName === "deprecated" &&
         !isDeprecatedDescription(description)
       ) {
-        const deprecatedReason = directive.arguments?.find(
+        const deprecatedReasonNode = directive.arguments?.find(
           (arg) => arg.name.value === "reason",
         )?.value;
-        return `@Deprecated("${
-          deprecatedReason?.kind === "StringValue" ? deprecatedReason.value : ""
-        }")\n`;
+        const deprecatedReason =
+          deprecatedReasonNode?.kind === "StringValue"
+            ? deprecatedReasonNode.value
+            : "";
+        const descriptionAnnotator = resolvedType?.unionAnnotation
+          ? "@GraphQLDescription"
+          : "@Deprecated";
+        return `${descriptionAnnotator}("${deprecatedReason}")\n`;
       }
       const federationReplacement =
         getFederationDirectiveReplacement(directive);
