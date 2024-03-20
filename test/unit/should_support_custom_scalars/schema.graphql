@@ -1,6 +1,7 @@
 scalar URL
 
 type MyScalarType {
+  idField: ID
   field: URL
   field2: URL!
 }
