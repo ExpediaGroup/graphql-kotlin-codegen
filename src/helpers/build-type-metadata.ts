@@ -100,7 +100,7 @@ export function buildListType(typeNode: TypeNode, typeName: string) {
 export const KOTLIN_SCALARS = [
   {
     scalarName: "ID",
-    kotlinType: "String",
+    kotlinType: "com.expediagroup.graphql.generator.scalars.ID",
   },
   {
     scalarName: "String",
