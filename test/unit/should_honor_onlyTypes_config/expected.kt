@@ -11,15 +11,13 @@ data class MyType(
 )
 
 @GraphQLDescription("A description for MyEnum")
-enum class MyEnum(val label: String) {
+enum class MyEnum(val value: String) {
     This("THIS"),
     @GraphQLDescription("A description for THAT")
     That("THAT");
 
     companion object {
-        @JvmStatic
-        fun valueOfLabel(label: String): MyEnum? {
-            return values().find { it.label == label }
-        }
+        fun findByName(name: String): MyEnum? = values().find { it.name == name }
+        fun findByValue(value: String): MyEnum? = values().find { it.value == value }
     }
 }
