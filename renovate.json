@@ -9,11 +9,16 @@
       "matchUpdateTypes": ["patch", "minor"],
       "groupName": "devDependencies",
       "automerge": true
-    },
+    }
     {
       "matchDepTypes": ["dependencies"],
       "matchUpdateTypes": ["patch", "minor"],
       "groupName": "dependencies",
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": ["gradle"],
+      "groupName": "devDependencies",
       "automerge": true
     }
   ]
