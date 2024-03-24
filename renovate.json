@@ -9,7 +9,7 @@
       "matchUpdateTypes": ["patch", "minor"],
       "groupName": "devDependencies",
       "automerge": true
-    }
+    },
     {
       "matchDepTypes": ["dependencies"],
       "matchUpdateTypes": ["patch", "minor"],
