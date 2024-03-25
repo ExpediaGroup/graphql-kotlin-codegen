@@ -10,8 +10,6 @@ plugins:
           release: patch
         - type: refactor
           release: patch
-        - type: chore
-          release: patch
         - scope: no-release
           release: false
   - "@semantic-release/github"
