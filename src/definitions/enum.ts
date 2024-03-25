@@ -35,14 +35,12 @@ export function buildEnumTypeDefinition(
     config,
     definitionNode: node,
   });
-  return `${annotations}enum class ${enumName}(val label: String) {
+  return `${annotations}enum class ${enumName}(val value: String) {
 ${indentMultiline(enumValues.join(",\n") + ";", 2)}
 
     companion object {
-        @JvmStatic
-        fun valueOfLabel(label: String): ${enumName}? {
-            return values().find { it.label == label }
-        }
+        fun findByName(name: String): ${enumName}? = values().find { it.name == name }
+        fun findByValue(value: String): ${enumName}? = values().find { it.value == value }
     }
 }`;
 }
