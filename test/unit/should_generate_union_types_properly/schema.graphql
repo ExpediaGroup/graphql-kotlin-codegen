@@ -7,7 +7,9 @@ type MyType2 {
   field: String
 }
 
-"A description for MyUnion"
+"""
+A "trimmed" description for MyUnion
+"""
 union MyUnion = MyType1 | MyType2
 
 type MyUnionType {
