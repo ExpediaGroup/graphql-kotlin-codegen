@@ -95,7 +95,7 @@ export function isDeprecatedDescription(
   );
 }
 
-function trimDescription(description: string) {
+export function trimDescription(description: string) {
   return (
     description
       .split("\n")

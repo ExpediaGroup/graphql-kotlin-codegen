@@ -14,7 +14,7 @@ data class MyType2(
 @GraphQLUnion(
     name = "MyUnion",
     possibleTypes = [MyType1::class, MyType2::class],
-    description = "A description for MyUnion"
+    description = "A trimmed description for MyUnion"
 )
 annotation class MyUnion
 
