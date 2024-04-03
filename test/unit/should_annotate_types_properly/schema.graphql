@@ -26,7 +26,7 @@ type MyType {
     )
   "When there is a description"
   deprecated7: MyUnion
-    @deprecated(reason: "It puts the deprecated reason in @Deprecated")
+    @deprecated(reason: "It omits the @Deprecated annotation for now")
 }
 
 union MyUnion = MyType

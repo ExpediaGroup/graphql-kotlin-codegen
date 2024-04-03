@@ -25,7 +25,6 @@ data class MyType(
     val deprecated6: Any? = null,
     @MyUnion
     @GraphQLDescription("When there is a description")
-    @Deprecated("It puts the deprecated reason in @Deprecated")
     val deprecated7: Any? = null
 )
 
