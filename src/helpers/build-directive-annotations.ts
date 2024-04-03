@@ -39,6 +39,9 @@ export function buildDirectiveAnnotations(
           deprecatedReasonNode?.kind === "StringValue"
             ? deprecatedReasonNode.value
             : "";
+        if (incomingNode.description?.value && resolvedType?.unionAnnotation) {
+          return "";
+        }
         const descriptionAnnotator = resolvedType?.unionAnnotation
           ? "@GraphQLDescription"
           : "@Deprecated";
