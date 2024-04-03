@@ -22,7 +22,11 @@ data class MyType(
     val deprecated5: Any? = null,
     @MyUnion
     @GraphQLDescription("It uses the GraphQLDescription annotation for union types")
-    val deprecated6: Any? = null
+    val deprecated6: Any? = null,
+    @MyUnion
+    @GraphQLDescription("When there is a description")
+    @Deprecated("It puts the deprecated reason in @Deprecated")
+    val deprecated7: Any? = null
 )
 
 @GraphQLUnion(
