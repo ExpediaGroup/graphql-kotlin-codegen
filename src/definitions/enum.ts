@@ -35,12 +35,11 @@ export function buildEnumTypeDefinition(
     config,
     definitionNode: node,
   });
-  return `${annotations}enum class ${enumName}(val value: String) {
+  return `${annotations}enum class ${enumName} {
 ${indentMultiline(enumValues.join(",\n") + ";", 2)}
 
     companion object {
-        fun findByName(name: String): ${enumName}? = values().find { it.name == name }
-        fun findByValue(value: String): ${enumName}? = values().find { it.value == value }
+        fun findByName(name: String, ignoreCase: Boolean = false): ${enumName}? = values().find { it.name.equals(name, ignoreCase = ignoreCase) }
     }
 }`;
 }
@@ -53,5 +52,5 @@ function buildEnumValueDefinition(
     config,
     definitionNode: node,
   });
-  return `${annotations}${config.convert(node)}("${node.name.value}")`;
+  return `${annotations}${config.convert(node)}`;
 }

@@ -2,13 +2,12 @@ package com.kotlin.generated
 
 import com.expediagroup.graphql.generator.annotations.*
 
-enum class UserRole(val value: String) {
-    Admin("ADMIN"),
-    User("USER"),
-    Editor("EDITOR");
+enum class UserRole {
+    Admin,
+    User,
+    Editor;
 
     companion object {
-        fun findByName(name: String): UserRole? = values().find { it.name == name }
-        fun findByValue(value: String): UserRole? = values().find { it.value == value }
+        fun findByName(name: String, ignoreCase: Boolean = false): UserRole? = values().find { it.name.equals(name, ignoreCase = ignoreCase) }
     }
 }
