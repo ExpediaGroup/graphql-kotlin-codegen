@@ -3,13 +3,12 @@ package com.kotlin.generated
 import com.expediagroup.graphql.generator.annotations.*
 
 @GraphQLDescription("A description for MyEnum")
-enum class MyEnum(val value: String) {
-    This("THIS"),
+enum class MyEnum {
+    This,
     @GraphQLDescription("A description for THAT")
-    That("THAT");
+    That;
 
     companion object {
-        fun findByName(name: String): MyEnum? = values().find { it.name == name }
-        fun findByValue(value: String): MyEnum? = values().find { it.value == value }
+        fun findByName(name: String, ignoreCase: Boolean = false): MyEnum? = values().find { it.name.equals(name, ignoreCase = ignoreCase) }
     }
 }

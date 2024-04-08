@@ -25,13 +25,12 @@ data class NestedListType(
     val field: String? = null
 )
 
-enum class MyEnum(val value: String) {
-    This("THIS"),
-    That("THAT");
+enum class MyEnum {
+    This,
+    That;
 
     companion object {
-        fun findByName(name: String): MyEnum? = values().find { it.name == name }
-        fun findByValue(value: String): MyEnum? = values().find { it.value == value }
+        fun findByName(name: String, ignoreCase: Boolean = false): MyEnum? = values().find { it.name.equals(name, ignoreCase = ignoreCase) }
     }
 }
 
