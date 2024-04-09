@@ -11,7 +11,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { array, boolean, enum_, object, optional, string } from "valibot";
+import {
+  array,
+  boolean,
+  enum_,
+  object,
+  optional,
+  string,
+  union,
+} from "valibot";
 import { Kind } from "graphql";
 
 export const configSchema = object({
@@ -70,7 +78,22 @@ export const configSchema = object({
         /**
          * A list of Kotlin annotations to replace the directive with.
          */
-        kotlinAnnotations: array(string()),
+        kotlinAnnotations: array(
+          union([
+            string(),
+            object({
+              /**
+               * The name of the annotation to replace the directive with.
+               */
+              annotationName: string(),
+              /**
+               * The arguments to forward from the directive directly to the Kotlin annotation. Can be INT, FLOAT, STRING, BOOLEAN, or ENUM.
+               * @example @YourGraphQLDirective(arg1: "value1") -> @YourKotlinAnnotation(arg1 = "value1")
+               */
+              argumentsToRetain: array(string()),
+            }),
+          ]),
+        ),
         /**
          * The type definition to apply the directive replacement to. If omitted, the replacement will apply to all definition types.
          */
