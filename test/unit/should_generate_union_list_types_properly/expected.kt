@@ -2,7 +2,7 @@ package com.kotlin.generated
 
 import com.expediagroup.graphql.generator.annotations.*
 
-@GraphQLDescription("A description for MyType1")
+@GraphQLDescription("A description for TypeForGeneratingUnionListTypes1")
 data class TypeForGeneratingUnionListTypes1(
     val field: String? = null
 )

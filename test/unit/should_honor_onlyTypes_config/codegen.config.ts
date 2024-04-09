@@ -1,5 +1,5 @@
 import { GraphQLKotlinCodegenConfig } from "../../../src/plugin";
 
 export default {
-  onlyTypes: ["MyType", "MyEnum"],
+  onlyTypes: ["TypeHonoringOnlyTypesConfig", "EnumHonoringOnlyTypesConfig"],
 } satisfies GraphQLKotlinCodegenConfig;

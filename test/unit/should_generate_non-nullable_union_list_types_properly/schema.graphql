@@ -7,7 +7,7 @@ type TypeForNonNullableUnionList2 {
   field: String
 }
 
-"A description for MyUnion"
+"A description for UnionForNonNullableList"
 union UnionForNonNullableList =
   | TypeForNonNullableUnionList1
   | TypeForNonNullableUnionList2

@@ -1,4 +1,4 @@
-"A description for MyType1"
+"A description for TypeForGeneratingUnionListTypes1"
 type TypeForGeneratingUnionListTypes1 {
   field: String
 }
@@ -7,7 +7,7 @@ type TypeForGeneratingUnionListTypes2 {
   field: String
 }
 
-"A description for MyUnion"
+"A description for UnionForGeneratingUnionListTypes"
 union UnionForGeneratingUnionListTypes =
   | TypeForGeneratingUnionListTypes1
   | TypeForGeneratingUnionListTypes2

@@ -1,6 +1,6 @@
 import { GraphQLKotlinCodegenConfig } from "../../../src/plugin";
 
 export default {
-  onlyTypes: ["MyType"],
+  onlyTypes: ["TypeHonoringIncludeDependentTypesConfig"],
   includeDependentTypes: false,
 } satisfies GraphQLKotlinCodegenConfig;

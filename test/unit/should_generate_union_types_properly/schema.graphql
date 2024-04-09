@@ -8,7 +8,7 @@ type TypeForGeneratingUnionTypesProperly2 {
 }
 
 """
-A "trimmed" description for MyUnion
+A "trimmed" description for UnionForGeneratingUnionsProperly
 """
 union UnionForGeneratingUnionsProperly =
   | TypeForGeneratingUnionTypesProperly1

@@ -1,4 +1,4 @@
-"A description for MyInterface"
+"A description for InterfaceWithInheritance"
 interface InterfaceWithInheritance {
   field: String
   field2: String!

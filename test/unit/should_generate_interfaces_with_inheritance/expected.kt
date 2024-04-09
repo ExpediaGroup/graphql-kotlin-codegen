@@ -2,7 +2,7 @@ package com.kotlin.generated
 
 import com.expediagroup.graphql.generator.annotations.*
 
-@GraphQLDescription("A description for MyInterface")
+@GraphQLDescription("A description for InterfaceWithInheritance")
 interface InterfaceWithInheritance {
     val field: String?
     val field2: String

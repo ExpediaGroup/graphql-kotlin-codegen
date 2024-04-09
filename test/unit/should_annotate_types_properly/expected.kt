@@ -17,20 +17,20 @@ data class TypeThatShouldBeProperlyAnnotated(
     val deprecated3: String? = null,
     @Deprecated("It only takes the first one")
     val deprecated4: String? = null,
-    @MyUnion
+    @UnionThatShouldBeProperlyAnnotated
     @GraphQLDescription("DEPRECATED: It uses the GraphQLDescription annotation for union types")
     val deprecated5: Any? = null,
-    @MyUnion
+    @UnionThatShouldBeProperlyAnnotated
     @GraphQLDescription("It uses the GraphQLDescription annotation for union types")
     val deprecated6: Any? = null,
-    @MyUnion
+    @UnionThatShouldBeProperlyAnnotated
     @GraphQLDescription("When there is a description")
     val deprecated7: Any? = null
 )
 
 @GraphQLUnion(
     name = "UnionThatShouldBeProperlyAnnotated",
-    possibleTypes = [MyType::class],
+    possibleTypes = [TypeThatShouldBeProperlyAnnotated::class],
     description = ""
 )
 annotation class UnionThatShouldBeProperlyAnnotated
