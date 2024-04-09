@@ -11,7 +11,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { array, boolean, enum_, object, optional, string } from "valibot";
+import {
+  array,
+  boolean,
+  enum_,
+  object,
+  optional,
+  string,
+  union,
+} from "valibot";
 import { Kind } from "graphql";
 
 export const configSchema = object({
@@ -70,7 +78,15 @@ export const configSchema = object({
         /**
          * A list of Kotlin annotations to replace the directive with.
          */
-        kotlinAnnotations: array(string()),
+        kotlinAnnotations: array(
+          union([
+            string(),
+            object({
+              annotationName: string(),
+              retainArguments: array(string()),
+            }),
+          ]),
+        ),
         /**
          * The type definition to apply the directive replacement to. If omitted, the replacement will apply to all definition types.
          */

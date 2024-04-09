@@ -1,7 +1,8 @@
 directive @directive1 on OBJECT | UNION
+directive @directive2(arg1: String, arg2: Int) on OBJECT | UNION
 
 "A description for MyDirectiveType"
-type MyDirectiveType @directive1 {
+type MyDirectiveType @directive1 @directive2(arg1: "arg1", arg2: 0) {
   field: String
 }
 
