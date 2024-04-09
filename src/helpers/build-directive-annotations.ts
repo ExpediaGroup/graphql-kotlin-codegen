@@ -11,10 +11,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { CodegenConfig } from "../plugin";
+import { CodegenConfig, GraphQLKotlinCodegenConfig } from "../plugin";
 import { DefinitionNode, isDeprecatedDescription } from "./build-annotations";
 import { getFederationDirectiveReplacement } from "./get-federation-directive-replacement";
 import { TypeMetadata } from "./build-type-metadata";
+import { ConstDirectiveNode } from "graphql/language";
 
 export function buildDirectiveAnnotations(
   incomingNode: DefinitionNode,
@@ -57,32 +58,43 @@ export function buildDirectiveAnnotations(
           (!definitionType || definitionType === kind),
       );
       if (!directiveReplacementFromConfig) return "";
-      const kotlinAnnotations =
-        directiveReplacementFromConfig.kotlinAnnotations.map((item) => {
-          if (typeof item === "string") return item;
-          const directiveArguments = item.argumentsToRetain
-            ?.map((argumentToRetain) => {
-              const argumentValueNode = directive.arguments?.find(
-                (argument) => argument.name.value === argumentToRetain,
-              )?.value;
-              if (!argumentValueNode)
-                throw new Error(
-                  `Argument ${argumentToRetain} was provided in argumentsToRetain config but was not found in directive ${directiveName}`,
-                );
-              if (!("value" in argumentValueNode))
-                throw new Error(
-                  `Directive argument ${argumentToRetain} in directive ${directiveName} has an unsupported type. Only INT, FLOAT, STRING, BOOLEAN, and ENUM are supported.`,
-                );
-              const argumentValue =
-                argumentValueNode.kind === "StringValue"
-                  ? `"${argumentValueNode.value}"`
-                  : argumentValueNode.value;
-              return `${argumentToRetain}: ${argumentValue}`;
-            })
-            .join(", ");
-          return `@${item.annotationName}(${directiveArguments})`;
-        });
+      const kotlinAnnotations = buildKotlinAnnotations(
+        directive,
+        directiveReplacementFromConfig.kotlinAnnotations,
+      );
       return kotlinAnnotations.join("\n") + "\n";
     })
     .join("");
+}
+
+function buildKotlinAnnotations(
+  directive: ConstDirectiveNode,
+  kotlinAnnotations: NonNullable<
+    GraphQLKotlinCodegenConfig["directiveReplacements"]
+  >[number]["kotlinAnnotations"],
+) {
+  return kotlinAnnotations.map((kotlinAnnotation) => {
+    if (typeof kotlinAnnotation === "string") return kotlinAnnotation;
+    const directiveArguments = kotlinAnnotation.argumentsToRetain
+      ?.map((argumentToRetain) => {
+        const argumentValueNode = directive.arguments?.find(
+          (argument) => argument.name.value === argumentToRetain,
+        )?.value;
+        if (!argumentValueNode)
+          throw new Error(
+            `Argument ${argumentToRetain} was provided in argumentsToRetain config but was not found in directive ${directive.name.value}`,
+          );
+        if (!("value" in argumentValueNode))
+          throw new Error(
+            `Directive argument ${argumentToRetain} in directive ${directive.name.value} has an unsupported type. Only INT, FLOAT, STRING, BOOLEAN, and ENUM are supported.`,
+          );
+        const argumentValue =
+          argumentValueNode.kind === "StringValue"
+            ? `"${argumentValueNode.value}"`
+            : argumentValueNode.value;
+        return `${argumentToRetain}: ${argumentValue}`;
+      })
+      .join(", ");
+    return `@${kotlinAnnotation.annotationName}(${directiveArguments})`;
+  });
 }

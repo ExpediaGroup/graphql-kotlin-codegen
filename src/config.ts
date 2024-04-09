@@ -87,7 +87,8 @@ export const configSchema = object({
                */
               annotationName: string(),
               /**
-               * The arguments to retain from the directive. Can be INT, FLOAT, STRING, BOOLEAN, or ENUM.
+               * The arguments to forward from the directive directly to the Kotlin annotation. Can be INT, FLOAT, STRING, BOOLEAN, or ENUM.
+               * @example @YourGraphQLDirective(arg1: "value1") -> @YourKotlinAnnotation(arg1: "value1")
                */
               argumentsToRetain: array(string()),
             }),
