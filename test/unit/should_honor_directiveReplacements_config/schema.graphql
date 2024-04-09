@@ -1,7 +1,10 @@
 directive @directive1 on OBJECT | UNION
+directive @directiveWithArgs(arg1: String, arg2: Int) on OBJECT | UNION
 
 "A description for MyDirectiveType"
-type TypeHonoringDirectiveReplacements @directive1 {
+type TypeHonoringDirectiveReplacements
+  @directive1
+  @directiveWithArgs(arg1: "arg1", arg2: 0) {
   field: String
 }
 
