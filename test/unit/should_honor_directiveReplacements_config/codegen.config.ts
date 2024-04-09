@@ -7,11 +7,11 @@ export default {
       kotlinAnnotations: ["@SomeAnnotation1", "@SomeAnnotation2"],
     },
     {
-      directive: "directive2",
+      directive: "directiveWithArgs",
       kotlinAnnotations: [
         {
           annotationName: "SomeAnnotation3",
-          retainArguments: ["arg1", "arg2"],
+          argumentsToRetain: ["arg1", "arg2"],
         },
       ],
     },

@@ -82,8 +82,14 @@ export const configSchema = object({
           union([
             string(),
             object({
+              /**
+               * The name of the annotation to replace the directive with.
+               */
               annotationName: string(),
-              retainArguments: array(string()),
+              /**
+               * The arguments to retain from the directive. Can be INT, FLOAT, STRING, BOOLEAN, or ENUM.
+               */
+              argumentsToRetain: array(string()),
             }),
           ]),
         ),

@@ -60,13 +60,19 @@ export function buildDirectiveAnnotations(
       const kotlinAnnotations =
         directiveReplacementFromConfig.kotlinAnnotations.map((item) => {
           if (typeof item === "string") return item;
-          const directiveArguments = item.retainArguments
+          const directiveArguments = item.argumentsToRetain
             ?.map((argumentToRetain) => {
               const argumentValueNode = directive.arguments?.find(
                 (argument) => argument.name.value === argumentToRetain,
               )?.value;
-              if (!argumentValueNode) throw new Error();
-              if (!("value" in argumentValueNode)) throw new Error();
+              if (!argumentValueNode)
+                throw new Error(
+                  `Argument ${argumentToRetain} was provided in argumentsToRetain config but was not found in directive ${directiveName}`,
+                );
+              if (!("value" in argumentValueNode))
+                throw new Error(
+                  `Directive argument ${argumentToRetain} in directive ${directiveName} has an unsupported type. Only INT, FLOAT, STRING, BOOLEAN, and ENUM are supported.`,
+                );
               const argumentValue =
                 argumentValueNode.kind === "StringValue"
                   ? `"${argumentValueNode.value}"`
