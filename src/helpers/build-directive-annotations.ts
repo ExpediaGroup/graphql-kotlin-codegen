@@ -92,7 +92,7 @@ function buildKotlinAnnotations(
           argumentValueNode.kind === "StringValue"
             ? `"${argumentValueNode.value}"`
             : argumentValueNode.value;
-        return `${argumentToRetain}: ${argumentValue}`;
+        return `${argumentToRetain} = ${argumentValue}`;
       })
       .join(", ");
     return `@${kotlinAnnotation.annotationName}(${directiveArguments})`;

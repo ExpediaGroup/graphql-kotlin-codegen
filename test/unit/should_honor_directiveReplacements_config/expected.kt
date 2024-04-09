@@ -5,7 +5,7 @@ import com.expediagroup.graphql.generator.annotations.*
 @GraphQLDescription("A description for MyDirectiveType")
 @SomeAnnotation1
 @SomeAnnotation2
-@SomeAnnotation3(arg1: "arg1", arg2: 0)
+@SomeAnnotation3(arg1 = "arg1", arg2 = 0)
 data class MyDirectiveType(
     val field: String? = null
 )
