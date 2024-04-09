@@ -1,24 +1,24 @@
 "A description for MyInterface"
-interface MyInterface {
+interface InterfaceWithInheritance {
   field: String
   field2: String!
 }
 
 "A description for MyInterfaceImplementation"
-type MyInterfaceImplementation implements MyInterface {
+type MyInterfaceImplementation implements InterfaceWithInheritance {
   field: String
   field2: String!
 }
 
-interface MyInterface1 {
+interface InheritedInterface1 {
   field: String
 }
 
-interface MyInterface2 {
+interface InheritedInterface2 {
   field2: String!
 }
 
-type MyMergedInterfaceImplementation implements MyInterface1 & MyInterface2 {
+type MyMergedInterfaceImplementation implements InheritedInterface1 & InheritedInterface2 {
   field: String
   field2: String!
 }

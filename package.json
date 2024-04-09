@@ -39,7 +39,7 @@
     "build": "tsup src/plugin.ts --clean --dts --external graphql",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
-    "integration": "bun run build && graphql-codegen && ./gradlew compileKotlin",
+    "integration": "bun run build && graphql-codegen && ./gradlew compileTestKotlin",
     "lint": "eslint .",
     "prepack": "bun run build",
     "prepare": "husky",

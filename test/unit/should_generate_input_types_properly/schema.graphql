@@ -1,5 +1,5 @@
 "A description for MyInputType"
-input MyInputType {
+input InputTypeThatShouldBeGeneratedProperly {
   username: String
   "A description for email"
   email: String

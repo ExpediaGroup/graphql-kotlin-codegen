@@ -3,7 +3,7 @@ package com.kotlin.generated
 import com.expediagroup.graphql.generator.annotations.*
 
 @GraphQLDescription("A description for MyInterface")
-interface MyInterface {
+interface InterfaceWithInheritance {
     val field: String?
     val field2: String
 }
@@ -12,17 +12,17 @@ interface MyInterface {
 data class MyInterfaceImplementation(
     override val field: String? = null,
     override val field2: String
-) : MyInterface
+) : InterfaceWithInheritance
 
-interface MyInterface1 {
+interface InheritedInterface1 {
     val field: String?
 }
 
-interface MyInterface2 {
+interface InheritedInterface2 {
     val field2: String
 }
 
 data class MyMergedInterfaceImplementation(
     override val field: String? = null,
     override val field2: String
-) : MyInterface1, MyInterface2
+) : InheritedInterface1, InheritedInterface2

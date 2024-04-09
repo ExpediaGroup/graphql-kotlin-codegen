@@ -3,7 +3,7 @@
 A "description" for MyType
 It can be multiline
 """
-type MyType {
+type TypeThatShouldBeProperlyAnnotated {
   username: String
   "A description for email"
   email: String
@@ -29,4 +29,4 @@ type MyType {
     @deprecated(reason: "It omits the @Deprecated annotation for now")
 }
 
-union MyUnion = MyType
+union UnionThatShouldBeProperlyAnnotated = MyType

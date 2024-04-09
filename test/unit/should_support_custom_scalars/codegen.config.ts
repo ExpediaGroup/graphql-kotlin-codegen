@@ -4,7 +4,7 @@ export default {
   extraScalars: [
     {
       scalarName: "URL",
-      kotlinType: "URL",
+      kotlinType: "java.net.URL",
     },
   ],
 } satisfies GraphQLKotlinCodegenConfig;

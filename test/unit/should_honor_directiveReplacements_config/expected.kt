@@ -1,11 +1,12 @@
 package com.kotlin.generated
 
 import com.expediagroup.graphql.generator.annotations.*
+import should_honor_directiveReplacements_config.*
 
 @GraphQLDescription("A description for MyDirectiveType")
 @SomeAnnotation1
 @SomeAnnotation2
-data class MyDirectiveType(
+data class TypeHonoringDirectiveReplacements(
     val field: String? = null
 )
 
@@ -13,7 +14,7 @@ data class MyDirectiveType(
 @SomeAnnotation2
 @GraphQLUnion(
     name = "MyDirectiveUnion",
-    possibleTypes = [MyDirectiveType::class],
+    possibleTypes = [TypeHonoringDirectiveReplacements::class],
     description = "A description for MyDirectiveUnion"
 )
 annotation class MyDirectiveUnion

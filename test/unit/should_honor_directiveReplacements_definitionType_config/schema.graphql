@@ -1,7 +1,7 @@
 directive @directive1 on INPUT_OBJECT | OBJECT
 directive @directive2 on INPUT_OBJECT | OBJECT
 
-type MyDirectiveType @directive1 @directive2 {
+type TypeHonoringDirectiveReplacementsDefinitionType @directive1 @directive2 {
   field: String
 }
 

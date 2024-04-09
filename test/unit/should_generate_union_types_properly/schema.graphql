@@ -1,19 +1,21 @@
 "A description for MyType1"
-type MyType1 {
+type TypeForGeneratingUnionTypesProperly1 {
   field: String
 }
 
-type MyType2 {
+type TypeForGeneratingUnionTypesProperly2 {
   field: String
 }
 
 """
 A "trimmed" description for MyUnion
 """
-union MyUnion = MyType1 | MyType2
+union UnionForGeneratingUnionsProperly =
+  | TypeForGeneratingUnionTypesProperly1
+  | TypeForGeneratingUnionTypesProperly2
 
 type MyUnionType {
   "A description for field"
-  field: MyUnion
+  field: UnionForGeneratingUnionsProperly
   field2: String
 }

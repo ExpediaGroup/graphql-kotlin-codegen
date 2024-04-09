@@ -1,4 +1,4 @@
-type MyType {
+type TypeHonoringIncludeDependentTypesConfig {
   field: MyNestedType
 }
 

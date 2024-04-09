@@ -3,7 +3,7 @@ package com.kotlin.generated
 import com.expediagroup.graphql.generator.annotations.*
 
 @GraphQLDescription("A description for MyType")
-data class MyType(
+data class TypeThatShouldBeProperlyAnnotated(
     val username: String? = null,
     @GraphQLDescription("A description for email")
     val email: String? = null,
@@ -29,8 +29,8 @@ data class MyType(
 )
 
 @GraphQLUnion(
-    name = "MyUnion",
+    name = "UnionThatShouldBeProperlyAnnotated",
     possibleTypes = [MyType::class],
     description = ""
 )
-annotation class MyUnion
+annotation class UnionThatShouldBeProperlyAnnotated

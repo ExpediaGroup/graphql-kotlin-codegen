@@ -1,17 +1,19 @@
 "A description for MyType1"
-type MyType1 {
+type TypeForGeneratingUnionListTypes1 {
   field: String
 }
 
-type MyType2 {
+type TypeForGeneratingUnionListTypes2 {
   field: String
 }
 
 "A description for MyUnion"
-union MyUnion = MyType1 | MyType2
+union UnionForGeneratingUnionListTypes =
+  | TypeForGeneratingUnionListTypes1
+  | TypeForGeneratingUnionListTypes2
 
 type MyUnionListType {
   "A description for field"
-  field: [MyUnion!]
-  field2: [MyUnion]
+  field: [UnionForGeneratingUnionListTypes!]
+  field2: [UnionForGeneratingUnionListTypes]
 }

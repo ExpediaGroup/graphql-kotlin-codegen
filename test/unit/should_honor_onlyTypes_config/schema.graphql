@@ -1,4 +1,4 @@
-type MyType {
+type TypeHonoringOnlyTypesConfig {
   username: String
   "A description for email"
   email: String
@@ -9,7 +9,7 @@ type MyType {
 }
 
 "A description for MyEnum"
-enum MyEnum {
+enum EnumHonoringOnlyTypesConfig {
   THIS
   "A description for THAT"
   THAT
