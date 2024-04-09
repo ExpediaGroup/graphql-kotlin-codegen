@@ -12,9 +12,10 @@ dependencies {
 }
 
 sourceSets {
-    main {
+    test {
         kotlin {
-            srcDirs("test/integration")
+            srcDirs("test/unit", "test/integration")
+            exclude("**/actual.kt")
         }
     }
 }

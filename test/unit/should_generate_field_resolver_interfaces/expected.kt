@@ -7,7 +7,7 @@ interface Query {
     suspend fun nullableField(): FieldType? = null
     suspend fun nonNullableField(): FieldType
     suspend fun nullableResolver(arg: String): String? = null
-    suspend fun nonNullableResolver(arg: MyInputType): String
+    suspend fun nonNullableResolver(arg: InputTypeGenerateFieldResolverInterfaces): String
 }
 
 @GraphQLIgnore
@@ -15,10 +15,10 @@ interface QueryCompletableFuture {
     fun nullableField(): java.util.concurrent.CompletableFuture<FieldType?>
     fun nonNullableField(): java.util.concurrent.CompletableFuture<FieldType>
     fun nullableResolver(arg: String): java.util.concurrent.CompletableFuture<String?>
-    fun nonNullableResolver(arg: MyInputType): java.util.concurrent.CompletableFuture<String>
+    fun nonNullableResolver(arg: InputTypeGenerateFieldResolverInterfaces): java.util.concurrent.CompletableFuture<String>
 }
 
-data class MyInputType(
+data class InputTypeGenerateFieldResolverInterfaces(
     val field: String? = null
 )
 

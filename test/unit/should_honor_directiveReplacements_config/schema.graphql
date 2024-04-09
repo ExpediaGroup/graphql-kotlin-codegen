@@ -2,9 +2,11 @@ directive @directive1 on OBJECT | UNION
 directive @directiveWithArgs(arg1: String, arg2: Int) on OBJECT | UNION
 
 "A description for MyDirectiveType"
-type MyDirectiveType @directive1 @directiveWithArgs(arg1: "arg1", arg2: 0) {
+type TypeHonoringDirectiveReplacements
+  @directive1
+  @directiveWithArgs(arg1: "arg1", arg2: 0) {
   field: String
 }
 
 "A description for MyDirectiveUnion"
-union MyDirectiveUnion @directive1 = MyDirectiveType
+union MyDirectiveUnion @directive1 = TypeHonoringDirectiveReplacements

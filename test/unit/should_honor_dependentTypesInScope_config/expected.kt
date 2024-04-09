@@ -1,9 +1,7 @@
 package com.kotlin.generated
 
 import com.expediagroup.graphql.generator.annotations.*
-import com.some.import.TypeOutOfScope
-import com.some.import.UnionOutOfScope
-import com.some.import.ExternalUnionAsInterface
+import should_honor_dependentTypesInScope_config.*
 
 data class MyTypeInOnlyTypes(
     val field: TypeInScope,

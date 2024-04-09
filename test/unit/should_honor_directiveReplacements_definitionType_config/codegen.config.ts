@@ -2,15 +2,16 @@ import { GraphQLKotlinCodegenConfig } from "../../../src/plugin";
 import { Kind } from "graphql/index";
 
 export default {
+  extraImports: ["should_honor_directiveReplacements_config.*"],
   directiveReplacements: [
     {
       directive: "directive1",
-      kotlinAnnotations: ["@SomeInputAnnotation"],
+      kotlinAnnotations: ["@SomeAnnotation2"],
       definitionType: Kind.INPUT_OBJECT_TYPE_DEFINITION,
     },
     {
       directive: "directive1",
-      kotlinAnnotations: ["@SomeAnnotation"],
+      kotlinAnnotations: ["@SomeAnnotation1"],
     },
     {
       directive: "directive2",

@@ -3,24 +3,24 @@ package com.kotlin.generated
 import com.expediagroup.graphql.generator.annotations.*
 
 @GraphQLDescription("A description for MyType1")
-data class MyType1(
+data class TypeForNonNullableUnionList1(
     val field: String? = null
 )
 
-data class MyType2(
+data class TypeForNonNullableUnionList2(
     val field: String? = null
 )
 
 @GraphQLUnion(
-    name = "MyUnion",
-    possibleTypes = [MyType1::class, MyType2::class],
-    description = "A description for MyUnion"
+    name = "UnionForNonNullableList",
+    possibleTypes = [TypeForNonNullableUnionList1::class, TypeForNonNullableUnionList2::class],
+    description = "A description for UnionForNonNullableList"
 )
-annotation class MyUnion
+annotation class UnionForNonNullableList
 
 data class MyNonNullableUnionListType(
-    @MyUnion
+    @UnionForNonNullableList
     val field: List<Any> = emptyList(),
-    @MyUnion
+    @UnionForNonNullableList
     val field2: List<Any?> = emptyList()
 )

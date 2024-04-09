@@ -3,7 +3,7 @@
 A "description" for MyType
 It can be multiline
 """
-type MyType {
+type TypeThatShouldBeProperlyAnnotated {
   username: String
   "A description for email"
   email: String
@@ -19,14 +19,14 @@ type MyType {
   deprecated4: String
     @deprecated(reason: "when you have multiple deprecated annotations")
   "DEPRECATED: It uses the GraphQLDescription annotation for union types"
-  deprecated5: MyUnion
-  deprecated6: MyUnion
+  deprecated5: UnionThatShouldBeProperlyAnnotated
+  deprecated6: UnionThatShouldBeProperlyAnnotated
     @deprecated(
       reason: "It uses the GraphQLDescription annotation for union types"
     )
   "When there is a description"
-  deprecated7: MyUnion
+  deprecated7: UnionThatShouldBeProperlyAnnotated
     @deprecated(reason: "It omits the @Deprecated annotation for now")
 }
 
-union MyUnion = MyType
+union UnionThatShouldBeProperlyAnnotated = TypeThatShouldBeProperlyAnnotated

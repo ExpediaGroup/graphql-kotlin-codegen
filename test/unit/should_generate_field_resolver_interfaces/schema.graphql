@@ -2,10 +2,10 @@ type Query {
   nullableField: FieldType
   nonNullableField: FieldType!
   nullableResolver(arg: String!): String
-  nonNullableResolver(arg: MyInputType!): String!
+  nonNullableResolver(arg: InputTypeGenerateFieldResolverInterfaces!): String!
 }
 
-input MyInputType {
+input InputTypeGenerateFieldResolverInterfaces {
   field: String
 }
 
