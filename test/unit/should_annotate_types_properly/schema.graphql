@@ -4,13 +4,13 @@ A "description" for MyType
 It can be multiline
 """
 type TypeThatShouldBeProperlyAnnotated {
-  username: String
-  "A description for email"
-  email: String
+  field: String
+  "A description for fieldWithDescription"
+  fieldWithDescription: String
   """
-  A \`weird\` description for name
+  A \`weird\` description for weirdDescription
   """
-  name: String
+  weirdDescription: String
   "DEPRECATED: Use something else instead"
   deprecated1: String
   deprecated2: String @deprecated
@@ -27,6 +27,10 @@ type TypeThatShouldBeProperlyAnnotated {
   "When there is a description"
   deprecated7: UnionThatShouldBeProperlyAnnotated
     @deprecated(reason: "It omits the @Deprecated annotation for now")
+  deprecated8: String
+    @deprecated(
+      reason: "\n        Multiline reason\n        with spaces\n        "
+    )
 }
 
 union UnionThatShouldBeProperlyAnnotated = TypeThatShouldBeProperlyAnnotated
