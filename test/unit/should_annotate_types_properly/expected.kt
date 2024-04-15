@@ -4,11 +4,11 @@ import com.expediagroup.graphql.generator.annotations.*
 
 @GraphQLDescription("A description for MyType")
 data class TypeThatShouldBeProperlyAnnotated(
-    val username: String? = null,
-    @GraphQLDescription("A description for email")
-    val email: String? = null,
-    @GraphQLDescription("A `weird` description for name")
-    val name: String? = null,
+    val field: String? = null,
+    @GraphQLDescription("A description for fieldWithDescription")
+    val fieldWithDescription: String? = null,
+    @GraphQLDescription("A `weird` description for weirdDescription")
+    val weirdDescription: String? = null,
     @Deprecated("Use something else instead")
     val deprecated1: String? = null,
     @Deprecated("")
@@ -25,7 +25,9 @@ data class TypeThatShouldBeProperlyAnnotated(
     val deprecated6: Any? = null,
     @UnionThatShouldBeProperlyAnnotated
     @GraphQLDescription("When there is a description")
-    val deprecated7: Any? = null
+    val deprecated7: Any? = null,
+    @Deprecated("Multiline reason")
+    val deprecated8: String? = null
 )
 
 @GraphQLUnion(

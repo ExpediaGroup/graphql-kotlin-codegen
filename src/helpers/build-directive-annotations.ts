@@ -12,7 +12,11 @@ limitations under the License.
 */
 
 import { CodegenConfig, GraphQLKotlinCodegenConfig } from "../plugin";
-import { DefinitionNode, isDeprecatedDescription } from "./build-annotations";
+import {
+  DefinitionNode,
+  isDeprecatedDescription,
+  trimDescription,
+} from "./build-annotations";
 import { getFederationDirectiveReplacement } from "./get-federation-directive-replacement";
 import { TypeMetadata } from "./build-type-metadata";
 import { ConstDirectiveNode } from "graphql/language";
@@ -46,7 +50,8 @@ export function buildDirectiveAnnotations(
         const descriptionAnnotator = resolvedType?.unionAnnotation
           ? "@GraphQLDescription"
           : "@Deprecated";
-        return `${descriptionAnnotator}("${deprecatedReason}")\n`;
+        const trimmedDeprecatedReason = trimDescription(deprecatedReason);
+        return `${descriptionAnnotator}("${trimmedDeprecatedReason}")\n`;
       }
       const federationReplacement =
         getFederationDirectiveReplacement(directive);
