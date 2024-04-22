@@ -18,21 +18,22 @@ import {
   getDependentInterfaceNames,
   getDependentUnionNames,
 } from "./dependent-type-utils";
-import { CodegenConfig } from "../plugin";
+import { GraphQLKotlinCodegenConfig } from "../plugin";
 
 export function getDependentTypeNames(
   schema: GraphQLSchema,
   node: TypeDefinitionNode,
-  dependentTypesInScope: CodegenConfig["dependentTypesInScope"],
+  config: GraphQLKotlinCodegenConfig,
 ): string[] {
-  const namedTypes = getDependentFieldTypeNames(node, dependentTypesInScope)
+  const namedTypes = getDependentFieldTypeNames(
+    node,
+    config.dependentTypesInScope,
+  )
     .concat(getDependentUnionNames(node))
     .concat(getDependentInterfaceNames(node));
   const recursivelyFoundTypes = namedTypes
     .map((typeName) => schema.getType(typeName)?.astNode)
     .filter(Boolean)
-    .flatMap((node) =>
-      getDependentTypeNames(schema, node, dependentTypesInScope),
-    );
+    .flatMap((node) => getDependentTypeNames(schema, node, config));
   return namedTypes.concat(recursivelyFoundTypes);
 }

@@ -60,6 +60,7 @@ export function buildTypeMetadata(
     };
   } else if (isUnionType(schemaType)) {
     const shouldTreatUnionAsInterface =
+      config.useMarkerInterfaces ||
       config.externalUnionsAsInterfaces?.includes(schemaType.name);
     return {
       ...commonMetadata,

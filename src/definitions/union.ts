@@ -15,7 +15,10 @@ import { UnionTypeDefinitionNode } from "graphql";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
 import { buildDirectiveAnnotations } from "../helpers/build-directive-annotations";
 import { CodegenConfig } from "../plugin";
-import { trimDescription } from "../helpers/build-annotations";
+import {
+  buildAnnotations,
+  trimDescription,
+} from "../helpers/build-annotations";
 
 export function buildUnionTypeDefinition(
   node: UnionTypeDefinitionNode,
@@ -24,6 +27,13 @@ export function buildUnionTypeDefinition(
   if (!shouldIncludeTypeDefinition(node, config)) {
     return "";
   }
+  const annotations = buildAnnotations({
+    config,
+    definitionNode: node,
+  });
+  if (config.useMarkerInterfaces) {
+    return `${annotations}interface ${node.name.value}`;
+  }
 
   const directiveAnnotations = buildDirectiveAnnotations(node, config);
   const possibleTypes =
@@ -31,7 +41,7 @@ export function buildUnionTypeDefinition(
   return `${directiveAnnotations}@GraphQLUnion(
     name = "${node.name.value}",
     possibleTypes = [${possibleTypes}],
-    description = "${node.description?.value ? trimDescription(node.description.value) : ""}"
+    description = "${trimDescription(node.description?.value)}"
 )
 annotation class ${node.name.value}`;
 }

@@ -1,0 +1,21 @@
+"A description for TypeForHonoringUnionConfig1"
+type TypeForHonoringUnionConfig1 {
+  field: String
+}
+
+type TypeForHonoringUnionConfig2 {
+  field: String
+}
+
+"""
+A description for UnionAsMarkerInterface
+"""
+union UnionAsMarkerInterface =
+  | TypeForHonoringUnionConfig1
+  | TypeForHonoringUnionConfig2
+
+type UnionForHonoringUnionConfig {
+  "A description for field"
+  field: UnionAsMarkerInterface
+  field2: String
+}

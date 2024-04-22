@@ -16,7 +16,10 @@ import { buildAnnotations } from "../helpers/build-annotations";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
-import { getDependentInterfaceNames } from "../helpers/dependent-type-utils";
+import {
+  getDependentInterfaceNames,
+  getDependentUnionsForType,
+} from "../helpers/dependent-type-utils";
 import { isResolverType } from "../helpers/is-resolver-type";
 import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { isExternalField } from "../helpers/is-external-field";
@@ -36,7 +39,11 @@ export function buildObjectTypeDefinition(
     definitionNode: node,
   });
   const name = node.name.value;
-  const interfacesToInherit = getDependentInterfaceNames(node);
+  const dependentInterfaces = getDependentInterfaceNames(node);
+  const dependentUnions = getDependentUnionsForType(schema, node);
+  const interfacesToInherit = config.useMarkerInterfaces
+    ? dependentInterfaces.concat(dependentUnions)
+    : dependentInterfaces;
   const interfaceInheritance = `${interfacesToInherit.length ? ` : ${interfacesToInherit.join(", ")}` : ""}`;
 
   if (isResolverType(node, config)) {

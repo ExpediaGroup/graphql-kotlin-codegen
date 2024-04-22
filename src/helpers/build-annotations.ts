@@ -95,10 +95,10 @@ export function isDeprecatedDescription(
   );
 }
 
-export function trimDescription(description: string) {
+export function trimDescription(description?: string) {
   return (
     description
-      .split("\n")
+      ?.split("\n")
       .map((str) => str.trim().replaceAll('"', "").replaceAll("\\", ""))
       .find((str) => str.match(/^[a-zA-Z]/)) ?? ""
   );

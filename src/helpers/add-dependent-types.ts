@@ -25,7 +25,7 @@ export function addDependentTypes(
       .map((typeName) => schema.getType(typeName)?.astNode)
       .filter(Boolean);
     const dependentTypeNames = onlyTypesNodes.flatMap((node) =>
-      getDependentTypeNames(schema, node, config.dependentTypesInScope),
+      getDependentTypeNames(schema, node, config),
     );
     const dependentTypesInScope = dependentTypeNames.filter((typeName) =>
       dependentTypeIsInScope(typeName, config),

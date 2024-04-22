@@ -129,4 +129,5 @@ export const configSchema = object({
       }),
     ),
   ),
+  useMarkerInterfaces: optional(boolean()),
 });
