@@ -7,8 +7,8 @@ plugins {
 }
 
 dependencies {
-    implementation("com.expediagroup", "graphql-kotlin-schema-generator", "7.1.0")
-    implementation("com.expediagroup", "graphql-kotlin-federation", "7.1.0")
+    implementation("com.expediagroup", "graphql-kotlin-schema-generator", "7.1.1")
+    implementation("com.expediagroup", "graphql-kotlin-federation", "7.1.1")
 }
 
 sourceSets {
