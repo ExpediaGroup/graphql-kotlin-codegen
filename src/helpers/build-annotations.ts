@@ -19,7 +19,7 @@ import {
   TypeDefinitionNode,
 } from "graphql";
 import { buildDirectiveAnnotations } from "./build-directive-annotations";
-import { CodegenConfig } from "../plugin";
+import { CodegenConfigWithDefaults } from "../config";
 import { TypeMetadata } from "./build-type-metadata";
 
 export type DefinitionNode =
@@ -34,7 +34,7 @@ export function buildAnnotations({
   definitionNode,
   resolvedType,
 }: {
-  config: CodegenConfig;
+  config: CodegenConfigWithDefaults;
   inputDescription?: string;
   definitionNode?: DefinitionNode;
   resolvedType?: TypeMetadata;

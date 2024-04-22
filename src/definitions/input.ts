@@ -16,12 +16,12 @@ import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-defi
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
 import { buildAnnotations } from "../helpers/build-annotations";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
-import { CodegenConfig } from "../plugin";
+import { CodegenConfigWithDefaults } from "../config";
 
 export function buildInputObjectDefinition(
   node: InputObjectTypeDefinitionNode,
   schema: GraphQLSchema,
-  config: CodegenConfig,
+  config: CodegenConfigWithDefaults,
 ) {
   if (!shouldIncludeTypeDefinition(node, config)) {
     return "";

@@ -17,12 +17,12 @@ import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
 import { buildFieldDefinition } from "../helpers/build-field-definition";
-import { CodegenConfig } from "../plugin";
+import { CodegenConfigWithDefaults } from "../config";
 
 export function buildInterfaceDefinition(
   node: InterfaceTypeDefinitionNode,
   schema: GraphQLSchema,
-  config: CodegenConfig,
+  config: CodegenConfigWithDefaults,
 ) {
   if (!shouldIncludeTypeDefinition(node, config)) {
     return "";

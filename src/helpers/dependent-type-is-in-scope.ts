@@ -11,11 +11,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { CodegenConfig } from "../plugin";
+import { CodegenConfigWithDefaults } from "../config";
 
 export function dependentTypeIsInScope(
   typeName: string,
-  config: CodegenConfig,
+  config: CodegenConfigWithDefaults,
 ) {
   return (
     !config.dependentTypesInScope ||

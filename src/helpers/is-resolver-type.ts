@@ -12,11 +12,11 @@ limitations under the License.
 */
 
 import { InterfaceTypeDefinitionNode, ObjectTypeDefinitionNode } from "graphql";
-import { CodegenConfig } from "../plugin";
+import { CodegenConfigWithDefaults } from "../config";
 
 export function isResolverType(
   node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
-  config: CodegenConfig,
+  config: CodegenConfigWithDefaults,
 ) {
   return (
     node.fields?.some((fieldNode) => fieldNode.arguments?.length) ||

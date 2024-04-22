@@ -22,6 +22,7 @@ import {
   union,
 } from "valibot";
 import { Kind } from "graphql";
+import { buildConfigWithDefaults } from "./helpers/build-config-with-defaults";
 
 export const configSchema = object({
   /**
@@ -130,7 +131,15 @@ export const configSchema = object({
       }),
     ),
   ),
+  /**
+   * Denotes the generation strategy for union types. Defaults to `MARKER_INTERFACE`.
+   * https://opensource.expediagroup.com/graphql-kotlin/docs/schema-generator/writing-schemas/unions/
+   */
   unionGeneration: optional(
     union([literal("ANNOTATION_CLASS"), literal("MARKER_INTERFACE")]),
   ),
 });
+
+export type CodegenConfigWithDefaults = ReturnType<
+  typeof buildConfigWithDefaults
+>;

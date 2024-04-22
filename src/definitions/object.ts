@@ -23,12 +23,12 @@ import {
 import { isResolverType } from "../helpers/is-resolver-type";
 import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { isExternalField } from "../helpers/is-external-field";
-import { CodegenConfig } from "../plugin";
+import { CodegenConfigWithDefaults } from "../config";
 
 export function buildObjectTypeDefinition(
   node: ObjectTypeDefinitionNode,
   schema: GraphQLSchema,
-  config: CodegenConfig,
+  config: CodegenConfigWithDefaults,
 ) {
   if (!shouldIncludeTypeDefinition(node, config)) {
     return "";
@@ -70,7 +70,7 @@ function getClassMembers({
 }: {
   node: ObjectTypeDefinitionNode;
   schema: GraphQLSchema;
-  config: CodegenConfig;
+  config: CodegenConfigWithDefaults;
   completableFuture?: boolean;
 }) {
   const resolverType = isResolverType(node, config);

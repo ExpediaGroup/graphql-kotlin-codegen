@@ -18,18 +18,19 @@ import {
   TypeDefinitionNode,
   TypeNode,
 } from "graphql";
-import { CodegenConfig } from "../plugin";
+import { CodegenConfigWithDefaults } from "../config";
 
 export function getDependentFieldTypeNames(
   node: TypeDefinitionNode,
-  dependentTypesInScope: CodegenConfig["dependentTypesInScope"],
+  config: CodegenConfigWithDefaults,
 ) {
   return "fields" in node && node.fields
     ? node.fields
         .map((field) => getFieldTypeName(field.type))
         .filter(
           (typeName) =>
-            !dependentTypesInScope || dependentTypesInScope.includes(typeName),
+            !config.dependentTypesInScope ||
+            config.dependentTypesInScope.includes(typeName),
         )
     : [];
 }

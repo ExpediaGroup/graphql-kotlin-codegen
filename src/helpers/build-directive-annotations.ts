@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { CodegenConfig, GraphQLKotlinCodegenConfig } from "../plugin";
+import { CodegenConfigWithDefaults } from "../config";
 import {
   DefinitionNode,
   isDeprecatedDescription,
@@ -23,7 +23,7 @@ import { ConstDirectiveNode } from "graphql/language";
 
 export function buildDirectiveAnnotations(
   incomingNode: DefinitionNode,
-  config: CodegenConfig,
+  config: CodegenConfigWithDefaults,
   description?: string,
   resolvedType?: TypeMetadata,
 ) {
@@ -75,7 +75,7 @@ export function buildDirectiveAnnotations(
 function buildKotlinAnnotations(
   directive: ConstDirectiveNode,
   kotlinAnnotations: NonNullable<
-    GraphQLKotlinCodegenConfig["directiveReplacements"]
+    CodegenConfigWithDefaults["directiveReplacements"]
   >[number]["kotlinAnnotations"],
 ) {
   return kotlinAnnotations.map((kotlinAnnotation) => {

@@ -18,17 +18,14 @@ import {
   getDependentInterfaceNames,
   getDependentUnionNames,
 } from "./dependent-type-utils";
-import { GraphQLKotlinCodegenConfig } from "../plugin";
+import { CodegenConfigWithDefaults } from "../config";
 
 export function getDependentTypeNames(
   schema: GraphQLSchema,
   node: TypeDefinitionNode,
-  config: GraphQLKotlinCodegenConfig,
+  config: CodegenConfigWithDefaults,
 ): string[] {
-  const namedTypes = getDependentFieldTypeNames(
-    node,
-    config.dependentTypesInScope,
-  )
+  const namedTypes = getDependentFieldTypeNames(node, config)
     .concat(getDependentUnionNames(node))
     .concat(getDependentInterfaceNames(node));
   const recursivelyFoundTypes = namedTypes
