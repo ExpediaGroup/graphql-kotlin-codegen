@@ -18,5 +18,15 @@ type UnionForHonoringUnionGenerationConfig {
   "A description for field"
   field: UnionAsAnnotation
   "DEPRECATED: It uses the GraphQLDescription annotation for union annotations"
-  field2: UnionAsAnnotation
+  deprecated1: UnionAsAnnotation
+    @deprecated(reason: "when you have multiple deprecated annotations")
+  "DEPRECATED: It uses the GraphQLDescription annotation for union types"
+  deprecated2: UnionAsAnnotation
+  deprecated3: UnionAsAnnotation
+    @deprecated(
+      reason: "It uses the GraphQLDescription annotation for union types"
+    )
+  "When there is a description"
+  deprecated4: UnionAsAnnotation
+    @deprecated(reason: "It omits the @Deprecated annotation for now")
 }

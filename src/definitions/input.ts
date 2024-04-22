@@ -16,7 +16,7 @@ import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-defi
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
 import { buildAnnotations } from "../helpers/build-annotations";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
-import { CodegenConfigWithDefaults } from "../config";
+import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 
 export function buildInputObjectDefinition(
   node: InputObjectTypeDefinitionNode,
@@ -47,7 +47,6 @@ export function buildInputObjectDefinition(
 
   const annotations = buildAnnotations({
     config,
-    inputDescription: node.description?.value,
     definitionNode: node,
   });
 

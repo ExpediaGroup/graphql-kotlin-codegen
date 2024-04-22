@@ -13,6 +13,7 @@ export default [
       },
     },
     rules: {
+      "no-console": "error",
       "@typescript-eslint/no-non-null-assertion": "error",
       "@typescript-eslint/no-unsafe-argument": "error",
       "@typescript-eslint/no-unsafe-call": "error",

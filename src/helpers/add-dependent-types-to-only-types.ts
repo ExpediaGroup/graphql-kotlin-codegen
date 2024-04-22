@@ -11,17 +11,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { CodegenConfigWithDefaults } from "../config";
+import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 import { getDependentTypeNames } from "./get-dependent-type-names";
-import { dependentTypeIsInScope } from "./dependent-type-is-in-scope";
 import { GraphQLSchema } from "graphql";
 
-export function addDependentTypes(
+export function addDependentTypesToOnlyTypes(
   config: CodegenConfigWithDefaults,
   schema: GraphQLSchema,
 ) {
   if (!config.onlyTypes) {
-    throw new Error(`config.onlyTypes is required to add dependent types`);
+    throw new Error(`onlyTypes config is required to add dependent types`);
   }
   const onlyTypesNodes = config.onlyTypes
     .map((typeName) => schema.getType(typeName)?.astNode)
@@ -29,8 +28,9 @@ export function addDependentTypes(
   const dependentTypeNames = onlyTypesNodes.flatMap((node) =>
     getDependentTypeNames(schema, node, config),
   );
-  const dependentTypesInScope = dependentTypeNames.filter((typeName) =>
-    dependentTypeIsInScope(typeName, config),
-  );
+  const typesInScope = config.dependentTypesInScope;
+  const dependentTypesInScope = typesInScope
+    ? dependentTypeNames.filter((typeName) => typesInScope.includes(typeName))
+    : dependentTypeNames;
   config.onlyTypes.push(...dependentTypesInScope);
 }

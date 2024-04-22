@@ -13,8 +13,7 @@ limitations under the License.
 
 import { UnionTypeDefinitionNode } from "graphql";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
-import { buildDirectiveAnnotations } from "../helpers/build-directive-annotations";
-import { CodegenConfigWithDefaults } from "../config";
+import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 import {
   buildAnnotations,
   trimDescription,
@@ -31,17 +30,16 @@ export function buildUnionTypeDefinition(
     config,
     definitionNode: node,
   });
-  if (config.unionGeneration === "ANNOTATION_CLASS") {
-    const directiveAnnotations = buildDirectiveAnnotations(node, config);
-    const possibleTypes =
-      node.types?.map((type) => `${type.name.value}::class`).join(", ") || "";
-    return `${directiveAnnotations}@GraphQLUnion(
+  if (config.unionGeneration === "MARKER_INTERFACE") {
+    return `${annotations}interface ${node.name.value}`;
+  }
+
+  const possibleTypes =
+    node.types?.map((type) => `${type.name.value}::class`).join(", ") || "";
+  return `${annotations}@GraphQLUnion(
     name = "${node.name.value}",
     possibleTypes = [${possibleTypes}],
     description = "${trimDescription(node.description?.value)}"
 )
 annotation class ${node.name.value}`;
-  }
-
-  return `${annotations}interface ${node.name.value}`;
 }

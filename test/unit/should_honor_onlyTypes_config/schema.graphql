@@ -1,11 +1,11 @@
 type TypeHonoringOnlyTypesConfig {
-  username: String
-  "A description for email"
-  email: String
+  field1: String
+  "A description for field2"
+  field2: String
   """
   A \`weird\` description for name
   """
-  name: String
+  field3: String
 }
 
 "A description for MyEnum"

@@ -15,7 +15,7 @@ import { EnumTypeDefinitionNode, EnumValueDefinitionNode } from "graphql";
 import { indentMultiline } from "@graphql-codegen/visitor-plugin-common";
 import { buildAnnotations } from "../helpers/build-annotations";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
-import { CodegenConfigWithDefaults } from "../config";
+import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 
 export function buildEnumTypeDefinition(
   node: EnumTypeDefinitionNode,

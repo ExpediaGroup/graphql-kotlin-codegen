@@ -23,7 +23,7 @@ import {
 import { isResolverType } from "../helpers/is-resolver-type";
 import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { isExternalField } from "../helpers/is-external-field";
-import { CodegenConfigWithDefaults } from "../config";
+import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 
 export function buildObjectTypeDefinition(
   node: ObjectTypeDefinitionNode,
@@ -42,27 +42,27 @@ export function buildObjectTypeDefinition(
   const dependentInterfaces = getDependentInterfaceNames(node);
   const dependentUnions = getDependentUnionsForType(schema, node);
   const interfacesToInherit =
-    config.unionGeneration === "ANNOTATION_CLASS"
-      ? dependentInterfaces
-      : dependentInterfaces.concat(dependentUnions);
+    config.unionGeneration === "MARKER_INTERFACE"
+      ? dependentInterfaces.concat(dependentUnions)
+      : dependentInterfaces;
   const interfaceInheritance = `${interfacesToInherit.length ? ` : ${interfacesToInherit.join(", ")}` : ""}`;
 
   if (isResolverType(node, config)) {
     return `${annotations}@GraphQLIgnore\ninterface ${name}${interfaceInheritance} {
-${getClassMembers({ node, schema, config })}
+${getDataClassMembers({ node, schema, config })}
 }
 
 ${annotations}@GraphQLIgnore\ninterface ${name}CompletableFuture {
-${getClassMembers({ node, schema, config, completableFuture: true })}
+${getDataClassMembers({ node, schema, config, completableFuture: true })}
 }`;
   }
 
   return `${annotations}data class ${name}(
-${getClassMembers({ node, schema, config })}
+${getDataClassMembers({ node, schema, config })}
 )${interfaceInheritance}`;
 }
 
-function getClassMembers({
+function getDataClassMembers({
   node,
   schema,
   config,

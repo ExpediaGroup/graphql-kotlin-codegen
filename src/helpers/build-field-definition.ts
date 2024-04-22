@@ -21,7 +21,7 @@ import {
 } from "graphql";
 import { isResolverType } from "./is-resolver-type";
 import { isExternalField } from "./is-external-field";
-import { CodegenConfigWithDefaults } from "../config";
+import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 
 export function buildFieldDefinition(
   fieldNode: FieldDefinitionNode,

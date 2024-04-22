@@ -13,7 +13,11 @@ export function buildConfigWithDefaults(
     ...config,
     extraImports: [
       "com.expediagroup.graphql.generator.annotations.*",
-      ...(config.extraImports ?? ([] satisfies string[])),
+      ...(config.extraImports ?? []),
     ],
   } as const;
 }
+
+export type CodegenConfigWithDefaults = ReturnType<
+  typeof buildConfigWithDefaults
+>;

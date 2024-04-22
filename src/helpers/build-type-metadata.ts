@@ -13,15 +13,15 @@ limitations under the License.
 
 import {
   GraphQLSchema,
-  isScalarType,
-  isUnionType,
   Kind,
   NamedTypeNode,
   TypeNode,
+  isScalarType,
+  isUnionType,
 } from "graphql";
 import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
 import { wrapTypeWithModifiers } from "@graphql-codegen/java-common";
-import { CodegenConfigWithDefaults } from "../config";
+import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 
 export interface TypeMetadata {
   typeName: string;

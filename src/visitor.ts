@@ -15,12 +15,12 @@ import { BaseVisitor, RawConfig } from "@graphql-codegen/visitor-plugin-common";
 import {
   EnumTypeDefinitionNode,
   GraphQLSchema,
-  InterfaceTypeDefinitionNode,
   InputObjectTypeDefinitionNode,
+  InterfaceTypeDefinitionNode,
   ObjectTypeDefinitionNode,
   UnionTypeDefinitionNode,
 } from "graphql";
-import { CodegenConfigWithDefaults } from "./config";
+import { CodegenConfigWithDefaults } from "./helpers/build-config-with-defaults";
 import { buildEnumTypeDefinition } from "./definitions/enum";
 import { buildInterfaceDefinition } from "./definitions/interface";
 import { buildInputObjectDefinition } from "./definitions/input";

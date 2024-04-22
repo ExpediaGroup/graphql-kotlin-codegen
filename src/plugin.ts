@@ -12,8 +12,8 @@ limitations under the License.
 */
 
 import {
-  getCachedDocumentNodeFromSchema,
   PluginFunction,
+  getCachedDocumentNodeFromSchema,
 } from "@graphql-codegen/plugin-helpers";
 import { KotlinVisitor } from "./visitor";
 import {
@@ -22,7 +22,7 @@ import {
 } from "@graphql-codegen/visitor-plugin-common";
 import { Input, safeParse } from "valibot";
 import { configSchema } from "./config";
-import { addDependentTypes } from "./helpers/add-dependent-types";
+import { addDependentTypesToOnlyTypes } from "./helpers/add-dependent-types-to-only-types";
 import { visit } from "graphql";
 import { buildConfigWithDefaults } from "./helpers/build-config-with-defaults";
 
@@ -51,12 +51,11 @@ export const plugin: PluginFunction<GraphQLKotlinCodegenConfig> = (
   }
 
   const configWithDefaults = buildConfigWithDefaults(config, info.outputFile);
-
   if (
     configWithDefaults.onlyTypes &&
     configWithDefaults.includeDependentTypes
   ) {
-    addDependentTypes(configWithDefaults, schema);
+    addDependentTypesToOnlyTypes(configWithDefaults, schema);
   }
   const visitor = new KotlinVisitor(configWithDefaults, schema);
   const astNode = getCachedDocumentNodeFromSchema(schema);
@@ -67,7 +66,10 @@ export const plugin: PluginFunction<GraphQLKotlinCodegenConfig> = (
       .map((annotation) => `import ${annotation}`)
       .join("\n") + "\n";
   const typeDefinitions = definitions
-    .filter((d: unknown) => typeof d === "string" && d.length)
+    .filter(
+      (definition: unknown) =>
+        typeof definition === "string" && definition.length,
+    )
     .join("\n\n");
 
   return [packageName, imports, typeDefinitions].join("\n") + "\n";

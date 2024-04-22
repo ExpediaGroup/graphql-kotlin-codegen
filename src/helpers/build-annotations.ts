@@ -18,8 +18,9 @@ import {
   InputValueDefinitionNode,
   TypeDefinitionNode,
 } from "graphql";
+import { buildDescriptionAnnotation } from "./build-description-annotation";
 import { buildDirectiveAnnotations } from "./build-directive-annotations";
-import { CodegenConfigWithDefaults } from "../config";
+import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 import { TypeMetadata } from "./build-type-metadata";
 
 export type DefinitionNode =
@@ -30,37 +31,24 @@ export type DefinitionNode =
 
 export function buildAnnotations({
   config,
-  inputDescription,
   definitionNode,
   resolvedType,
 }: {
   config: CodegenConfigWithDefaults;
-  inputDescription?: string;
-  definitionNode?: DefinitionNode;
+  definitionNode: DefinitionNode;
   resolvedType?: TypeMetadata;
 }) {
-  const description =
-    inputDescription ?? definitionNode?.description?.value ?? "";
-  const isDeprecated = isDeprecatedDescription(description, resolvedType);
-  const descriptionAnnotator = isDeprecated
-    ? "@Deprecated"
-    : "@GraphQLDescription";
-  const descriptionValue = isDeprecated
-    ? description.replace("DEPRECATED: ", "")
-    : description;
-  const trimmedDescription = trimDescription(descriptionValue);
-  const descriptionAnnotation = description
-    ? `${descriptionAnnotator}("${trimmedDescription}")\n`
-    : "";
-
-  const directiveAnnotations = definitionNode
-    ? buildDirectiveAnnotations(
-        definitionNode,
-        config,
-        description,
-        resolvedType,
-      )
-    : "";
+  const description = definitionNode?.description?.value ?? "";
+  const descriptionAnnotation = buildDescriptionAnnotation(
+    description,
+    definitionNode,
+    config,
+    resolvedType,
+  );
+  const directiveAnnotations = buildDirectiveAnnotations(
+    definitionNode,
+    config,
+  );
   const unionAnnotation = resolvedType?.unionAnnotation
     ? `@${resolvedType.unionAnnotation}\n`
     : "";
@@ -81,15 +69,6 @@ export function buildAnnotations({
       )
       .filter(Boolean)
       .join("") + "\n".trim()
-  );
-}
-
-export function isDeprecatedDescription(
-  description?: string,
-  resolvedType?: TypeMetadata,
-) {
-  return (
-    description?.startsWith("DEPRECATED: ") && !resolvedType?.unionAnnotation
   );
 }
 

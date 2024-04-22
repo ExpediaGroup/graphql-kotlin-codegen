@@ -18,7 +18,7 @@ import {
   getDependentInterfaceNames,
   getDependentUnionNames,
 } from "./dependent-type-utils";
-import { CodegenConfigWithDefaults } from "../config";
+import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 
 export function getDependentTypeNames(
   schema: GraphQLSchema,

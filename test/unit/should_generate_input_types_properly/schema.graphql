@@ -1,7 +1,6 @@
 "A description for MyInputType"
 input InputTypeThatShouldBeGeneratedProperly {
-  username: String
-  "A description for email"
-  email: String
-  name: String
+  field1: String
+  "A description for field2"
+  field2: String
 }

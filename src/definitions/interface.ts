@@ -17,7 +17,7 @@ import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
 import { buildFieldDefinition } from "../helpers/build-field-definition";
-import { CodegenConfigWithDefaults } from "../config";
+import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 
 export function buildInterfaceDefinition(
   node: InterfaceTypeDefinitionNode,

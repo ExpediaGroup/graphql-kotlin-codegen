@@ -24,5 +24,14 @@ data class UnionForHonoringUnionGenerationConfig(
     val field: Any? = null,
     @UnionAsAnnotation
     @GraphQLDescription("DEPRECATED: It uses the GraphQLDescription annotation for union annotations")
-    val field2: Any? = null
+    val deprecated1: Any? = null,
+    @UnionAsAnnotation
+    @GraphQLDescription("DEPRECATED: It uses the GraphQLDescription annotation for union types")
+    val deprecated2: Any? = null,
+    @UnionAsAnnotation
+    @GraphQLDescription("It uses the GraphQLDescription annotation for union types")
+    val deprecated3: Any? = null,
+    @UnionAsAnnotation
+    @GraphQLDescription("It omits the @Deprecated annotation for now")
+    val deprecated4: Any? = null
 )
