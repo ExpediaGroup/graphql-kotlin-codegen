@@ -10,20 +10,13 @@ data class MyTypeInOnlyTypes(
 
 data class TypeInScope(
     val field: String? = null,
-    @UnionInScope
-    val unionInScopeField: Any? = null,
-    @UnionOutOfScope
-    val unionOutOfScopeField: Any? = null,
+    val unionInScopeField: UnionInScope? = null,
+    val unionOutOfScopeField: UnionOutOfScope? = null,
     val externalUnionAsInterfaceField: ExternalUnionAsInterface? = null
 )
 
-@GraphQLUnion(
-    name = "UnionInScope",
-    possibleTypes = [Type1::class],
-    description = ""
-)
-annotation class UnionInScope
+interface UnionInScope
 
 data class Type1(
     val field: String? = null
-)
+) : UnionInScope, ExternalUnionAsInterface

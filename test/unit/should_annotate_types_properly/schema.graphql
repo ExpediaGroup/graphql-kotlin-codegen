@@ -26,7 +26,7 @@ type TypeThatShouldBeProperlyAnnotated {
     )
   "When there is a description"
   deprecated7: UnionThatShouldBeProperlyAnnotated
-    @deprecated(reason: "It omits the @Deprecated annotation for now")
+    @deprecated(reason: "It uses the @Deprecated annotation for the reason")
   deprecated8: String
     @deprecated(
       reason: "\n        Multiline reason\n        with spaces\n        "

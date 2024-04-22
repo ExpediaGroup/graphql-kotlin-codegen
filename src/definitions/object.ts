@@ -41,9 +41,10 @@ export function buildObjectTypeDefinition(
   const name = node.name.value;
   const dependentInterfaces = getDependentInterfaceNames(node);
   const dependentUnions = getDependentUnionsForType(schema, node);
-  const interfacesToInherit = config.useMarkerInterfaces
-    ? dependentInterfaces.concat(dependentUnions)
-    : dependentInterfaces;
+  const interfacesToInherit =
+    config.unionGeneration === "ANNOTATION_CLASS"
+      ? dependentInterfaces
+      : dependentInterfaces.concat(dependentUnions);
   const interfaceInheritance = `${interfacesToInherit.length ? ` : ${interfacesToInherit.join(", ")}` : ""}`;
 
   if (isResolverType(node, config)) {

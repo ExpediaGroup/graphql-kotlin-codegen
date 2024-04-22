@@ -41,13 +41,11 @@ export function buildAnnotations({
 }) {
   const description =
     inputDescription ?? definitionNode?.description?.value ?? "";
-  const descriptionAnnotator = isDeprecatedDescription(
-    description,
-    resolvedType,
-  )
+  const isDeprecated = isDeprecatedDescription(description, resolvedType);
+  const descriptionAnnotator = isDeprecated
     ? "@Deprecated"
     : "@GraphQLDescription";
-  const descriptionValue = isDeprecatedDescription(description, resolvedType)
+  const descriptionValue = isDeprecated
     ? description.replace("DEPRECATED: ", "")
     : description;
   const trimmedDescription = trimDescription(descriptionValue);

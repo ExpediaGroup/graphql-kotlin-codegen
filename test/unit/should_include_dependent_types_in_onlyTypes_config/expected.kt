@@ -6,8 +6,7 @@ data class MyType(
     val typeField: MyNestedType,
     val typeListField: List<ListType> = emptyList(),
     val enumField: MyEnum,
-    @MyUnion
-    val unionField: Any,
+    val unionField: MyUnion,
     val unionImplementationField: UnionImplementation,
     val interfaceField: MyInterface1,
     val interfaceImplementationField: MyImplementedInterface
@@ -34,24 +33,19 @@ enum class MyEnum {
     }
 }
 
-@GraphQLUnion(
-    name = "MyUnion",
-    possibleTypes = [MyType1::class, MyType2::class],
-    description = ""
-)
-annotation class MyUnion
+interface MyUnion
 
 data class MyType1(
     val field: String? = null
-)
+) : MyUnion
 
 data class MyType2(
     val field: String? = null
-)
+) : MyUnion
 
 data class UnionImplementation(
     val field: String? = null
-)
+) : MyUnion2
 
 interface MyInterface1 {
     val field: String?
@@ -73,16 +67,11 @@ data class MyNestedInput(
     val field: String? = null
 )
 
-@GraphQLUnion(
-    name = "MyStandaloneUnion",
-    possibleTypes = [StandaloneUnionType::class],
-    description = ""
-)
-annotation class MyStandaloneUnion
+interface MyStandaloneUnion
 
 data class StandaloneUnionType(
     val field: StandaloneNestedType? = null
-)
+) : MyStandaloneUnion
 
 data class StandaloneNestedType(
     val field: String? = null

@@ -9,13 +9,9 @@ import should_honor_directiveReplacements_config.*
 @SomeAnnotationWithArgs(arg1 = "arg1", arg2 = 0)
 data class TypeHonoringDirectiveReplacements(
     val field: String? = null
-)
+) : MyDirectiveUnion
 
+@GraphQLDescription("A description for MyDirectiveUnion")
 @SomeAnnotation1
 @SomeAnnotation2
-@GraphQLUnion(
-    name = "MyDirectiveUnion",
-    possibleTypes = [TypeHonoringDirectiveReplacements::class],
-    description = "A description for MyDirectiveUnion"
-)
-annotation class MyDirectiveUnion
+interface MyDirectiveUnion

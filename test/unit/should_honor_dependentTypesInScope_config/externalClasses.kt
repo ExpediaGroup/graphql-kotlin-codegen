@@ -4,4 +4,4 @@ data class TypeOutOfScope(val value: String)
 
 interface ExternalUnionAsInterface
 
-annotation class UnionOutOfScope
+interface UnionOutOfScope

@@ -17,22 +17,15 @@ data class TypeThatShouldBeProperlyAnnotated(
     val deprecated3: String? = null,
     @Deprecated("It only takes the first one")
     val deprecated4: String? = null,
-    @UnionThatShouldBeProperlyAnnotated
-    @GraphQLDescription("DEPRECATED: It uses the GraphQLDescription annotation for union types")
-    val deprecated5: Any? = null,
-    @UnionThatShouldBeProperlyAnnotated
-    @GraphQLDescription("It uses the GraphQLDescription annotation for union types")
-    val deprecated6: Any? = null,
-    @UnionThatShouldBeProperlyAnnotated
+    @Deprecated("It uses the GraphQLDescription annotation for union types")
+    val deprecated5: UnionThatShouldBeProperlyAnnotated? = null,
+    @Deprecated("It uses the GraphQLDescription annotation for union types")
+    val deprecated6: UnionThatShouldBeProperlyAnnotated? = null,
     @GraphQLDescription("When there is a description")
-    val deprecated7: Any? = null,
+    @Deprecated("It uses the @Deprecated annotation for the reason")
+    val deprecated7: UnionThatShouldBeProperlyAnnotated? = null,
     @Deprecated("Multiline reason")
     val deprecated8: String? = null
-)
+) : UnionThatShouldBeProperlyAnnotated
 
-@GraphQLUnion(
-    name = "UnionThatShouldBeProperlyAnnotated",
-    possibleTypes = [TypeThatShouldBeProperlyAnnotated::class],
-    description = ""
-)
-annotation class UnionThatShouldBeProperlyAnnotated
+interface UnionThatShouldBeProperlyAnnotated

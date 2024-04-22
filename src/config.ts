@@ -15,6 +15,7 @@ import {
   array,
   boolean,
   enum_,
+  literal,
   object,
   optional,
   string,
@@ -129,5 +130,7 @@ export const configSchema = object({
       }),
     ),
   ),
-  useMarkerInterfaces: optional(boolean()),
+  unionGeneration: optional(
+    union([literal("ANNOTATION_CLASS"), literal("MARKER_INTERFACE")]),
+  ),
 });
