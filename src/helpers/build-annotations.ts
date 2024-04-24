@@ -18,8 +18,9 @@ import {
   InputValueDefinitionNode,
   TypeDefinitionNode,
 } from "graphql";
+import { buildDescriptionAnnotation } from "./build-description-annotation";
 import { buildDirectiveAnnotations } from "./build-directive-annotations";
-import { CodegenConfig } from "../plugin";
+import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 import { TypeMetadata } from "./build-type-metadata";
 
 export type DefinitionNode =
@@ -30,39 +31,24 @@ export type DefinitionNode =
 
 export function buildAnnotations({
   config,
-  inputDescription,
   definitionNode,
   resolvedType,
 }: {
-  config: CodegenConfig;
-  inputDescription?: string;
-  definitionNode?: DefinitionNode;
+  config: CodegenConfigWithDefaults;
+  definitionNode: DefinitionNode;
   resolvedType?: TypeMetadata;
 }) {
-  const description =
-    inputDescription ?? definitionNode?.description?.value ?? "";
-  const descriptionAnnotator = isDeprecatedDescription(
+  const description = definitionNode?.description?.value ?? "";
+  const descriptionAnnotation = buildDescriptionAnnotation(
     description,
+    definitionNode,
+    config,
     resolvedType,
-  )
-    ? "@Deprecated"
-    : "@GraphQLDescription";
-  const descriptionValue = isDeprecatedDescription(description, resolvedType)
-    ? description.replace("DEPRECATED: ", "")
-    : description;
-  const trimmedDescription = trimDescription(descriptionValue);
-  const descriptionAnnotation = description
-    ? `${descriptionAnnotator}("${trimmedDescription}")\n`
-    : "";
-
-  const directiveAnnotations = definitionNode
-    ? buildDirectiveAnnotations(
-        definitionNode,
-        config,
-        description,
-        resolvedType,
-      )
-    : "";
+  );
+  const directiveAnnotations = buildDirectiveAnnotations(
+    definitionNode,
+    config,
+  );
   const unionAnnotation = resolvedType?.unionAnnotation
     ? `@${resolvedType.unionAnnotation}\n`
     : "";
@@ -86,19 +72,10 @@ export function buildAnnotations({
   );
 }
 
-export function isDeprecatedDescription(
-  description?: string,
-  resolvedType?: TypeMetadata,
-) {
-  return (
-    description?.startsWith("DEPRECATED: ") && !resolvedType?.unionAnnotation
-  );
-}
-
-export function trimDescription(description: string) {
+export function trimDescription(description?: string) {
   return (
     description
-      .split("\n")
+      ?.split("\n")
       .map((str) => str.trim().replaceAll('"', "").replaceAll("\\", ""))
       .find((str) => str.match(/^[a-zA-Z]/)) ?? ""
   );

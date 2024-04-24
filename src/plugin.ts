@@ -11,12 +11,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { dirname, normalize } from "path";
 import {
-  getCachedDocumentNodeFromSchema,
   PluginFunction,
+  getCachedDocumentNodeFromSchema,
 } from "@graphql-codegen/plugin-helpers";
-import { buildPackageNameFromPath } from "@graphql-codegen/java-common";
 import { KotlinVisitor } from "./visitor";
 import {
   ParsedConfig,
@@ -24,15 +22,14 @@ import {
 } from "@graphql-codegen/visitor-plugin-common";
 import { Input, safeParse } from "valibot";
 import { configSchema } from "./config";
-import { addDependentTypes } from "./helpers/add-dependent-types";
+import { addDependentTypesToOnlyTypes } from "./helpers/add-dependent-types-to-only-types";
 import { visit } from "graphql";
+import { buildConfigWithDefaults } from "./helpers/build-config-with-defaults";
 
 export type GraphQLKotlinCodegenConfig = Partial<RawConfig & ParsedConfig> &
   Input<typeof configSchema>;
-export type CodegenConfig = RawConfig &
-  ParsedConfig &
-  Input<typeof configSchema>;
-export const plugin: PluginFunction<CodegenConfig> = (
+
+export const plugin: PluginFunction<GraphQLKotlinCodegenConfig> = (
   schema,
   _,
   config,
@@ -41,7 +38,6 @@ export const plugin: PluginFunction<CodegenConfig> = (
   if (!info?.outputFile) {
     throw new Error("Missing outputFile in config");
   }
-  const relevantPath = dirname(normalize(info.outputFile));
   const { issues } = safeParse(configSchema, config);
   if (issues) {
     throw new Error(
@@ -54,21 +50,26 @@ export const plugin: PluginFunction<CodegenConfig> = (
     );
   }
 
-  addDependentTypes(config, schema);
-  const visitor = new KotlinVisitor(config, schema);
+  const configWithDefaults = buildConfigWithDefaults(config, info.outputFile);
+  if (
+    configWithDefaults.onlyTypes &&
+    configWithDefaults.includeDependentTypes
+  ) {
+    addDependentTypesToOnlyTypes(configWithDefaults, schema);
+  }
+  const visitor = new KotlinVisitor(configWithDefaults, schema);
   const astNode = getCachedDocumentNodeFromSchema(schema);
   const { definitions } = visit(astNode, visitor);
-  const packageName = `package ${
-    config.packageName ?? buildPackageNameFromPath(relevantPath)
-  }\n`;
-  const defaultImports = ["com.expediagroup.graphql.generator.annotations.*"];
+  const packageName = `package ${configWithDefaults.packageName}\n`;
   const imports =
-    defaultImports
-      .concat(config.extraImports ?? [])
+    configWithDefaults.extraImports
       .map((annotation) => `import ${annotation}`)
       .join("\n") + "\n";
   const typeDefinitions = definitions
-    .filter((d: unknown) => typeof d === "string" && d.length)
+    .filter(
+      (definition: unknown) =>
+        typeof definition === "string" && definition.length,
+    )
     .join("\n\n");
 
   return [packageName, imports, typeDefinitions].join("\n") + "\n";

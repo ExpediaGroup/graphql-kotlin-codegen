@@ -11,19 +11,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Kind, TypeDefinitionNode, TypeNode } from "graphql";
-import { CodegenConfig } from "../plugin";
+import {
+  GraphQLSchema,
+  GraphQLUnionType,
+  Kind,
+  TypeDefinitionNode,
+  TypeNode,
+} from "graphql";
+import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 
 export function getDependentFieldTypeNames(
   node: TypeDefinitionNode,
-  dependentTypesInScope: CodegenConfig["dependentTypesInScope"],
+  config: CodegenConfigWithDefaults,
 ) {
   return "fields" in node && node.fields
     ? node.fields
         .map((field) => getFieldTypeName(field.type))
         .filter(
           (typeName) =>
-            !dependentTypesInScope || dependentTypesInScope.includes(typeName),
+            !config.dependentTypesInScope ||
+            config.dependentTypesInScope.includes(typeName),
         )
     : [];
 }
@@ -54,4 +61,21 @@ export function getDependentUnionNames(node: TypeDefinitionNode) {
   return node.kind === Kind.UNION_TYPE_DEFINITION
     ? node.types?.map((type) => type.name.value) ?? []
     : [];
+}
+
+export function getDependentUnionsForType(
+  schema: GraphQLSchema,
+  node: TypeDefinitionNode,
+) {
+  const typeMap = schema.getTypeMap();
+  const unions = Object.keys(typeMap)
+    .filter(
+      (type) => typeMap[type]?.astNode?.kind === Kind.UNION_TYPE_DEFINITION,
+    )
+    .map((type) => typeMap[type] as GraphQLUnionType);
+  return unions
+    .filter((union) =>
+      union.getTypes().some((type) => type.name === node.name.value),
+    )
+    .map((union) => union.name);
 }

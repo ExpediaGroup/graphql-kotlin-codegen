@@ -1,0 +1,32 @@
+"A description for TypeForHonoringUnionGenerationConfig1"
+type TypeForHonoringUnionGenerationConfig1 {
+  field: String
+}
+
+type TypeForHonoringUnionGenerationConfig2 {
+  field: String
+}
+
+"""
+A description for UnionAsAnnotation
+"""
+union UnionAsAnnotation =
+  | TypeForHonoringUnionGenerationConfig1
+  | TypeForHonoringUnionGenerationConfig2
+
+type UnionForHonoringUnionGenerationConfig {
+  "A description for field"
+  field: UnionAsAnnotation
+  "DEPRECATED: It uses the GraphQLDescription annotation for union annotations"
+  deprecated1: UnionAsAnnotation
+    @deprecated(reason: "when you have multiple deprecated annotations")
+  "DEPRECATED: It uses the GraphQLDescription annotation for union types"
+  deprecated2: UnionAsAnnotation
+  deprecated3: UnionAsAnnotation
+    @deprecated(
+      reason: "It uses the GraphQLDescription annotation for union types"
+    )
+  "When there is a description"
+  deprecated4: UnionAsAnnotation
+    @deprecated(reason: "It omits the @Deprecated annotation for now")
+}

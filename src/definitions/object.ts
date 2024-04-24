@@ -16,16 +16,19 @@ import { buildAnnotations } from "../helpers/build-annotations";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
-import { getDependentInterfaceNames } from "../helpers/dependent-type-utils";
+import {
+  getDependentInterfaceNames,
+  getDependentUnionsForType,
+} from "../helpers/dependent-type-utils";
 import { isResolverType } from "../helpers/is-resolver-type";
 import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { isExternalField } from "../helpers/is-external-field";
-import { CodegenConfig } from "../plugin";
+import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 
 export function buildObjectTypeDefinition(
   node: ObjectTypeDefinitionNode,
   schema: GraphQLSchema,
-  config: CodegenConfig,
+  config: CodegenConfigWithDefaults,
 ) {
   if (!shouldIncludeTypeDefinition(node, config)) {
     return "";
@@ -36,25 +39,30 @@ export function buildObjectTypeDefinition(
     definitionNode: node,
   });
   const name = node.name.value;
-  const interfacesToInherit = getDependentInterfaceNames(node);
+  const dependentInterfaces = getDependentInterfaceNames(node);
+  const dependentUnions = getDependentUnionsForType(schema, node);
+  const interfacesToInherit =
+    config.unionGeneration === "MARKER_INTERFACE"
+      ? dependentInterfaces.concat(dependentUnions)
+      : dependentInterfaces;
   const interfaceInheritance = `${interfacesToInherit.length ? ` : ${interfacesToInherit.join(", ")}` : ""}`;
 
   if (isResolverType(node, config)) {
     return `${annotations}@GraphQLIgnore\ninterface ${name}${interfaceInheritance} {
-${getClassMembers({ node, schema, config })}
+${getDataClassMembers({ node, schema, config })}
 }
 
 ${annotations}@GraphQLIgnore\ninterface ${name}CompletableFuture {
-${getClassMembers({ node, schema, config, completableFuture: true })}
+${getDataClassMembers({ node, schema, config, completableFuture: true })}
 }`;
   }
 
   return `${annotations}data class ${name}(
-${getClassMembers({ node, schema, config })}
+${getDataClassMembers({ node, schema, config })}
 )${interfaceInheritance}`;
 }
 
-function getClassMembers({
+function getDataClassMembers({
   node,
   schema,
   config,
@@ -62,7 +70,7 @@ function getClassMembers({
 }: {
   node: ObjectTypeDefinitionNode;
   schema: GraphQLSchema;
-  config: CodegenConfig;
+  config: CodegenConfigWithDefaults;
   completableFuture?: boolean;
 }) {
   const resolverType = isResolverType(node, config);

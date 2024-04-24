@@ -11,48 +11,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { CodegenConfig, GraphQLKotlinCodegenConfig } from "../plugin";
-import {
-  DefinitionNode,
-  isDeprecatedDescription,
-  trimDescription,
-} from "./build-annotations";
+import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
+import { DefinitionNode } from "./build-annotations";
 import { getFederationDirectiveReplacement } from "./get-federation-directive-replacement";
-import { TypeMetadata } from "./build-type-metadata";
 import { ConstDirectiveNode } from "graphql/language";
 
 export function buildDirectiveAnnotations(
-  incomingNode: DefinitionNode,
-  config: CodegenConfig,
-  description?: string,
-  resolvedType?: TypeMetadata,
+  definitionNode: DefinitionNode,
+  config: CodegenConfigWithDefaults,
 ) {
-  const kind = incomingNode.kind;
-  const directives = incomingNode.directives ?? [];
-
+  const directives = definitionNode.directives ?? [];
   return directives
     .map((directive) => {
       const directiveName = directive.name.value;
-      if (
-        directiveName === "deprecated" &&
-        !isDeprecatedDescription(description)
-      ) {
-        const deprecatedReasonNode = directive.arguments?.find(
-          (arg) => arg.name.value === "reason",
-        )?.value;
-        const deprecatedReason =
-          deprecatedReasonNode?.kind === "StringValue"
-            ? deprecatedReasonNode.value
-            : "";
-        if (incomingNode.description?.value && resolvedType?.unionAnnotation) {
-          return "";
-        }
-        const descriptionAnnotator = resolvedType?.unionAnnotation
-          ? "@GraphQLDescription"
-          : "@Deprecated";
-        const trimmedDeprecatedReason = trimDescription(deprecatedReason);
-        return `${descriptionAnnotator}("${trimmedDeprecatedReason}")\n`;
-      }
       const federationReplacement =
         getFederationDirectiveReplacement(directive);
       if (federationReplacement) return federationReplacement + "\n";
@@ -60,7 +31,7 @@ export function buildDirectiveAnnotations(
       const directiveReplacementFromConfig = config.directiveReplacements?.find(
         ({ directive, definitionType }) =>
           directive === directiveName &&
-          (!definitionType || definitionType === kind),
+          (!definitionType || definitionType === definitionNode.kind),
       );
       if (!directiveReplacementFromConfig) return "";
       const kotlinAnnotations = buildKotlinAnnotations(
@@ -75,7 +46,7 @@ export function buildDirectiveAnnotations(
 function buildKotlinAnnotations(
   directive: ConstDirectiveNode,
   kotlinAnnotations: NonNullable<
-    GraphQLKotlinCodegenConfig["directiveReplacements"]
+    CodegenConfigWithDefaults["directiveReplacements"]
   >[number]["kotlinAnnotations"],
 ) {
   return kotlinAnnotations.map((kotlinAnnotation) => {

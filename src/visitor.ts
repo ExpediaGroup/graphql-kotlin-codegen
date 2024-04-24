@@ -15,21 +15,25 @@ import { BaseVisitor, RawConfig } from "@graphql-codegen/visitor-plugin-common";
 import {
   EnumTypeDefinitionNode,
   GraphQLSchema,
-  InterfaceTypeDefinitionNode,
   InputObjectTypeDefinitionNode,
+  InterfaceTypeDefinitionNode,
   ObjectTypeDefinitionNode,
   UnionTypeDefinitionNode,
 } from "graphql";
-import { CodegenConfig } from "./plugin";
+import { CodegenConfigWithDefaults } from "./helpers/build-config-with-defaults";
 import { buildEnumTypeDefinition } from "./definitions/enum";
 import { buildInterfaceDefinition } from "./definitions/interface";
 import { buildInputObjectDefinition } from "./definitions/input";
 import { buildObjectTypeDefinition } from "./definitions/object";
 import { buildUnionTypeDefinition } from "./definitions/union";
+import { ParsedConfig } from "@graphql-codegen/visitor-plugin-common/typings/base-visitor";
 
-export class KotlinVisitor extends BaseVisitor<RawConfig, CodegenConfig> {
+export class KotlinVisitor extends BaseVisitor<
+  RawConfig,
+  ParsedConfig & CodegenConfigWithDefaults
+> {
   constructor(
-    rawConfig: CodegenConfig,
+    rawConfig: CodegenConfigWithDefaults,
     protected _schema: GraphQLSchema,
   ) {
     super(rawConfig, rawConfig);

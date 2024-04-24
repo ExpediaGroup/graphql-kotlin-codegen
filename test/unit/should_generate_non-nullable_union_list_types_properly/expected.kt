@@ -5,22 +5,16 @@ import com.expediagroup.graphql.generator.annotations.*
 @GraphQLDescription("A description for MyType1")
 data class TypeForNonNullableUnionList1(
     val field: String? = null
-)
+) : UnionForNonNullableList
 
 data class TypeForNonNullableUnionList2(
     val field: String? = null
-)
+) : UnionForNonNullableList
 
-@GraphQLUnion(
-    name = "UnionForNonNullableList",
-    possibleTypes = [TypeForNonNullableUnionList1::class, TypeForNonNullableUnionList2::class],
-    description = "A description for UnionForNonNullableList"
-)
-annotation class UnionForNonNullableList
+@GraphQLDescription("A description for UnionForNonNullableList")
+interface UnionForNonNullableList
 
 data class MyNonNullableUnionListType(
-    @UnionForNonNullableList
-    val field: List<Any> = emptyList(),
-    @UnionForNonNullableList
-    val field2: List<Any?> = emptyList()
+    val field: List<UnionForNonNullableList> = emptyList(),
+    val field2: List<UnionForNonNullableList?> = emptyList()
 )

@@ -13,15 +13,15 @@ limitations under the License.
 
 import {
   GraphQLSchema,
-  isScalarType,
-  isUnionType,
   Kind,
   NamedTypeNode,
   TypeNode,
+  isScalarType,
+  isUnionType,
 } from "graphql";
 import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
 import { wrapTypeWithModifiers } from "@graphql-codegen/java-common";
-import { CodegenConfig } from "../plugin";
+import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 
 export interface TypeMetadata {
   typeName: string;
@@ -33,7 +33,7 @@ export interface TypeMetadata {
 export function buildTypeMetadata(
   typeNode: TypeNode,
   schema: GraphQLSchema,
-  config: CodegenConfig,
+  config: CodegenConfigWithDefaults,
 ): TypeMetadata {
   const innerType = getBaseTypeNode(typeNode);
   const schemaType = schema.getType(innerType.name.value);
@@ -60,6 +60,7 @@ export function buildTypeMetadata(
     };
   } else if (isUnionType(schemaType)) {
     const shouldTreatUnionAsInterface =
+      config.unionGeneration === "MARKER_INTERFACE" ||
       config.externalUnionsAsInterfaces?.includes(schemaType.name);
     return {
       ...commonMetadata,

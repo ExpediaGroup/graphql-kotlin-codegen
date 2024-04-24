@@ -15,11 +15,11 @@ import { EnumTypeDefinitionNode, EnumValueDefinitionNode } from "graphql";
 import { indentMultiline } from "@graphql-codegen/visitor-plugin-common";
 import { buildAnnotations } from "../helpers/build-annotations";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
-import { CodegenConfig } from "../plugin";
+import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 
 export function buildEnumTypeDefinition(
   node: EnumTypeDefinitionNode,
-  config: CodegenConfig,
+  config: CodegenConfigWithDefaults,
 ) {
   if (!shouldIncludeTypeDefinition(node, config)) {
     return "";
@@ -46,11 +46,11 @@ ${indentMultiline(enumValues.join(",\n") + ";", 2)}
 
 function buildEnumValueDefinition(
   node: EnumValueDefinitionNode,
-  config: CodegenConfig,
+  config: CodegenConfigWithDefaults,
 ) {
   const annotations = buildAnnotations({
     config,
     definitionNode: node,
   });
-  return `${annotations}${config.convert(node)}`;
+  return `${annotations}${config.convert?.(node)}`;
 }

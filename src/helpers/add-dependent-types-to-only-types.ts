@@ -11,26 +11,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { TypeDefinitionNode } from "graphql/index";
-import { GraphQLSchema } from "graphql";
-import {
-  getDependentFieldTypeNames,
-  getDependentInterfaceNames,
-  getDependentUnionNames,
-} from "./dependent-type-utils";
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
+import { getDependentTypeNames } from "./get-dependent-type-names";
+import { GraphQLSchema } from "graphql";
 
-export function getDependentTypeNames(
-  schema: GraphQLSchema,
-  node: TypeDefinitionNode,
+export function addDependentTypesToOnlyTypes(
   config: CodegenConfigWithDefaults,
-): string[] {
-  const namedTypes = getDependentFieldTypeNames(node, config)
-    .concat(getDependentUnionNames(node))
-    .concat(getDependentInterfaceNames(node));
-  const recursivelyFoundTypes = namedTypes
+  schema: GraphQLSchema,
+) {
+  if (!config.onlyTypes) {
+    throw new Error(`onlyTypes config is required to add dependent types`);
+  }
+  const onlyTypesNodes = config.onlyTypes
     .map((typeName) => schema.getType(typeName)?.astNode)
-    .filter(Boolean)
-    .flatMap((node) => getDependentTypeNames(schema, node, config));
-  return namedTypes.concat(recursivelyFoundTypes);
+    .filter(Boolean);
+  const dependentTypeNames = onlyTypesNodes.flatMap((node) =>
+    getDependentTypeNames(schema, node, config),
+  );
+  const typesInScope = config.dependentTypesInScope;
+  const dependentTypesInScope = typesInScope
+    ? dependentTypeNames.filter((typeName) => typesInScope.includes(typeName))
+    : dependentTypeNames;
+  config.onlyTypes.push(...dependentTypesInScope);
 }
