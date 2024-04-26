@@ -28,8 +28,8 @@ export function buildInputObjectDefinition(
   }
 
   const typeNameWithoutInput = node.name.value.replace("Input", "");
-  const correspondingType = schema.getType(typeNameWithoutInput);
-  if (correspondingType) {
+  const matchingType = schema.getType(typeNameWithoutInput);
+  if (matchingType) {
     return "";
   }
 

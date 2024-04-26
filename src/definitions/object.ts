@@ -35,8 +35,8 @@ export function buildObjectTypeDefinition(
   }
 
   const typeNameWithInput = `${node.name.value}Input`;
-  const correspondingInput = schema.getType(typeNameWithInput);
-  const inputOutputAnnotation = correspondingInput
+  const matchingInput = schema.getType(typeNameWithInput);
+  const typeConsolidationAnnotation = matchingInput
     ? "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT, GraphQLValidObjectLocations.Locations.OBJECT])\n"
     : "";
 
@@ -63,7 +63,7 @@ ${getDataClassMembers({ node, schema, config, completableFuture: true })}
 }`;
   }
 
-  return `${annotations}${inputOutputAnnotation}data class ${name}(
+  return `${annotations}${typeConsolidationAnnotation}data class ${name}(
 ${getDataClassMembers({ node, schema, config })}
 )${interfaceInheritance}`;
 }
