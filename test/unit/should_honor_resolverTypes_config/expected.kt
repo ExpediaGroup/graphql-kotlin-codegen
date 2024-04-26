@@ -30,6 +30,7 @@ interface MyIncludedResolverTypeCompletableFuture {
     fun nonNullableField(): java.util.concurrent.CompletableFuture<String>
 }
 
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class MyExcludedResolverType(
     val nullableField: String? = null,
     val nonNullableField: String

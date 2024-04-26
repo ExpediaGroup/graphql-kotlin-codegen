@@ -25,28 +25,34 @@ data class MyTypeToConsolidate4(
     val field: String? = null
 )
 
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class MyTypeNotToConsolidate(
     val field: String? = null
 )
 
 @GraphQLDescription("The type name must exactly match in order to consolidate")
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
 data class MyTypeToNotConsolidateInput(
     val field: String? = null
 )
 
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class MyTypeToNotConsolidate2(
     val field: String? = null
 )
 
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
 data class MyTypeInputToNotConsolidate2(
     val field: String? = null
 )
 
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class MyTypeWhereFieldsDoNotMatch(
     val field: String? = null,
     val field2: String? = null
 )
 
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
 data class MyTypeWhereFieldsDoNotMatchInput(
     val field: String? = null,
     val field2: Int? = null

@@ -56,7 +56,9 @@ export function buildInputObjectDefinition(
     definitionNode: node,
   });
 
-  return `${annotations}data class ${node.name.value}(
+  const inputRestrictionAnnotation =
+    "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])\n";
+  return `${annotations}${inputRestrictionAnnotation}data class ${node.name.value}(
 ${classMembers}
 )`;
 }

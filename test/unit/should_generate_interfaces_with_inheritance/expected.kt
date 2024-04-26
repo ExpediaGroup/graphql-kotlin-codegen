@@ -9,6 +9,7 @@ interface InterfaceWithInheritance {
 }
 
 @GraphQLDescription("A description for MyInterfaceImplementation")
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class MyInterfaceImplementation(
     override val field: String? = null,
     override val field2: String
@@ -22,6 +23,7 @@ interface InheritedInterface2 {
     val field2: String
 }
 
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class MyMergedInterfaceImplementation(
     override val field: String? = null,
     override val field2: String
