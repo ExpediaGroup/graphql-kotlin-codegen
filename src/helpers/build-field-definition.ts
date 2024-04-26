@@ -11,10 +11,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { buildListType } from "./build-type-metadata";
-import { getFieldTypeName } from "./dependent-type-utils";
+import { buildTypeMetadata } from "./build-type-metadata";
 import {
   FieldDefinitionNode,
+  GraphQLSchema,
   InterfaceTypeDefinitionNode,
   Kind,
   ObjectTypeDefinitionNode,
@@ -26,6 +26,7 @@ import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 export function buildFieldDefinition(
   fieldNode: FieldDefinitionNode,
   definitionNode: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
+  schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
   completableFuture?: boolean,
 ) {
@@ -36,10 +37,10 @@ export function buildFieldDefinition(
       ? "fun"
       : "suspend fun"
     : "val";
-  const existingFieldArguments = fieldNode.arguments?.map(
-    (arg) =>
-      `${arg.name.value}: ${buildListType(arg.type, getFieldTypeName(arg.type))}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : "?"}`,
-  );
+  const existingFieldArguments = fieldNode.arguments?.map((arg) => {
+    const typeMetadata = buildTypeMetadata(arg.type, schema, config);
+    return `${arg.name.value}: ${typeMetadata.typeName}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : "?"}`;
+  });
   const additionalFieldArguments = config.extraResolverArguments
     ?.map(({ typeNames, argumentType, argumentName }) => {
       const shouldIncludeArg =

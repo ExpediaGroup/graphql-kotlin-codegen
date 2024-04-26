@@ -19,6 +19,7 @@ import {
   TypeNode,
 } from "graphql";
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
+import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
 
 export function getDependentFieldTypeNames(
   node: TypeDefinitionNode,
@@ -35,20 +36,8 @@ export function getDependentFieldTypeNames(
     : [];
 }
 
-export function getFieldTypeName(fieldType: TypeNode) {
-  switch (fieldType.kind) {
-    case Kind.NAMED_TYPE:
-      return fieldType.name.value;
-    case Kind.LIST_TYPE:
-      return getFieldTypeName(fieldType.type);
-    case Kind.NON_NULL_TYPE:
-      switch (fieldType.type.kind) {
-        case Kind.NAMED_TYPE:
-          return fieldType.type.name.value;
-        case Kind.LIST_TYPE:
-          return getFieldTypeName(fieldType.type.type);
-      }
-  }
+function getFieldTypeName(fieldType: TypeNode) {
+  return getBaseTypeNode(fieldType).name.value;
 }
 
 export function getDependentInterfaceNames(node: TypeDefinitionNode) {

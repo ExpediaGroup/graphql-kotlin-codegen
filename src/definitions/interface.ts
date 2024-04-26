@@ -36,7 +36,12 @@ export function buildInterfaceDefinition(
         config,
         definitionNode: fieldNode,
       });
-      const fieldDefinition = buildFieldDefinition(fieldNode, node, config);
+      const fieldDefinition = buildFieldDefinition(
+        fieldNode,
+        node,
+        schema,
+        config,
+      );
       const fieldText = indent(
         `${fieldDefinition}: ${typeToUse.typeName}${
           typeToUse.isNullable ? "?" : ""

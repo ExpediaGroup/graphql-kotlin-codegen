@@ -28,7 +28,7 @@ export function buildInputObjectDefinition(
     return "";
   }
 
-  const typeWillBeConsolidated = inputTypeHasMatchingOutputType(node, schema);
+  const typeWillBeConsolidated = inputTypeHasMatchingOutputType(schema, node);
   if (typeWillBeConsolidated) {
     return "";
   }

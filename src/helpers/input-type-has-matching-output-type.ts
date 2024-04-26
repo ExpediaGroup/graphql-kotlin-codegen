@@ -1,19 +1,21 @@
 import { Kind, TypeNode } from "graphql/index";
-import { GraphQLSchema, InputObjectTypeDefinitionNode } from "graphql";
+import { GraphQLSchema, TypeDefinitionNode } from "graphql";
 
 export function inputTypeHasMatchingOutputType(
-  inputTypeNode: InputObjectTypeDefinitionNode,
   schema: GraphQLSchema,
+  typeNode?: TypeDefinitionNode | null,
 ) {
-  const typeNameWithoutInput = getTypeNameWithoutInput(
-    inputTypeNode.name.value,
-  );
+  if (typeNode?.kind !== Kind.INPUT_OBJECT_TYPE_DEFINITION) {
+    return false;
+  }
+
+  const typeNameWithoutInput = getTypeNameWithoutInput(typeNode.name.value);
   const matchingType = schema.getType(typeNameWithoutInput)?.astNode;
   const matchingTypeFields =
     matchingType?.kind === Kind.OBJECT_TYPE_DEFINITION
       ? matchingType.fields
       : [];
-  const inputFields = inputTypeNode.fields;
+  const inputFields = typeNode.fields;
   const fieldsMatch = matchingTypeFields?.every((field) => {
     const matchingInputField = inputFields?.find(
       (inputField) => inputField.name.value === field.name.value,
@@ -24,7 +26,7 @@ export function inputTypeHasMatchingOutputType(
   return Boolean(matchingTypeFields?.length && fieldsMatch);
 }
 
-function getTypeNameWithoutInput(name: string) {
+export function getTypeNameWithoutInput(name: string) {
   return name.endsWith("Input") ? name.replace("Input", "") : name;
 }
 
