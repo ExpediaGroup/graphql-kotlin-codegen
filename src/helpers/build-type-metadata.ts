@@ -22,6 +22,10 @@ import {
 import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
 import { wrapTypeWithModifiers } from "@graphql-codegen/java-common";
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
+import {
+  getTypeNameWithoutInput,
+  inputTypeHasMatchingOutputType,
+} from "./input-type-has-matching-output-type";
 
 export interface TypeMetadata {
   typeName: string;
@@ -73,9 +77,16 @@ export function buildTypeMetadata(
       ),
     };
   } else {
+    const typeWillBeConsolidated =
+      schemaType?.name.endsWith("Input") &&
+      schemaType?.astNode?.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION &&
+      inputTypeHasMatchingOutputType(schemaType.astNode, schema);
+    const typeName = typeWillBeConsolidated
+      ? getTypeNameWithoutInput(schemaType.name)
+      : schemaType.name;
     return {
       ...commonMetadata,
-      typeName: buildListType(typeNode, schemaType.name),
+      typeName: buildListType(typeNode, typeName),
     };
   }
 }

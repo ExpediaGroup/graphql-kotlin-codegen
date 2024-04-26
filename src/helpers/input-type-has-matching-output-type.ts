@@ -24,7 +24,7 @@ export function inputTypeHasMatchingOutputType(
   return Boolean(matchingTypeFields?.length && fieldsMatch);
 }
 
-function getTypeNameWithoutInput(name: string) {
+export function getTypeNameWithoutInput(name: string) {
   return name.endsWith("Input") ? name.replace("Input", "") : name;
 }
 

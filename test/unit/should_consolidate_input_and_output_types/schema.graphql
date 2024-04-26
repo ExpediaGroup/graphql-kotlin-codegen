@@ -84,3 +84,13 @@ input MyTypeWhereFieldsDoNotMatchInput {
   field: String
   field2: Int
 }
+
+# case where parent types reference consolidated types
+
+type MyTypeToConsolidateParent {
+  field: MyTypeToConsolidate
+}
+
+input MyTypeToConsolidateInputParent {
+  field: MyTypeToConsolidateInput
+}

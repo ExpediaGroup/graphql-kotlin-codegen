@@ -57,3 +57,13 @@ data class MyTypeWhereFieldsDoNotMatchInput(
     val field: String? = null,
     val field2: Int? = null
 )
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
+data class MyTypeToConsolidateParent(
+    val field: MyTypeToConsolidate? = null
+)
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
+data class MyTypeToConsolidateInputParent(
+    val field: MyTypeToConsolidate? = null
+)
