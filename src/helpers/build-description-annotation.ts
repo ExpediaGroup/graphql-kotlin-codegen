@@ -8,13 +8,13 @@ export function buildDescriptionAnnotation(
   description: string,
   definitionNode: DefinitionNode,
   config: CodegenConfigWithDefaults,
-  resolvedType?: TypeMetadata,
+  typeMetadata?: TypeMetadata,
 ) {
   const trimmedDescription = trimDescription(description);
   const isDeprecatedDescription = trimmedDescription.startsWith(
     deprecatedDescriptionPrefix,
   );
-  if (isDeprecatedDescription && resolvedType?.unionAnnotation) {
+  if (isDeprecatedDescription && typeMetadata?.unionAnnotation) {
     return `@GraphQLDescription("${trimmedDescription}")\n`;
   } else if (isDeprecatedDescription) {
     const descriptionValue = description.replace(
@@ -36,7 +36,7 @@ export function buildDescriptionAnnotation(
       : "";
   const trimmedDeprecatedReason = trimDescription(deprecatedReason);
 
-  if (deprecatedDirective && resolvedType?.unionAnnotation) {
+  if (deprecatedDirective && typeMetadata?.unionAnnotation) {
     return `@GraphQLDescription("${trimmedDeprecatedReason}")\n`;
   } else if (deprecatedDirective) {
     const graphqlDescription = trimmedDescription

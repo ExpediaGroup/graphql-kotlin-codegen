@@ -36,7 +36,7 @@ export function getDependentFieldTypeNames(
     : [];
 }
 
-export function getFieldTypeName(fieldType: TypeNode) {
+function getFieldTypeName(fieldType: TypeNode) {
   return getBaseTypeNode(fieldType).name.value;
 }
 

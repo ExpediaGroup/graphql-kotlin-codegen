@@ -85,7 +85,7 @@ function getDataClassMembers({
 
   return node.fields
     ?.map((fieldNode) => {
-      const typeToUse = buildTypeMetadata(fieldNode.type, schema, config);
+      const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
       const shouldOverrideField =
         !completableFuture &&
         node.interfaces?.some((i) => {
@@ -98,11 +98,12 @@ function getDataClassMembers({
       const fieldDefinition = buildFieldDefinition(
         fieldNode,
         node,
+        schema,
         config,
         completableFuture,
       );
-      const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeToUse.typeName}${typeToUse.isNullable ? "?" : ""}>`;
-      const defaultDefinition = `${typeToUse.typeName}${isExternalField(fieldNode) ? (typeToUse.isNullable ? "?" : "") : typeToUse.defaultValue}`;
+      const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}>`;
+      const defaultDefinition = `${typeMetadata.typeName}${isExternalField(fieldNode) ? (typeMetadata.isNullable ? "?" : "") : typeMetadata.defaultValue}`;
       const field = indent(
         `${shouldOverrideField ? "override " : ""}${fieldDefinition}: ${completableFuture ? completableFutureDefinition : defaultDefinition}`,
         2,
@@ -110,7 +111,7 @@ function getDataClassMembers({
       const annotations = buildAnnotations({
         config,
         definitionNode: fieldNode,
-        resolvedType: typeToUse,
+        typeMetadata,
       });
       return `${annotations}${field}`;
     })

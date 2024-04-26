@@ -94,3 +94,7 @@ type MyTypeToConsolidateParent {
 input MyTypeToConsolidateInputParent {
   field: MyTypeToConsolidateInput
 }
+
+type MyTypeToConsolidateParent2 {
+  field(input: MyTypeToConsolidateInput!): String
+}

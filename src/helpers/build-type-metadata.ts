@@ -91,7 +91,7 @@ export function buildTypeMetadata(
   }
 }
 
-export function buildListType(typeNode: TypeNode, typeName: string) {
+function buildListType(typeNode: TypeNode, typeName: string) {
   const isNullable = typeNode.kind !== Kind.NON_NULL_TYPE;
   const listTypeNullableWithNullableMember =
     typeNode.kind == Kind.LIST_TYPE &&

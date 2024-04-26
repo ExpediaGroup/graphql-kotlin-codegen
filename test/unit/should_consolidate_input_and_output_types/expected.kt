@@ -67,3 +67,13 @@ data class MyTypeToConsolidateParent(
 data class MyTypeToConsolidateInputParent(
     val field: MyTypeToConsolidate? = null
 )
+
+@GraphQLIgnore
+interface MyTypeToConsolidateParent2 {
+    suspend fun field(input: MyTypeToConsolidate): String? = null
+}
+
+@GraphQLIgnore
+interface MyTypeToConsolidateParent2CompletableFuture {
+    fun field(input: MyTypeToConsolidate): java.util.concurrent.CompletableFuture<String?>
+}

@@ -32,25 +32,25 @@ export type DefinitionNode =
 export function buildAnnotations({
   config,
   definitionNode,
-  resolvedType,
+  typeMetadata,
 }: {
   config: CodegenConfigWithDefaults;
   definitionNode: DefinitionNode;
-  resolvedType?: TypeMetadata;
+  typeMetadata?: TypeMetadata;
 }) {
   const description = definitionNode?.description?.value ?? "";
   const descriptionAnnotation = buildDescriptionAnnotation(
     description,
     definitionNode,
     config,
-    resolvedType,
+    typeMetadata,
   );
   const directiveAnnotations = buildDirectiveAnnotations(
     definitionNode,
     config,
   );
-  const unionAnnotation = resolvedType?.unionAnnotation
-    ? `@${resolvedType.unionAnnotation}\n`
+  const unionAnnotation = typeMetadata?.unionAnnotation
+    ? `@${typeMetadata.unionAnnotation}\n`
     : "";
 
   const annotations = [
