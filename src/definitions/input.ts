@@ -17,6 +17,7 @@ import { buildTypeMetadata } from "../helpers/build-type-metadata";
 import { buildAnnotations } from "../helpers/build-annotations";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
+import { inputTypeHasMatchingOutputType } from "../helpers/input-type-has-matching-output-type";
 
 export function buildInputObjectDefinition(
   node: InputObjectTypeDefinitionNode,
@@ -24,6 +25,11 @@ export function buildInputObjectDefinition(
   config: CodegenConfigWithDefaults,
 ) {
   if (!shouldIncludeTypeDefinition(node, config)) {
+    return "";
+  }
+
+  const typeWillBeConsolidated = inputTypeHasMatchingOutputType(node, schema);
+  if (typeWillBeConsolidated) {
     return "";
   }
 

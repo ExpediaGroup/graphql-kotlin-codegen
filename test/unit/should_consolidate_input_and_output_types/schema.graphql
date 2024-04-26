@@ -1,0 +1,86 @@
+# typical case where input and output types are consolidated
+
+type MyTypeToConsolidate {
+  field: [String!]
+  field2: NestedTypeToConsolidate
+}
+
+input MyTypeToConsolidateInput {
+  field: [String!]
+  field2: NestedTypeToConsolidateInput
+}
+
+type NestedTypeToConsolidate {
+  field: String
+}
+
+input NestedTypeToConsolidateInput {
+  field: String
+}
+
+# case where type has description but input does not
+
+"A description for MyTypeToConsolidate2"
+type MyTypeToConsolidate2 {
+  field: String
+}
+
+input MyTypeToConsolidate2Input {
+  field: String
+}
+
+# case where input has description but type does not
+
+type MyTypeToConsolidate3 {
+  field: String
+}
+
+"It ignores the description on the input when consolidating"
+input MyTypeToConsolidate3Input {
+  field: String
+}
+
+# case where both type and input have descriptions
+
+"It always uses the type description when consolidating"
+type MyTypeToConsolidate4 {
+  field: String
+}
+
+"A description for MyTypeToConsolidateInput4"
+input MyTypeToConsolidate4Input {
+  field: String
+}
+
+# case where type and input names do not match
+
+type MyTypeNotToConsolidate {
+  field: String
+}
+
+"The type name must exactly match in order to consolidate"
+input MyTypeToNotConsolidateInput {
+  field: String
+}
+
+# case where type has input in the middle of the name
+
+type MyTypeToNotConsolidate2 {
+  field: String
+}
+
+input MyTypeInputToNotConsolidate2 {
+  field: String
+}
+
+# case where type and input names match but fields do not match
+
+type MyTypeWhereFieldsDoNotMatch {
+  field: String
+  field2: String
+}
+
+input MyTypeWhereFieldsDoNotMatchInput {
+  field: String
+  field2: Int
+}
