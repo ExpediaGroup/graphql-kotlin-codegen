@@ -7,6 +7,7 @@ import should_honor_directiveReplacements_config.*
 @SomeAnnotation1
 @SomeAnnotation2
 @SomeAnnotationWithArgs(arg1 = "arg1", arg2 = 0)
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class TypeHonoringDirectiveReplacements(
     val field: String? = null
 ) : MyDirectiveUnion

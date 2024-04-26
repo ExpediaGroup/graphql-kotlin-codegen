@@ -24,6 +24,7 @@ import { isResolverType } from "../helpers/is-resolver-type";
 import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { isExternalField } from "../helpers/is-external-field";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
+import { inputTypeHasMatchingOutputType } from "../helpers/input-type-has-matching-output-type";
 
 export function buildObjectTypeDefinition(
   node: ObjectTypeDefinitionNode,
@@ -57,7 +58,14 @@ ${getDataClassMembers({ node, schema, config, completableFuture: true })}
 }`;
   }
 
-  return `${annotations}data class ${name}(
+  const potentialMatchingInputType = schema.getType(`${name}Input`)?.astNode;
+  const typeWillBeConsolidated =
+    potentialMatchingInputType?.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION &&
+    inputTypeHasMatchingOutputType(potentialMatchingInputType, schema);
+  const outputRestrictionAnnotation = typeWillBeConsolidated
+    ? ""
+    : "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])\n";
+  return `${annotations}${outputRestrictionAnnotation}data class ${name}(
 ${getDataClassMembers({ node, schema, config })}
 )${interfaceInheritance}`;
 }

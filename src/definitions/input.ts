@@ -11,17 +11,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {
-  GraphQLSchema,
-  InputObjectTypeDefinitionNode,
-  Kind,
-  TypeNode,
-} from "graphql";
+import { GraphQLSchema, InputObjectTypeDefinitionNode } from "graphql";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
 import { buildAnnotations } from "../helpers/build-annotations";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
+import { inputTypeHasMatchingOutputType } from "../helpers/input-type-has-matching-output-type";
 
 export function buildInputObjectDefinition(
   node: InputObjectTypeDefinitionNode,
@@ -32,21 +28,8 @@ export function buildInputObjectDefinition(
     return "";
   }
 
-  const typeNameWithoutInput = getTypeNameWithoutInput(node.name.value);
-  const matchingType = schema.getType(typeNameWithoutInput)?.astNode;
-  const matchingTypeFields =
-    matchingType?.kind === Kind.OBJECT_TYPE_DEFINITION
-      ? matchingType.fields
-      : [];
-  const inputFields = node.fields;
-  const fieldsMatch = matchingTypeFields?.every((field) => {
-    const matchingInputField = inputFields?.find(
-      (inputField) => inputField.name.value === field.name.value,
-    );
-    if (!matchingInputField) return false;
-    return fieldsAreEquivalent(field.type, matchingInputField.type);
-  });
-  if (matchingTypeFields?.length && fieldsMatch) {
+  const typeWillBeConsolidated = inputTypeHasMatchingOutputType(node, schema);
+  if (typeWillBeConsolidated) {
     return "";
   }
 
@@ -73,34 +56,9 @@ export function buildInputObjectDefinition(
     definitionNode: node,
   });
 
-  return `${annotations}data class ${node.name.value}(
+  const inputRestrictionAnnotation =
+    "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])\n";
+  return `${annotations}${inputRestrictionAnnotation}data class ${node.name.value}(
 ${classMembers}
 )`;
-}
-
-function getTypeNameWithoutInput(name: string) {
-  return name.endsWith("Input") ? name.replace("Input", "") : name;
-}
-
-function fieldsAreEquivalent(
-  typeField: TypeNode,
-  inputField: TypeNode,
-): boolean {
-  switch (typeField.kind) {
-    case Kind.NAMED_TYPE:
-      return (
-        inputField.kind === Kind.NAMED_TYPE &&
-        typeField.name.value === getTypeNameWithoutInput(inputField.name.value)
-      );
-    case Kind.LIST_TYPE:
-      return (
-        inputField.kind === Kind.LIST_TYPE &&
-        fieldsAreEquivalent(typeField.type, inputField.type)
-      );
-    case Kind.NON_NULL_TYPE:
-      return (
-        inputField.kind === Kind.NON_NULL_TYPE &&
-        fieldsAreEquivalent(typeField.type, inputField.type)
-      );
-  }
 }

@@ -3,6 +3,7 @@ package com.kotlin.generated
 import com.expediagroup.graphql.generator.annotations.*
 
 @GraphQLDescription("A description for MyType")
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class TypeThatShouldBeProperlyAnnotated(
     val field: String? = null,
     @GraphQLDescription("A description for fieldWithDescription")

@@ -18,6 +18,7 @@ interface QueryCompletableFuture {
     fun nonNullableResolver(arg: InputTypeGenerateFieldResolverInterfaces): java.util.concurrent.CompletableFuture<String>
 }
 
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
 data class InputTypeGenerateFieldResolverInterfaces(
     val field: String? = null
 )

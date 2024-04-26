@@ -3,10 +3,12 @@ package com.kotlin.generated
 import com.expediagroup.graphql.generator.annotations.*
 
 @GraphQLDescription("A description for TypeForHonoringUnionGenerationConfig1")
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class TypeForHonoringUnionGenerationConfig1(
     val field: String? = null
 )
 
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class TypeForHonoringUnionGenerationConfig2(
     val field: String? = null
 )
@@ -18,6 +20,7 @@ data class TypeForHonoringUnionGenerationConfig2(
 )
 annotation class UnionAsAnnotation
 
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class UnionForHonoringUnionGenerationConfig(
     @UnionAsAnnotation
     @GraphQLDescription("A description for field")

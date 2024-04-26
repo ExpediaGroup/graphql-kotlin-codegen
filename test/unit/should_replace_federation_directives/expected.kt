@@ -4,6 +4,7 @@ import com.expediagroup.graphql.generator.annotations.*
 
 @com.expediagroup.graphql.generator.federation.directives.ExtendsDirective
 @com.expediagroup.graphql.generator.federation.directives.KeyDirective(com.expediagroup.graphql.generator.federation.directives.FieldSet("some field"))
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class FederatedType(
     @com.expediagroup.graphql.generator.federation.directives.ExternalDirective
     val field: String
