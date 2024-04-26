@@ -1,0 +1,54 @@
+# typical case where input and output types are consolidated
+
+type MyTypeToConsolidate {
+  field: String
+}
+
+input MyTypeToConsolidateInput {
+  field: String
+}
+
+# case where type has description but input does not
+
+"A description for MyTypeToConsolidate2"
+type MyTypeToConsolidate2 {
+  field: String
+}
+
+input MyTypeToConsolidate2Input {
+  field: String
+}
+
+# case where input has description but type does not
+
+type MyTypeToConsolidate3 {
+  field: String
+}
+
+"It ignores the description on the input when consolidating"
+input MyTypeToConsolidate3Input {
+  field: String
+}
+
+# case where both type and input have descriptions
+
+"It always uses the type description when consolidating"
+type MyTypeToConsolidate4 {
+  field: String
+}
+
+"A description for MyTypeToConsolidateInput4"
+input MyTypeToConsolidate4Input {
+  field: String
+}
+
+# case where type and input names do not match
+
+type MyTypeNotToConsolidate {
+  field: String
+}
+
+"The type name must exactly match in order to consolidate"
+input MyTypeToNotConsolidateInput {
+  field: String
+}
