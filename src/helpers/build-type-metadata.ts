@@ -77,10 +77,10 @@ export function buildTypeMetadata(
       ),
     };
   } else {
-    const typeWillBeConsolidated =
-      schemaType?.name.endsWith("Input") &&
-      schemaType?.astNode?.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION &&
-      inputTypeHasMatchingOutputType(schemaType.astNode, schema);
+    const typeWillBeConsolidated = inputTypeHasMatchingOutputType(
+      schema,
+      schemaType.astNode,
+    );
     const typeName = typeWillBeConsolidated
       ? getTypeNameWithoutInput(schemaType.name)
       : schemaType.name;

@@ -59,9 +59,10 @@ ${getDataClassMembers({ node, schema, config, completableFuture: true })}
   }
 
   const potentialMatchingInputType = schema.getType(`${name}Input`)?.astNode;
-  const typeWillBeConsolidated =
-    potentialMatchingInputType?.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION &&
-    inputTypeHasMatchingOutputType(potentialMatchingInputType, schema);
+  const typeWillBeConsolidated = inputTypeHasMatchingOutputType(
+    schema,
+    potentialMatchingInputType,
+  );
   const outputRestrictionAnnotation = typeWillBeConsolidated
     ? ""
     : "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])\n";
