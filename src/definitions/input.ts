@@ -27,6 +27,12 @@ export function buildInputObjectDefinition(
     return "";
   }
 
+  const typeNameWithoutInput = node.name.value.replace("Input", "");
+  const correspondingType = schema.getType(typeNameWithoutInput);
+  if (correspondingType) {
+    return "";
+  }
+
   const classMembers = (node.fields ?? [])
     .map((arg) => {
       const typeToUse = buildTypeMetadata(arg.type, schema, config);
