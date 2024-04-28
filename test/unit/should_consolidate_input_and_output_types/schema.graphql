@@ -98,3 +98,35 @@ input MyTypeToConsolidateInputParent {
 type MyTypeToConsolidateParent2 {
   field(input: MyTypeToConsolidateInput!): String
 }
+
+# case where parent types reference types that should not be consolidated
+
+type MyTypeNotToConsolidateParent {
+  field: MyTypeNotToConsolidate2
+}
+
+input MyTypeNotToConsolidateParentInput {
+  field: MyTypeNotToConsolidate2Input
+}
+
+type MyTypeNotToConsolidate2 {
+  field1: String
+  field2: String
+}
+
+input MyTypeNotToConsolidate2Input {
+  field1: String
+}
+
+# case where input fields are a superset of type fields
+
+type MySuperSetType {
+  field: String
+  field2: String
+}
+
+input MySuperSetTypeInput {
+  field: String
+  field2: String
+  field3: Int
+}

@@ -1,5 +1,6 @@
 import { Kind, TypeNode } from "graphql/index";
 import { GraphQLSchema, TypeDefinitionNode } from "graphql";
+import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
 
 export function inputTypeHasMatchingOutputType(
   schema: GraphQLSchema,
@@ -16,6 +17,10 @@ export function inputTypeHasMatchingOutputType(
       ? matchingType.fields
       : [];
   const inputFields = typeNode.fields;
+  const typesHaveSameNumberOfFields = Boolean(
+    matchingTypeFields?.length &&
+      matchingTypeFields.length === inputFields?.length,
+  );
   const fieldsMatch = matchingTypeFields?.every((field) => {
     const matchingInputField = inputFields?.find(
       (inputField) => inputField.name.value === field.name.value,
@@ -23,7 +28,7 @@ export function inputTypeHasMatchingOutputType(
     if (!matchingInputField) return false;
     return fieldsAreEquivalent(field.type, matchingInputField.type);
   });
-  return Boolean(matchingTypeFields?.length && fieldsMatch);
+  return Boolean(typesHaveSameNumberOfFields && fieldsMatch);
 }
 
 export function getTypeNameWithoutInput(name: string) {
@@ -34,21 +39,7 @@ function fieldsAreEquivalent(
   typeField: TypeNode,
   inputField: TypeNode,
 ): boolean {
-  switch (typeField.kind) {
-    case Kind.NAMED_TYPE:
-      return (
-        inputField.kind === Kind.NAMED_TYPE &&
-        typeField.name.value === getTypeNameWithoutInput(inputField.name.value)
-      );
-    case Kind.LIST_TYPE:
-      return (
-        inputField.kind === Kind.LIST_TYPE &&
-        fieldsAreEquivalent(typeField.type, inputField.type)
-      );
-    case Kind.NON_NULL_TYPE:
-      return (
-        inputField.kind === Kind.NON_NULL_TYPE &&
-        fieldsAreEquivalent(typeField.type, inputField.type)
-      );
-  }
+  const baseTypeName = getBaseTypeNode(typeField).name.value;
+  const baseInputTypeName = getBaseTypeNode(inputField).name.value;
+  return baseTypeName === getTypeNameWithoutInput(baseInputTypeName);
 }

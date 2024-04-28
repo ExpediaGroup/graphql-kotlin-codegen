@@ -77,3 +77,37 @@ interface MyTypeToConsolidateParent2 {
 interface MyTypeToConsolidateParent2CompletableFuture {
     fun field(input: MyTypeToConsolidate): java.util.concurrent.CompletableFuture<String?>
 }
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
+data class MyTypeNotToConsolidateParent(
+    val field: MyTypeNotToConsolidate2? = null
+)
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
+data class MyTypeNotToConsolidateParentInput(
+    val field: MyTypeNotToConsolidate2Input? = null
+)
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
+data class MyTypeNotToConsolidate2(
+    val field1: String? = null,
+    val field2: String? = null
+)
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
+data class MyTypeNotToConsolidate2Input(
+    val field1: String? = null
+)
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
+data class MySuperSetType(
+    val field: String? = null,
+    val field2: String? = null
+)
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
+data class MySuperSetTypeInput(
+    val field: String? = null,
+    val field2: String? = null,
+    val field3: Int? = null
+)
