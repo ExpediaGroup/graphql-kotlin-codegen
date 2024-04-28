@@ -43,7 +43,7 @@ function getFieldTypeName(fieldType: TypeNode) {
 
 export function getDependentInterfaceNames(node: TypeDefinitionNode) {
   return node.kind === Kind.OBJECT_TYPE_DEFINITION
-    ? node.interfaces?.map((i) => i.name.value) ?? []
+    ? node.interfaces?.map((interfaceNode) => interfaceNode.name.value) ?? []
     : [];
 }
 

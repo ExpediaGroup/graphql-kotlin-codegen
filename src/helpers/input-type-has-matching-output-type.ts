@@ -1,5 +1,9 @@
-import { Kind } from "graphql/index";
-import { GraphQLSchema, InputObjectTypeDefinitionNode } from "graphql";
+import {
+  GraphQLSchema,
+  InputObjectTypeDefinitionNode,
+  isInputObjectType,
+  isObjectType,
+} from "graphql";
 import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
 
 export function inputTypeHasMatchingOutputType(
@@ -24,27 +28,24 @@ function typesAreEquivalent(
   inputName: string,
   schema: GraphQLSchema,
 ): boolean {
-  const typeNode = schema.getType(typeName)?.astNode;
-  const inputNode = schema.getType(inputName)?.astNode;
-  if (!typeNode && !inputNode) {
+  const typeNode = schema.getType(typeName);
+  const inputNode = schema.getType(inputName);
+  if (!typeNode?.astNode && !inputNode?.astNode) {
     return true;
   }
   if (
-    typeNode?.kind !== Kind.OBJECT_TYPE_DEFINITION ||
-    inputNode?.kind !== Kind.INPUT_OBJECT_TYPE_DEFINITION
+    !isObjectType(typeNode) ||
+    !isInputObjectType(inputNode) ||
+    !typeNode.astNode?.fields ||
+    !inputNode.astNode?.fields ||
+    typeNode.astNode.fields.length !== inputNode.astNode.fields.length
   ) {
     return false;
   }
-  if (
-    !typeNode.fields ||
-    !inputNode.fields ||
-    typeNode.fields.length !== inputNode.fields.length
-  ) {
-    return false;
-  }
-  return typeNode.fields.every((typeField) => {
+
+  return typeNode.astNode.fields.every((typeField) => {
     const baseTypeName = getBaseTypeNode(typeField.type).name.value;
-    const matchingInputField = inputNode.fields?.find(
+    const matchingInputField = inputNode.astNode?.fields?.find(
       (inputField) => inputField.name.value === typeField.name.value,
     );
     if (!matchingInputField?.type) return false;

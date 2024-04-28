@@ -94,12 +94,12 @@ function getDataClassMembers({
       const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
       const shouldOverrideField =
         !completableFuture &&
-        node.interfaces?.some((i) => {
-          const typeNode = schema.getType(i.name.value);
+        node.interfaces?.some((interfaceNode) => {
+          const typeNode = schema.getType(interfaceNode.name.value);
           return (
             isInterfaceType(typeNode) &&
             typeNode.astNode?.fields?.some(
-              (f) => f.name.value === fieldNode.name.value,
+              (field) => field.name.value === fieldNode.name.value,
             )
           );
         });
