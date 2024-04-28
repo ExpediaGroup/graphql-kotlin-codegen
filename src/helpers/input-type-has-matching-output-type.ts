@@ -44,11 +44,11 @@ function typesAreEquivalent(
   }
 
   return typeNode.astNode.fields.every((typeField) => {
-    const baseTypeName = getBaseTypeNode(typeField.type).name.value;
     const matchingInputField = inputNode.astNode?.fields?.find(
       (inputField) => inputField.name.value === typeField.name.value,
     );
     if (!matchingInputField?.type) return false;
+    const baseTypeName = getBaseTypeNode(typeField.type).name.value;
     const baseInputTypeName = getBaseTypeNode(matchingInputField.type).name
       .value;
     const typeNamesAreEquivalent =
