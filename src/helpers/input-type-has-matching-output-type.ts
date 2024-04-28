@@ -1,21 +1,17 @@
 import { Kind } from "graphql/index";
-import { GraphQLSchema, TypeDefinitionNode } from "graphql";
+import { GraphQLSchema, InputObjectTypeDefinitionNode } from "graphql";
 import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
 
 export function inputTypeHasMatchingOutputType(
+  inputNode: InputObjectTypeDefinitionNode,
   schema: GraphQLSchema,
-  inputNode?: TypeDefinitionNode | null,
 ) {
-  if (inputNode?.kind !== Kind.INPUT_OBJECT_TYPE_DEFINITION) {
-    return false;
-  }
-
   const inputName = inputNode.name.value;
   const typeNameWithoutInput = getTypeNameWithoutInput(inputName);
-  const matchingType = schema.getType(typeNameWithoutInput)?.astNode;
-  const matchingTypeName = matchingType?.name.value;
-  return (
-    matchingTypeName && typesAreEquivalent(matchingTypeName, inputName, schema)
+  const matchingTypeName =
+    schema.getType(typeNameWithoutInput)?.astNode?.name.value;
+  return Boolean(
+    matchingTypeName && typesAreEquivalent(matchingTypeName, inputName, schema),
   );
 }
 

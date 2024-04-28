@@ -11,7 +11,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { GraphQLSchema, Kind, ObjectTypeDefinitionNode } from "graphql";
+import {
+  GraphQLSchema,
+  isInputObjectType,
+  Kind,
+  ObjectTypeDefinitionNode,
+} from "graphql";
 import { buildAnnotations } from "../helpers/build-annotations";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
@@ -58,11 +63,11 @@ ${getDataClassMembers({ node, schema, config, completableFuture: true })}
 }`;
   }
 
-  const potentialMatchingInputType = schema.getType(`${name}Input`)?.astNode;
-  const typeWillBeConsolidated = inputTypeHasMatchingOutputType(
-    schema,
-    potentialMatchingInputType,
-  );
+  const potentialMatchingInputType = schema.getType(`${name}Input`);
+  const typeWillBeConsolidated =
+    isInputObjectType(potentialMatchingInputType) &&
+    potentialMatchingInputType.astNode &&
+    inputTypeHasMatchingOutputType(potentialMatchingInputType.astNode, schema);
   const outputRestrictionAnnotation = typeWillBeConsolidated
     ? ""
     : "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])\n";
