@@ -15,6 +15,7 @@ import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 import { DefinitionNode } from "./build-annotations";
 import { getFederationDirectiveReplacement } from "./get-federation-directive-replacement";
 import { ConstDirectiveNode } from "graphql/language";
+import { Kind } from "graphql";
 
 export function buildDirectiveAnnotations(
   definitionNode: DefinitionNode,
@@ -65,7 +66,7 @@ function buildKotlinAnnotations(
             `Directive argument ${argumentToRetain} in directive ${directive.name.value} has an unsupported type. Only INT, FLOAT, STRING, BOOLEAN, and ENUM are supported.`,
           );
         const argumentValue =
-          argumentValueNode.kind === "StringValue"
+          argumentValueNode.kind === Kind.STRING
             ? `"${argumentValueNode.value}"`
             : argumentValueNode.value;
         return `${argumentToRetain} = ${argumentValue}`;

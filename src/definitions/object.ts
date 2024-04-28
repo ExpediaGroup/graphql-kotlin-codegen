@@ -14,7 +14,7 @@ limitations under the License.
 import {
   GraphQLSchema,
   isInputObjectType,
-  Kind,
+  isInterfaceType,
   ObjectTypeDefinitionNode,
 } from "graphql";
 import { buildAnnotations } from "../helpers/build-annotations";
@@ -95,10 +95,12 @@ function getDataClassMembers({
       const shouldOverrideField =
         !completableFuture &&
         node.interfaces?.some((i) => {
-          const typeNode = schema.getType(i.name.value)?.astNode;
+          const typeNode = schema.getType(i.name.value);
           return (
-            typeNode?.kind === Kind.INTERFACE_TYPE_DEFINITION &&
-            typeNode.fields?.some((f) => f.name.value === fieldNode.name.value)
+            isInterfaceType(typeNode) &&
+            typeNode.astNode?.fields?.some(
+              (f) => f.name.value === fieldNode.name.value,
+            )
           );
         });
       const fieldDefinition = buildFieldDefinition(
