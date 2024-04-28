@@ -1,54 +1,61 @@
-import { Kind, TypeNode } from "graphql/index";
-import { GraphQLSchema, TypeDefinitionNode } from "graphql";
+import {
+  GraphQLSchema,
+  InputObjectTypeDefinitionNode,
+  isInputObjectType,
+  isObjectType,
+} from "graphql";
+import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
 
 export function inputTypeHasMatchingOutputType(
+  inputNode: InputObjectTypeDefinitionNode,
   schema: GraphQLSchema,
-  typeNode?: TypeDefinitionNode | null,
 ) {
-  if (typeNode?.kind !== Kind.INPUT_OBJECT_TYPE_DEFINITION) {
-    return false;
-  }
-
-  const typeNameWithoutInput = getTypeNameWithoutInput(typeNode.name.value);
-  const matchingType = schema.getType(typeNameWithoutInput)?.astNode;
-  const matchingTypeFields =
-    matchingType?.kind === Kind.OBJECT_TYPE_DEFINITION
-      ? matchingType.fields
-      : [];
-  const inputFields = typeNode.fields;
-  const fieldsMatch = matchingTypeFields?.every((field) => {
-    const matchingInputField = inputFields?.find(
-      (inputField) => inputField.name.value === field.name.value,
-    );
-    if (!matchingInputField) return false;
-    return fieldsAreEquivalent(field.type, matchingInputField.type);
-  });
-  return Boolean(matchingTypeFields?.length && fieldsMatch);
+  const inputName = inputNode.name.value;
+  const typeNameWithoutInput = getTypeNameWithoutInput(inputName);
+  const matchingTypeName =
+    schema.getType(typeNameWithoutInput)?.astNode?.name.value;
+  return Boolean(
+    matchingTypeName && typesAreEquivalent(matchingTypeName, inputName, schema),
+  );
 }
 
 export function getTypeNameWithoutInput(name: string) {
   return name.endsWith("Input") ? name.replace("Input", "") : name;
 }
 
-function fieldsAreEquivalent(
-  typeField: TypeNode,
-  inputField: TypeNode,
+function typesAreEquivalent(
+  typeName: string,
+  inputName: string,
+  schema: GraphQLSchema,
 ): boolean {
-  switch (typeField.kind) {
-    case Kind.NAMED_TYPE:
-      return (
-        inputField.kind === Kind.NAMED_TYPE &&
-        typeField.name.value === getTypeNameWithoutInput(inputField.name.value)
-      );
-    case Kind.LIST_TYPE:
-      return (
-        inputField.kind === Kind.LIST_TYPE &&
-        fieldsAreEquivalent(typeField.type, inputField.type)
-      );
-    case Kind.NON_NULL_TYPE:
-      return (
-        inputField.kind === Kind.NON_NULL_TYPE &&
-        fieldsAreEquivalent(typeField.type, inputField.type)
-      );
+  const typeNode = schema.getType(typeName);
+  const inputNode = schema.getType(inputName);
+  if (!typeNode?.astNode && !inputNode?.astNode) {
+    return true;
   }
+  if (
+    !isObjectType(typeNode) ||
+    !isInputObjectType(inputNode) ||
+    !typeNode.astNode?.fields ||
+    !inputNode.astNode?.fields ||
+    typeNode.astNode.fields.length !== inputNode.astNode.fields.length
+  ) {
+    return false;
+  }
+
+  return typeNode.astNode.fields.every((typeField) => {
+    const matchingInputField = inputNode.astNode?.fields?.find(
+      (inputField) => inputField.name.value === typeField.name.value,
+    );
+    if (!matchingInputField?.type) return false;
+    const baseTypeName = getBaseTypeNode(typeField.type).name.value;
+    const baseInputTypeName = getBaseTypeNode(matchingInputField.type).name
+      .value;
+    const typeNamesAreEquivalent =
+      baseTypeName == getTypeNameWithoutInput(baseInputTypeName);
+    if (!typeNamesAreEquivalent) {
+      return false;
+    }
+    return typesAreEquivalent(baseTypeName, baseInputTypeName, schema);
+  });
 }

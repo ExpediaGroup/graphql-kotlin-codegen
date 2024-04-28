@@ -18,6 +18,7 @@ import {
   TypeNode,
   isScalarType,
   isUnionType,
+  isInputObjectType,
 } from "graphql";
 import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
 import { wrapTypeWithModifiers } from "@graphql-codegen/java-common";
@@ -76,10 +77,10 @@ export function buildTypeMetadata(
         shouldTreatUnionAsInterface ? schemaType.name : "Any",
       ),
     };
-  } else {
+  } else if (isInputObjectType(schemaType) && schemaType.astNode) {
     const typeWillBeConsolidated = inputTypeHasMatchingOutputType(
-      schema,
       schemaType.astNode,
+      schema,
     );
     const typeName = typeWillBeConsolidated
       ? getTypeNameWithoutInput(schemaType.name)
@@ -87,6 +88,11 @@ export function buildTypeMetadata(
     return {
       ...commonMetadata,
       typeName: buildListType(typeNode, typeName),
+    };
+  } else {
+    return {
+      ...commonMetadata,
+      typeName: buildListType(typeNode, schemaType.name),
     };
   }
 }

@@ -11,7 +11,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { GraphQLSchema, Kind, ObjectTypeDefinitionNode } from "graphql";
+import {
+  GraphQLSchema,
+  isInputObjectType,
+  isInterfaceType,
+  ObjectTypeDefinitionNode,
+} from "graphql";
 import { buildAnnotations } from "../helpers/build-annotations";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
@@ -58,11 +63,11 @@ ${getDataClassMembers({ node, schema, config, completableFuture: true })}
 }`;
   }
 
-  const potentialMatchingInputType = schema.getType(`${name}Input`)?.astNode;
-  const typeWillBeConsolidated = inputTypeHasMatchingOutputType(
-    schema,
-    potentialMatchingInputType,
-  );
+  const potentialMatchingInputType = schema.getType(`${name}Input`);
+  const typeWillBeConsolidated =
+    isInputObjectType(potentialMatchingInputType) &&
+    potentialMatchingInputType.astNode &&
+    inputTypeHasMatchingOutputType(potentialMatchingInputType.astNode, schema);
   const outputRestrictionAnnotation = typeWillBeConsolidated
     ? ""
     : "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])\n";
@@ -89,11 +94,13 @@ function getDataClassMembers({
       const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
       const shouldOverrideField =
         !completableFuture &&
-        node.interfaces?.some((i) => {
-          const typeNode = schema.getType(i.name.value)?.astNode;
+        node.interfaces?.some((interfaceNode) => {
+          const typeNode = schema.getType(interfaceNode.name.value);
           return (
-            typeNode?.kind === Kind.INTERFACE_TYPE_DEFINITION &&
-            typeNode.fields?.some((f) => f.name.value === fieldNode.name.value)
+            isInterfaceType(typeNode) &&
+            typeNode.astNode?.fields?.some(
+              (field) => field.name.value === fieldNode.name.value,
+            )
           );
         });
       const fieldDefinition = buildFieldDefinition(

@@ -14,6 +14,7 @@ limitations under the License.
 import {
   GraphQLSchema,
   GraphQLUnionType,
+  isUnionType,
   Kind,
   TypeDefinitionNode,
   TypeNode,
@@ -42,7 +43,7 @@ function getFieldTypeName(fieldType: TypeNode) {
 
 export function getDependentInterfaceNames(node: TypeDefinitionNode) {
   return node.kind === Kind.OBJECT_TYPE_DEFINITION
-    ? node.interfaces?.map((i) => i.name.value) ?? []
+    ? node.interfaces?.map((interfaceNode) => interfaceNode.name.value) ?? []
     : [];
 }
 
@@ -57,11 +58,9 @@ export function getDependentUnionsForType(
   node: TypeDefinitionNode,
 ) {
   const typeMap = schema.getTypeMap();
-  const unions = Object.keys(typeMap)
-    .filter(
-      (type) => typeMap[type]?.astNode?.kind === Kind.UNION_TYPE_DEFINITION,
-    )
-    .map((type) => typeMap[type] as GraphQLUnionType);
+  const unions = Object.values(typeMap).filter((type) =>
+    isUnionType(type),
+  ) as GraphQLUnionType[];
   return unions
     .filter((union) =>
       union.getTypes().some((type) => type.name === node.name.value),

@@ -31,7 +31,7 @@ export function buildDescriptionAnnotation(
     (arg) => arg.name.value === "reason",
   )?.value;
   const deprecatedReason =
-    deprecatedReasonNode?.kind === "StringValue"
+    deprecatedReasonNode?.kind === Kind.STRING
       ? deprecatedReasonNode.value
       : "";
   const trimmedDeprecatedReason = trimDescription(deprecatedReason);

@@ -16,6 +16,7 @@ import {
   EnumValueDefinitionNode,
   FieldDefinitionNode,
   InputValueDefinitionNode,
+  Kind,
   TypeDefinitionNode,
 } from "graphql";
 import { buildDescriptionAnnotation } from "./build-description-annotation";
@@ -60,8 +61,8 @@ export function buildAnnotations({
   ];
 
   const shouldIndent =
-    definitionNode?.kind === "FieldDefinition" ||
-    definitionNode?.kind === "InputValueDefinition";
+    definitionNode?.kind === Kind.FIELD_DEFINITION ||
+    definitionNode?.kind === Kind.INPUT_VALUE_DEFINITION;
   return (
     annotations
       .map((annotation) =>
