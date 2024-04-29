@@ -4,30 +4,30 @@ import com.expediagroup.graphql.generator.annotations.*
 
 @GraphQLIgnore
 interface MyResolverType {
-    suspend fun nullableField(): String? = null
-    suspend fun nonNullableField(): String
-    suspend fun nullableResolver(arg: String): String? = null
-    suspend fun nonNullableResolver(arg: String): String
+    suspend fun nullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = null
+    suspend fun nonNullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String
+    suspend fun nullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = null
+    suspend fun nonNullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String
 }
 
 @GraphQLIgnore
 interface MyResolverTypeCompletableFuture {
-    fun nullableField(): java.util.concurrent.CompletableFuture<String?>
-    fun nonNullableField(): java.util.concurrent.CompletableFuture<String>
-    fun nullableResolver(arg: String): java.util.concurrent.CompletableFuture<String?>
-    fun nonNullableResolver(arg: String): java.util.concurrent.CompletableFuture<String>
+    fun nullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<String?>
+    fun nonNullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<String>
+    fun nullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<String?>
+    fun nonNullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<String>
 }
 
 @GraphQLIgnore
 interface MyIncludedResolverType {
-    suspend fun nullableField(): String? = null
-    suspend fun nonNullableField(): String
+    suspend fun nullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = null
+    suspend fun nonNullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String
 }
 
 @GraphQLIgnore
 interface MyIncludedResolverTypeCompletableFuture {
-    fun nullableField(): java.util.concurrent.CompletableFuture<String?>
-    fun nonNullableField(): java.util.concurrent.CompletableFuture<String>
+    fun nullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<String?>
+    fun nonNullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<String>
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
@@ -37,7 +37,7 @@ data class MyExcludedResolverType(
 )
 
 interface MyIncludedInterface {
-    suspend fun field(): String?
+    suspend fun field(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String?
 }
 
 interface MyExcludedInterface {

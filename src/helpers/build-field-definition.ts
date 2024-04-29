@@ -42,11 +42,17 @@ export function buildFieldDefinition(
     return `${arg.name.value}: ${typeMetadata.typeName}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : "?"}`;
   });
   const additionalFieldArguments = config.extraResolverArguments
-    ?.map(({ typeNames, argumentType, argumentName }) => {
+    ?.map((resolverArgument) => {
+      const { argumentName, argumentType } = resolverArgument;
       const shouldIncludeArg =
-        !typeNames ||
-        typeNames.some((typeName) => typeName === definitionNode.name.value);
-      return shouldIncludeArg ? `${argumentName}: ${argumentType}` : undefined;
+        !("typeNames" in resolverArgument) ||
+        !resolverArgument.typeNames ||
+        resolverArgument.typeNames.some(
+          (typeName) => typeName === definitionNode.name.value,
+        );
+      return shouldUseFunction && shouldIncludeArg
+        ? `${argumentName}: ${argumentType}`
+        : undefined;
     })
     .filter(Boolean);
   const allFieldArguments = existingFieldArguments?.concat(

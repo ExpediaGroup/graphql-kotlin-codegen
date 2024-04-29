@@ -15,7 +15,14 @@ export function buildConfigWithDefaults(
       "com.expediagroup.graphql.generator.annotations.*",
       ...(config.extraImports ?? []),
     ],
-  } as const;
+    extraResolverArguments: [
+      {
+        argumentName: "dataFetchingEnvironment",
+        argumentType: "graphql.schema.DataFetchingEnvironment",
+      },
+      ...(config.extraResolverArguments ?? []),
+    ],
+  } as const satisfies GraphQLKotlinCodegenConfig;
 }
 
 export type CodegenConfigWithDefaults = ReturnType<

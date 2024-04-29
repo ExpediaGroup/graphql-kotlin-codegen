@@ -14,7 +14,7 @@ data class FederatedType(
 @com.expediagroup.graphql.generator.federation.directives.KeyDirective(com.expediagroup.graphql.generator.federation.directives.FieldSet("some other field"))
 @GraphQLIgnore
 interface FederatedTypeResolver {
-    suspend fun field(arg: String): String
+    suspend fun field(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String
     @com.expediagroup.graphql.generator.federation.directives.ExternalDirective
     val field2: String?
 }
@@ -23,7 +23,7 @@ interface FederatedTypeResolver {
 @com.expediagroup.graphql.generator.federation.directives.KeyDirective(com.expediagroup.graphql.generator.federation.directives.FieldSet("some other field"))
 @GraphQLIgnore
 interface FederatedTypeResolverCompletableFuture {
-    fun field(arg: String): java.util.concurrent.CompletableFuture<String>
+    fun field(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<String>
     @com.expediagroup.graphql.generator.federation.directives.ExternalDirective
     val field2: java.util.concurrent.CompletableFuture<String?>
 }

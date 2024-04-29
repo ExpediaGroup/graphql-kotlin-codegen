@@ -111,6 +111,7 @@ export const configSchema = object({
   /**
    * Denotes extra arguments that should be added to functions on resolver classes.
    * @example [{ typeNames: ["MyType", "MyType2"], argumentName: "myArgument", argumentValue: "myValue" }]
+   * @deprecated This will be removed in a future release now that DataFetchingEnvironment is added to functions by default.
    */
   extraResolverArguments: optional(
     array(
