@@ -4,8 +4,8 @@ export default {
   resolverTypes: ["MyIncludedExtraFieldArgsType"],
   extraResolverArguments: [
     {
-      argumentName: "dataFetchingEnvironment",
-      argumentType: "graphql.schema.DataFetchingEnvironment",
+      argumentName: "myExtraFieldArg",
+      argumentType: "String",
       typeNames: ["MyExtraFieldArgsType", "MyIncludedExtraFieldArgsType"],
     },
   ],
