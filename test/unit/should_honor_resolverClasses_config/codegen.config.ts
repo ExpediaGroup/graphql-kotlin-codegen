@@ -2,7 +2,9 @@ import { GraphQLKotlinCodegenConfig } from "../../../src/plugin";
 
 export default {
   resolverClasses: [
-    "MyResolverType",
+    {
+      typeName: "MyIncludedResolverType",
+    },
     {
       typeName: "MySuspendResolverType",
       classMethods: "SUSPEND",
@@ -10,6 +12,13 @@ export default {
     {
       typeName: "MyCompletableFutureResolverType",
       classMethods: "COMPLETABLE_FUTURE",
+    },
+    {
+      typeName: "MyIncludedInterface",
+    },
+    {
+      typeName: "MyIncludedInterfaceSuspend",
+      classMethods: "SUSPEND",
     },
   ],
 } satisfies GraphQLKotlinCodegenConfig;

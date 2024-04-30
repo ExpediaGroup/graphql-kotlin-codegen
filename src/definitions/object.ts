@@ -27,6 +27,7 @@ import {
 import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 import { inputTypeHasMatchingOutputType } from "../helpers/input-type-has-matching-output-type";
+import { findTypeInResolverClassesConfig } from "../helpers/findTypeInResolverClassesConfig";
 
 export function buildObjectTypeDefinition(
   node: ObjectTypeDefinitionNode,
@@ -62,15 +63,16 @@ export function buildObjectTypeDefinition(
   const shouldGenerateFunctions = node.fields?.some(
     (fieldNode) => fieldNode.arguments?.length,
   );
+  const typeInResolverClassesConfig = findTypeInResolverClassesConfig(
+    node,
+    config,
+  );
   if (shouldGenerateFunctions) {
     const fieldsWithNoArguments = node.fields?.filter(
       (fieldNode) => !fieldNode.arguments?.length,
     );
-    const resolverClassesContainsType = config.resolverClasses?.includes(
-      node.name.value,
-    );
     const constructor =
-      !resolverClassesContainsType && fieldsWithNoArguments?.length
+      !typeInResolverClassesConfig && fieldsWithNoArguments?.length
         ? `(\n${fieldsWithNoArguments
             .map((fieldNode) => {
               const typeMetadata = buildTypeMetadata(
@@ -92,7 +94,7 @@ export function buildObjectTypeDefinition(
     const fieldsWithArguments = node.fields?.filter(
       (fieldNode) => fieldNode.arguments?.length,
     );
-    const fieldNodes = resolverClassesContainsType
+    const fieldNodes = typeInResolverClassesConfig
       ? node.fields
       : fieldsWithArguments;
     return `${annotations}${outputRestrictionAnnotation}open class ${name}${constructor}${interfaceInheritance} {

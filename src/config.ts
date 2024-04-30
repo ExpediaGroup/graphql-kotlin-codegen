@@ -104,11 +104,13 @@ export const configSchema = object({
   ),
   /**
    * Denotes types that should be generated as classes. Resolver classes can inherit from these to enforce a type contract.
-   * @description Type names can be passed as strings to generate default functions.
-   * Also, suspend functions or `java.util.concurrent.CompletableFuture` functions can be generated per type.
+   * @description Type names can be optionally passed with the classMethods config to generate suspend functions or
+   * `java.util.concurrent.CompletableFuture` functions.
    * @example
    * [
-   *   "MyResolverType",
+   *   {
+   *     typeName: "MyResolverType",
+   *   },
    *   {
    *     typeName: "MySuspendResolverType",
    *     classMethods: "SUSPEND",
@@ -121,15 +123,12 @@ export const configSchema = object({
    */
   resolverClasses: optional(
     array(
-      union([
-        string(),
-        object({
-          typeName: string(),
-          classMethods: optional(
-            union([literal("SUSPEND"), literal("COMPLETABLE_FUTURE")]),
-          ),
-        }),
-      ]),
+      object({
+        typeName: string(),
+        classMethods: optional(
+          union([literal("SUSPEND"), literal("COMPLETABLE_FUTURE")]),
+        ),
+      }),
     ),
   ),
   /**

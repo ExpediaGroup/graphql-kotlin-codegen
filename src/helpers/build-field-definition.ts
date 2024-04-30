@@ -23,6 +23,7 @@ import {
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildAnnotations } from "./build-annotations";
+import { findTypeInResolverClassesConfig } from "./findTypeInResolverClassesConfig";
 
 export function buildFieldDefinition(
   node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
@@ -48,15 +49,21 @@ export function buildFieldDefinition(
     );
   }
 
-  const defaultFunctionValue = `${typeMetadata.isNullable ? "?" : ""} = throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`;
+  const notImplementedError = ` = throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`;
+  const defaultFunctionValue = `${typeMetadata.isNullable ? "?" : ""}${notImplementedError}`;
   const defaultValue = shouldUseFunction
     ? defaultFunctionValue
     : typeMetadata.defaultValue;
   const defaultDefinition = `${typeMetadata.typeName}${defaultValue}`;
-  const completableFuture = false;
-  const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}>`;
+  const typeInResolverClassesConfig = findTypeInResolverClassesConfig(
+    node,
+    config,
+  );
+  const isCompletableFuture =
+    typeInResolverClassesConfig?.classMethods === "COMPLETABLE_FUTURE";
+  const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}>${notImplementedError}`;
   const field = indent(
-    `${fieldDefinition}: ${completableFuture ? completableFutureDefinition : defaultDefinition}`,
+    `${fieldDefinition}: ${isCompletableFuture ? completableFutureDefinition : defaultDefinition}`,
     2,
   );
   return `${annotations}${field}`;
@@ -68,23 +75,29 @@ function buildFieldModifier(
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  const resolverClassesContainsType = config.resolverClasses?.includes(
-    node.name.value,
+  const typeInResolverClassesConfig = findTypeInResolverClassesConfig(
+    node,
+    config,
   );
-  const completableFuture = false;
-  const shouldOverrideField =
-    !completableFuture &&
-    shouldModifyFieldWithOverride(node, fieldNode, schema);
-  if (!resolverClassesContainsType && !fieldNode.arguments?.length) {
+  const shouldOverrideField = shouldModifyFieldWithOverride(
+    node,
+    fieldNode,
+    schema,
+  );
+  if (!typeInResolverClassesConfig && !fieldNode.arguments?.length) {
     return shouldOverrideField ? "override val" : "val";
   }
-  if (completableFuture || node.kind === Kind.INTERFACE_TYPE_DEFINITION) {
-    return "fun";
+  const functionModifier =
+    typeInResolverClassesConfig?.classMethods === "SUSPEND" ? "suspend " : "";
+  if (node.kind === Kind.INTERFACE_TYPE_DEFINITION) {
+    return `${functionModifier}fun`;
   }
-  if (shouldOverrideField) {
+  const isCompletableFuture =
+    typeInResolverClassesConfig?.classMethods === "COMPLETABLE_FUTURE";
+  if (shouldOverrideField && !isCompletableFuture) {
     return "override fun";
   }
-  return "open fun";
+  return `open ${functionModifier}fun`;
 }
 
 function buildFieldArguments(
@@ -93,10 +106,8 @@ function buildFieldArguments(
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  const resolverClassesContainsType = config.resolverClasses?.includes(
-    node.name.value,
-  );
-  if (!resolverClassesContainsType && !fieldNode.arguments?.length) {
+  const typeIsInResolverClasses = findTypeInResolverClassesConfig(node, config);
+  if (!typeIsInResolverClasses && !fieldNode.arguments?.length) {
     return "";
   }
   const existingFieldArguments = fieldNode.arguments?.map((arg) => {
