@@ -16,8 +16,12 @@ import { buildAnnotations } from "../helpers/build-annotations";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
-import { buildFieldDefinition } from "../helpers/build-field-definition";
+import {
+  buildFieldDefinition,
+  buildFunctionFieldDefinition,
+} from "../helpers/build-field-definition";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
+import { shouldGenerateResolverClass } from "../helpers/should-generate-resolver-class";
 
 export function buildInterfaceDefinition(
   node: InterfaceTypeDefinitionNode,
@@ -27,6 +31,7 @@ export function buildInterfaceDefinition(
   if (!shouldIncludeTypeDefinition(node, config)) {
     return "";
   }
+  const shouldGenerateFunctions = shouldGenerateResolverClass(node, config);
 
   const classMembers = node.fields
     ?.map((fieldNode) => {
@@ -36,7 +41,10 @@ export function buildInterfaceDefinition(
         config,
         definitionNode: fieldNode,
       });
-      const fieldDefinition = buildFieldDefinition(fieldNode, schema, config);
+      const fieldDefinition =
+        shouldGenerateFunctions && fieldNode.arguments?.length
+          ? buildFunctionFieldDefinition(node, fieldNode, schema, config)
+          : buildFieldDefinition(fieldNode, schema, config);
       const fieldText = indent(
         `${fieldDefinition}: ${typeToUse.typeName}${
           typeToUse.isNullable ? "?" : ""

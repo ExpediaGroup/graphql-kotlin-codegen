@@ -26,7 +26,10 @@ import {
   getDependentUnionsForType,
 } from "../helpers/dependent-type-utils";
 import { shouldGenerateResolverClass } from "../helpers/should-generate-resolver-class";
-import { buildFieldDefinition } from "../helpers/build-field-definition";
+import {
+  buildFieldDefinition,
+  buildFunctionFieldDefinition,
+} from "../helpers/build-field-definition";
 import { isExternalField } from "../helpers/is-external-field";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 import { inputTypeHasMatchingOutputType } from "../helpers/input-type-has-matching-output-type";
@@ -80,9 +83,20 @@ export function buildObjectTypeDefinition(
               schema,
               config,
             );
+            const shouldOverrideField = node.interfaces?.some(
+              (interfaceNode) => {
+                const typeNode = schema.getType(interfaceNode.name.value);
+                return (
+                  isInterfaceType(typeNode) &&
+                  typeNode.astNode?.fields?.some(
+                    (field) => field.name.value === fieldNode.name.value,
+                  )
+                );
+              },
+            );
 
             return indent(
-              `${fieldDefinition}: ${typeMetadata.typeName}${typeMetadata.defaultValue}`,
+              `${shouldOverrideField ? "override " : ""}${fieldDefinition}: ${typeMetadata.typeName}${typeMetadata.defaultValue}`,
               2,
             );
           })
@@ -129,13 +143,16 @@ function getDataClassMembers({
             )
           );
         });
-      const fieldDefinition = buildFieldDefinition(
-        fieldNode,
-        schema,
-        config,
-        shouldGenerateFunctions,
-        completableFuture,
-      );
+      const fieldDefinition = shouldGenerateFunctions
+        ? buildFunctionFieldDefinition(
+            node,
+            fieldNode,
+            schema,
+            config,
+            completableFuture,
+            shouldOverrideField,
+          )
+        : buildFieldDefinition(fieldNode, schema, config);
       const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}>`;
       const defaultValue = shouldGenerateFunctions
         ? `${typeMetadata.isNullable ? "?" : ""} = throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`

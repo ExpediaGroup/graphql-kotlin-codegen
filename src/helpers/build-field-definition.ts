@@ -12,38 +12,57 @@ limitations under the License.
 */
 
 import { buildTypeMetadata } from "./build-type-metadata";
-import { FieldDefinitionNode, GraphQLSchema, Kind } from "graphql";
-import { isExternalField } from "./is-external-field";
+import {
+  FieldDefinitionNode,
+  GraphQLSchema,
+  InterfaceTypeDefinitionNode,
+  Kind,
+  ObjectTypeDefinitionNode,
+} from "graphql";
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 
 export function buildFieldDefinition(
   fieldNode: FieldDefinitionNode,
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
-  shouldGenerateFunctions?: boolean,
-  completableFuture?: boolean,
 ) {
-  const shouldUseFunction =
-    shouldGenerateFunctions && !isExternalField(fieldNode);
-  const modifier = shouldUseFunction
-    ? completableFuture
+  const modifier = "val";
+  const existingFieldArguments = fieldNode.arguments?.map((arg) => {
+    const typeMetadata = buildTypeMetadata(arg.type, schema, config);
+    return `${arg.name.value}: ${typeMetadata.typeName}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : "?"}`;
+  });
+  const extraFieldArguments = [] satisfies string[];
+  const allFieldArguments = existingFieldArguments?.concat(extraFieldArguments);
+  const fieldArguments = allFieldArguments?.length
+    ? `(${allFieldArguments?.join(", ")})`
+    : "";
+  return `${modifier} ${fieldNode.name.value}${fieldArguments}`;
+}
+
+export function buildFunctionFieldDefinition(
+  node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
+  fieldNode: FieldDefinitionNode,
+  schema: GraphQLSchema,
+  config: CodegenConfigWithDefaults,
+  completableFuture?: boolean,
+  shouldOverrideField?: boolean,
+) {
+  const modifier =
+    completableFuture ||
+    node.kind === Kind.INTERFACE_TYPE_DEFINITION ||
+    shouldOverrideField
       ? "fun"
-      : "open fun"
-    : "val";
+      : "open fun";
   const existingFieldArguments = fieldNode.arguments?.map((arg) => {
     const typeMetadata = buildTypeMetadata(arg.type, schema, config);
     return `${arg.name.value}: ${typeMetadata.typeName}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : "?"}`;
   });
   const dataFetchingEnvironmentArgument =
     "dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment";
-  const extraFieldArguments = shouldUseFunction
-    ? [dataFetchingEnvironmentArgument]
-    : [];
+  const extraFieldArguments = [dataFetchingEnvironmentArgument];
   const allFieldArguments = existingFieldArguments?.concat(extraFieldArguments);
   const fieldArguments = allFieldArguments?.length
     ? `(${allFieldArguments?.join(", ")})`
-    : shouldUseFunction
-      ? "()"
-      : "";
+    : "()";
   return `${modifier} ${fieldNode.name.value}${fieldArguments}`;
 }
