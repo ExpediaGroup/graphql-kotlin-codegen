@@ -53,16 +53,6 @@ export function buildObjectTypeDefinition(
       : dependentInterfaces;
   const interfaceInheritance = `${interfacesToInherit.length ? ` : ${interfacesToInherit.join(", ")}` : ""}`;
 
-  if (shouldGenerateResolverClass(node, config)) {
-    return `${annotations}@GraphQLIgnore\ninterface ${name}${interfaceInheritance} {
-${getDataClassMembers({ node, schema, config })}
-}
-
-${annotations}@GraphQLIgnore\ninterface ${name}CompletableFuture {
-${getDataClassMembers({ node, schema, config, completableFuture: true })}
-}`;
-  }
-
   const potentialMatchingInputType = schema.getType(`${name}Input`);
   const typeWillBeConsolidated =
     isInputObjectType(potentialMatchingInputType) &&
@@ -71,6 +61,14 @@ ${getDataClassMembers({ node, schema, config, completableFuture: true })}
   const outputRestrictionAnnotation = typeWillBeConsolidated
     ? ""
     : "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])\n";
+
+  const shouldGenerateFunctions = shouldGenerateResolverClass(node, config);
+  if (shouldGenerateFunctions) {
+    return `${annotations}${outputRestrictionAnnotation}open class ${name}${interfaceInheritance} {
+${getDataClassMembers({ node, schema, config, shouldGenerateFunctions })}
+}`;
+  }
+
   return `${annotations}${outputRestrictionAnnotation}data class ${name}(
 ${getDataClassMembers({ node, schema, config })}
 )${interfaceInheritance}`;
@@ -80,15 +78,15 @@ function getDataClassMembers({
   node,
   schema,
   config,
+  shouldGenerateFunctions,
   completableFuture,
 }: {
   node: ObjectTypeDefinitionNode;
   schema: GraphQLSchema;
   config: CodegenConfigWithDefaults;
+  shouldGenerateFunctions?: boolean;
   completableFuture?: boolean;
 }) {
-  const resolverType = shouldGenerateResolverClass(node, config);
-
   return node.fields
     ?.map((fieldNode) => {
       const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
@@ -105,13 +103,16 @@ function getDataClassMembers({
         });
       const fieldDefinition = buildFieldDefinition(
         fieldNode,
-        node,
         schema,
         config,
+        shouldGenerateFunctions,
         completableFuture,
       );
       const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}>`;
-      const defaultDefinition = `${typeMetadata.typeName}${isExternalField(fieldNode) ? (typeMetadata.isNullable ? "?" : "") : typeMetadata.defaultValue}`;
+      const defaultValue = shouldGenerateFunctions
+        ? `${typeMetadata.isNullable ? "?" : ""} = throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`
+        : typeMetadata.defaultValue;
+      const defaultDefinition = `${typeMetadata.typeName}${isExternalField(fieldNode) ? (typeMetadata.isNullable ? "?" : "") : defaultValue}`;
       const field = indent(
         `${shouldOverrideField ? "override " : ""}${fieldDefinition}: ${completableFuture ? completableFutureDefinition : defaultDefinition}`,
         2,
@@ -123,5 +124,5 @@ function getDataClassMembers({
       });
       return `${annotations}${field}`;
     })
-    .join(`${resolverType ? "" : ","}\n`);
+    .join(`${shouldGenerateFunctions ? "" : ","}\n`);
 }

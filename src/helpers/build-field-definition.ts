@@ -12,31 +12,23 @@ limitations under the License.
 */
 
 import { buildTypeMetadata } from "./build-type-metadata";
-import {
-  FieldDefinitionNode,
-  GraphQLSchema,
-  InterfaceTypeDefinitionNode,
-  Kind,
-  ObjectTypeDefinitionNode,
-} from "graphql";
-import { shouldGenerateResolverClass } from "./should-generate-resolver-class";
+import { FieldDefinitionNode, GraphQLSchema, Kind } from "graphql";
 import { isExternalField } from "./is-external-field";
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 
 export function buildFieldDefinition(
   fieldNode: FieldDefinitionNode,
-  definitionNode: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
+  shouldGenerateFunctions?: boolean,
   completableFuture?: boolean,
 ) {
   const shouldUseFunction =
-    shouldGenerateResolverClass(definitionNode, config) &&
-    !isExternalField(fieldNode);
+    shouldGenerateFunctions && !isExternalField(fieldNode);
   const modifier = shouldUseFunction
     ? completableFuture
       ? "fun"
-      : "suspend fun"
+      : "open fun"
     : "val";
   const existingFieldArguments = fieldNode.arguments?.map((arg) => {
     const typeMetadata = buildTypeMetadata(arg.type, schema, config);
