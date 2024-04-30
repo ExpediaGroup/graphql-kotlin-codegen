@@ -15,12 +15,8 @@ import { GraphQLSchema, InterfaceTypeDefinitionNode } from "graphql";
 import { buildAnnotations } from "../helpers/build-annotations";
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
-import {
-  buildFieldDefinition,
-  buildFunctionFieldDefinition,
-} from "../helpers/build-field-definition";
+import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
-import { shouldGenerateResolverClass } from "../helpers/should-generate-resolver-class";
 
 export function buildInterfaceDefinition(
   node: InterfaceTypeDefinitionNode,
@@ -30,23 +26,18 @@ export function buildInterfaceDefinition(
   if (!shouldIncludeTypeDefinition(node, config)) {
     return "";
   }
-  const shouldGenerateFunctions = shouldGenerateResolverClass(node, config);
 
   const classMembers = node.fields
     ?.map((fieldNode) => {
       const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
-
-      const fieldDefinition =
-        shouldGenerateFunctions && fieldNode.arguments?.length
-          ? buildFunctionFieldDefinition(
-              node,
-              fieldNode,
-              schema,
-              config,
-              typeMetadata,
-            )
-          : buildFieldDefinition(node, fieldNode, schema, config, typeMetadata);
-      return fieldDefinition;
+      return buildFieldDefinition(
+        node,
+        fieldNode,
+        schema,
+        config,
+        typeMetadata,
+        Boolean(fieldNode.arguments?.length),
+      );
     })
     .join("\n");
 

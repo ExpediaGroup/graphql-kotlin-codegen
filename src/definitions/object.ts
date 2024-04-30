@@ -24,10 +24,7 @@ import {
   getDependentUnionsForType,
 } from "../helpers/dependent-type-utils";
 import { shouldGenerateResolverClass } from "../helpers/should-generate-resolver-class";
-import {
-  buildFieldDefinition,
-  buildFunctionFieldDefinition,
-} from "../helpers/build-field-definition";
+import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 import { inputTypeHasMatchingOutputType } from "../helpers/input-type-has-matching-output-type";
 
@@ -101,13 +98,11 @@ function getDataClassMembers({
   schema,
   config,
   shouldGenerateFunctions,
-  completableFuture,
 }: {
   node: ObjectTypeDefinitionNode;
   schema: GraphQLSchema;
   config: CodegenConfigWithDefaults;
   shouldGenerateFunctions?: boolean;
-  completableFuture?: boolean;
 }) {
   return node.fields
     ?.filter(
@@ -115,18 +110,14 @@ function getDataClassMembers({
     )
     ?.map((fieldNode) => {
       const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
-      const fieldDefinition = shouldGenerateFunctions
-        ? buildFunctionFieldDefinition(
-            node,
-            fieldNode,
-            schema,
-            config,
-            typeMetadata,
-            completableFuture,
-          )
-        : buildFieldDefinition(node, fieldNode, schema, config, typeMetadata);
-
-      return fieldDefinition;
+      return buildFieldDefinition(
+        node,
+        fieldNode,
+        schema,
+        config,
+        typeMetadata,
+        shouldGenerateFunctions,
+      );
     })
     .join(`${shouldGenerateFunctions ? "" : ","}\n`);
 }
