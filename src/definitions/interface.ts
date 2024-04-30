@@ -13,7 +13,6 @@ limitations under the License.
 
 import { GraphQLSchema, InterfaceTypeDefinitionNode } from "graphql";
 import { buildAnnotations } from "../helpers/build-annotations";
-import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
 import {
@@ -35,23 +34,19 @@ export function buildInterfaceDefinition(
 
   const classMembers = node.fields
     ?.map((fieldNode) => {
-      const typeToUse = buildTypeMetadata(fieldNode.type, schema, config);
+      const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
 
-      const annotations = buildAnnotations({
-        config,
-        definitionNode: fieldNode,
-      });
       const fieldDefinition =
         shouldGenerateFunctions && fieldNode.arguments?.length
-          ? buildFunctionFieldDefinition(node, fieldNode, schema, config)
-          : buildFieldDefinition(node, fieldNode, schema, config);
-      const fieldText = indent(
-        `${fieldDefinition}: ${typeToUse.typeName}${
-          typeToUse.isNullable ? "?" : ""
-        }`,
-        2,
-      );
-      return `${annotations}${fieldText}`;
+          ? buildFunctionFieldDefinition(
+              node,
+              fieldNode,
+              schema,
+              config,
+              typeMetadata,
+            )
+          : buildFieldDefinition(node, fieldNode, schema, config, typeMetadata);
+      return fieldDefinition;
     })
     .join("\n");
 

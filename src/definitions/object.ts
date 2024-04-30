@@ -14,11 +14,9 @@ limitations under the License.
 import {
   GraphQLSchema,
   isInputObjectType,
-  isInterfaceType,
   ObjectTypeDefinitionNode,
 } from "graphql";
 import { buildAnnotations } from "../helpers/build-annotations";
-import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
 import {
@@ -30,7 +28,6 @@ import {
   buildFieldDefinition,
   buildFunctionFieldDefinition,
 } from "../helpers/build-field-definition";
-import { isExternalField } from "../helpers/is-external-field";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 import { inputTypeHasMatchingOutputType } from "../helpers/input-type-has-matching-output-type";
 
@@ -73,38 +70,18 @@ export function buildObjectTypeDefinition(
     const constructor = fieldsWithNoArguments?.length
       ? `(\n${fieldsWithNoArguments
           .map((fieldNode) => {
-            const fieldDefinition = buildFieldDefinition(
-              node,
-              fieldNode,
-              schema,
-              config,
-            );
             const typeMetadata = buildTypeMetadata(
               fieldNode.type,
               schema,
               config,
             );
-            const shouldOverrideField = node.interfaces?.some(
-              (interfaceNode) => {
-                const typeNode = schema.getType(interfaceNode.name.value);
-                return (
-                  isInterfaceType(typeNode) &&
-                  typeNode.astNode?.fields?.some(
-                    (field) => field.name.value === fieldNode.name.value,
-                  )
-                );
-              },
-            );
-            const annotations = buildAnnotations({
+            return buildFieldDefinition(
+              node,
+              fieldNode,
+              schema,
               config,
-              definitionNode: fieldNode,
               typeMetadata,
-            });
-            const field = indent(
-              `${shouldOverrideField ? "override " : ""}${fieldDefinition}: ${typeMetadata.typeName}${typeMetadata.defaultValue}`,
-              2,
             );
-            return `${annotations}${field}`;
           })
           .join(",\n")}\n)`
       : "";
@@ -138,42 +115,18 @@ function getDataClassMembers({
     )
     ?.map((fieldNode) => {
       const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
-      const shouldOverrideField =
-        !completableFuture &&
-        node.interfaces?.some((interfaceNode) => {
-          const typeNode = schema.getType(interfaceNode.name.value);
-          return (
-            isInterfaceType(typeNode) &&
-            typeNode.astNode?.fields?.some(
-              (field) => field.name.value === fieldNode.name.value,
-            )
-          );
-        });
       const fieldDefinition = shouldGenerateFunctions
         ? buildFunctionFieldDefinition(
             node,
             fieldNode,
             schema,
             config,
+            typeMetadata,
             completableFuture,
-            shouldOverrideField,
           )
-        : buildFieldDefinition(node, fieldNode, schema, config);
-      const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}>`;
-      const defaultValue = shouldGenerateFunctions
-        ? `${typeMetadata.isNullable ? "?" : ""} = throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`
-        : typeMetadata.defaultValue;
-      const defaultDefinition = `${typeMetadata.typeName}${isExternalField(fieldNode) ? (typeMetadata.isNullable ? "?" : "") : defaultValue}`;
-      const field = indent(
-        `${shouldOverrideField ? "override " : ""}${fieldDefinition}: ${completableFuture ? completableFutureDefinition : defaultDefinition}`,
-        2,
-      );
-      const annotations = buildAnnotations({
-        config,
-        definitionNode: fieldNode,
-        typeMetadata,
-      });
-      return `${annotations}${field}`;
+        : buildFieldDefinition(node, fieldNode, schema, config, typeMetadata);
+
+      return fieldDefinition;
     })
     .join(`${shouldGenerateFunctions ? "" : ","}\n`);
 }
