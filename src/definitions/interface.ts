@@ -17,6 +17,7 @@ import { buildTypeMetadata } from "../helpers/build-type-metadata";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
 import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
+import { getDependentInterfaceNames } from "../helpers/dependent-type-utils";
 
 export function buildInterfaceDefinition(
   node: InterfaceTypeDefinitionNode,
@@ -45,7 +46,11 @@ export function buildInterfaceDefinition(
     config,
     definitionNode: node,
   });
-  return `${annotations}interface ${node.name.value} {
+
+  const interfacesToInherit = getDependentInterfaceNames(node);
+  const interfaceInheritance = `${interfacesToInherit.length ? ` : ${interfacesToInherit.join(", ")}` : ""}`;
+
+  return `${annotations}interface ${node.name.value}${interfaceInheritance} {
 ${classMembers}
 }`;
 }

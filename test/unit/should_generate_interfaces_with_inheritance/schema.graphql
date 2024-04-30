@@ -4,10 +4,17 @@ interface InterfaceWithInheritance {
   field2: String!
 }
 
-"A description for MyInterfaceImplementation"
-type MyInterfaceImplementation implements InterfaceWithInheritance {
+"A description for MyImplementation"
+type MyImplementation implements InterfaceWithInheritance {
   field: String
   field2: String!
+}
+
+"A description for MyInterfaceImplementation"
+interface MyInterfaceImplementation implements InterfaceWithInheritance {
+  field: String
+  field2: String!
+  field3: Int
 }
 
 interface InheritedInterface1 {
