@@ -34,7 +34,7 @@ open class TypeImplementingInterface(
     override val field1: String? = null,
     override val field2: String,
     val booleanField1: Boolean? = null,
-    val booleanField2: Boolean,
+    val booleanField2: Boolean = false,
     val integerField1: Int? = null,
     val integerField2: Int
 ) : HybridInterface {

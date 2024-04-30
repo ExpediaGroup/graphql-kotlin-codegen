@@ -64,7 +64,32 @@ export function buildObjectTypeDefinition(
 
   const shouldGenerateFunctions = shouldGenerateResolverClass(node, config);
   if (shouldGenerateFunctions) {
-    return `${annotations}${outputRestrictionAnnotation}open class ${name}${interfaceInheritance} {
+    const fieldsWithNoArguments = node.fields?.filter(
+      (fieldNode) => !fieldNode.arguments?.length,
+    );
+    const constructor = fieldsWithNoArguments?.length
+      ? `(\n${fieldsWithNoArguments
+          .map((fieldNode) => {
+            const fieldDefinition = buildFieldDefinition(
+              fieldNode,
+              schema,
+              config,
+            );
+            const typeMetadata = buildTypeMetadata(
+              fieldNode.type,
+              schema,
+              config,
+            );
+
+            return indent(
+              `${fieldDefinition}: ${typeMetadata.typeName}${typeMetadata.defaultValue}`,
+              2,
+            );
+          })
+          .join(",\n")}\n)`
+      : "";
+
+    return `${annotations}${outputRestrictionAnnotation}open class ${name}${constructor}${interfaceInheritance} {
 ${getDataClassMembers({ node, schema, config, shouldGenerateFunctions })}
 }`;
   }
@@ -88,6 +113,9 @@ function getDataClassMembers({
   completableFuture?: boolean;
 }) {
   return node.fields
+    ?.filter(
+      (fieldNode) => !shouldGenerateFunctions || fieldNode.arguments?.length,
+    )
     ?.map((fieldNode) => {
       const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
       const shouldOverrideField =
