@@ -58,7 +58,9 @@ export function buildObjectTypeDefinition(
     inputTypeHasMatchingOutputType(potentialMatchingInputType.astNode, schema);
   const outputRestrictionAnnotation = typeWillBeConsolidated
     ? ""
-    : "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])\n";
+    : name === "Query"
+      ? "@GraphQLIgnore\n"
+      : "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])\n";
 
   const typeInResolverClassesConfig = findTypeInResolverClassesConfig(
     node,

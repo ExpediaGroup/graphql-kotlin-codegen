@@ -2,6 +2,12 @@ package com.kotlin.generated
 
 import com.expediagroup.graphql.generator.annotations.*
 
+@GraphQLIgnore
+open class Query {
+    open fun nullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = throw NotImplementedError("Query.nullableResolver must be implemented.")
+    open fun nonNullableResolver(arg: InputTypeForResolver, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("Query.nonNullableResolver must be implemented.")
+}
+
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 open class TypeWithOnlyFieldArgs {
     open fun nullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = throw NotImplementedError("TypeWithOnlyFieldArgs.nullableResolver must be implemented.")
