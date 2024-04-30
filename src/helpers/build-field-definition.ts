@@ -32,8 +32,8 @@ export function buildFieldDefinition(
   typeMetadata: TypeMetadata,
   shouldUseFunction?: boolean,
 ) {
-  const modifier = buildFieldModifier(node, fieldNode, schema);
-  const fieldArguments = buildFieldArguments(fieldNode, schema, config);
+  const modifier = buildFieldModifier(node, fieldNode, schema, config);
+  const fieldArguments = buildFieldArguments(node, fieldNode, schema, config);
   const fieldDefinition = `${modifier} ${fieldNode.name.value}${fieldArguments}`;
   const annotations = buildAnnotations({
     config,
@@ -66,12 +66,16 @@ function buildFieldModifier(
   node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
   fieldNode: FieldDefinitionNode,
   schema: GraphQLSchema,
+  config: CodegenConfigWithDefaults,
 ) {
+  const resolverClassesContainsType = config.resolverClasses?.includes(
+    node.name.value,
+  );
   const completableFuture = false;
   const shouldOverrideField =
     !completableFuture &&
     shouldModifyFieldWithOverride(node, fieldNode, schema);
-  if (!fieldNode.arguments?.length) {
+  if (!resolverClassesContainsType && !fieldNode.arguments?.length) {
     return shouldOverrideField ? "override val" : "val";
   }
   if (completableFuture || node.kind === Kind.INTERFACE_TYPE_DEFINITION) {
@@ -81,6 +85,31 @@ function buildFieldModifier(
     return "override fun";
   }
   return "open fun";
+}
+
+function buildFieldArguments(
+  node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
+  fieldNode: FieldDefinitionNode,
+  schema: GraphQLSchema,
+  config: CodegenConfigWithDefaults,
+) {
+  const resolverClassesContainsType = config.resolverClasses?.includes(
+    node.name.value,
+  );
+  if (!resolverClassesContainsType && !fieldNode.arguments?.length) {
+    return "";
+  }
+  const existingFieldArguments = fieldNode.arguments?.map((arg) => {
+    const argMetadata = buildTypeMetadata(arg.type, schema, config);
+    return `${arg.name.value}: ${argMetadata.typeName}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : "?"}`;
+  });
+  const dataFetchingEnvironmentArgument =
+    "dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment";
+  const extraFieldArguments = [dataFetchingEnvironmentArgument];
+  const allFieldArguments = existingFieldArguments?.concat(extraFieldArguments);
+  return allFieldArguments?.length
+    ? `(${allFieldArguments?.join(", ")})`
+    : "()";
 }
 
 function shouldModifyFieldWithOverride(
@@ -111,25 +140,4 @@ function buildInterfaceFieldDefinition(
     2,
   );
   return `${annotations}${fieldText}`;
-}
-
-function buildFieldArguments(
-  fieldNode: FieldDefinitionNode,
-  schema: GraphQLSchema,
-  config: CodegenConfigWithDefaults,
-) {
-  if (!fieldNode.arguments?.length) {
-    return "";
-  }
-  const existingFieldArguments = fieldNode.arguments.map((arg) => {
-    const argMetadata = buildTypeMetadata(arg.type, schema, config);
-    return `${arg.name.value}: ${argMetadata.typeName}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : "?"}`;
-  });
-  const dataFetchingEnvironmentArgument =
-    "dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment";
-  const extraFieldArguments = [dataFetchingEnvironmentArgument];
-  const allFieldArguments = existingFieldArguments?.concat(extraFieldArguments);
-  return allFieldArguments?.length
-    ? `(${allFieldArguments?.join(", ")})`
-    : "()";
 }
