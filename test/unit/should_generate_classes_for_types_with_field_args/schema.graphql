@@ -1,22 +1,27 @@
-type Query {
-  nullableField: FieldType
-  nonNullableField: FieldType!
+type TypeWithOnlyFieldArgs {
   nullableResolver(arg: String!): String
-  nonNullableResolver(arg: InputTypeGenerateFieldResolverInterfaces!): String!
+  nonNullableResolver(arg: InputTypeForResolver!): String!
 }
 
-input InputTypeGenerateFieldResolverInterfaces {
+type HybridType {
+  nullableField: String
+  nonNullableField: String!
+  nullableResolver(arg: String!): String
+  nonNullableResolver(arg: InputTypeForResolver!): String!
+}
+
+input InputTypeForResolver {
   field: String
 }
 
-interface MyFieldInterface {
+interface HybridInterface {
   field1: String
   field2: String!
   nullableListResolver(arg1: Int, arg2: Int!): [String]
   nonNullableListResolver(arg1: Int!, arg2: Int): [String!]!
 }
 
-type FieldType implements MyFieldInterface {
+type TypeImplementingInterface implements HybridInterface {
   field1: String
   field2: String!
   booleanField1: Boolean

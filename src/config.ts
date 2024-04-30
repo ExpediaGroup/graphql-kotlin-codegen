@@ -103,31 +103,31 @@ export const configSchema = object({
     ),
   ),
   /**
-   * Denotes types that should be generated as interfaces with suspense functions. Resolver classes can inherit from these to enforce a type contract.
-   * @description Two interfaces will be generated: one with suspend functions, and one with `java.util.concurrent.CompletableFuture` functions.
-   * @example ["MyResolverType1", "MyResolverType2"]
+   * Denotes types that should be generated as classes. Resolver classes can inherit from these to enforce a type contract.
+   * @description Type names can be optionally passed with the classMethods config to generate suspend functions or
+   * `java.util.concurrent.CompletableFuture` functions.
+   * @example
+   * [
+   *   {
+   *     typeName: "MyResolverType",
+   *   },
+   *   {
+   *     typeName: "MySuspendResolverType",
+   *     classMethods: "SUSPEND",
+   *   },
+   *   {
+   *     typeName: "MyCompletableFutureResolverType",
+   *     classMethods: "COMPLETABLE_FUTURE",
+   *   }
+   * ]
    */
-  resolverTypes: optional(array(string())),
-  /**
-   * Denotes extra arguments that should be added to functions on resolver classes.
-   * @example [{ typeNames: ["MyType", "MyType2"], argumentName: "myArgument", argumentValue: "myValue" }]
-   * @deprecated This will be removed in a future release now that DataFetchingEnvironment is added to functions by default.
-   */
-  extraResolverArguments: optional(
+  resolverClasses: optional(
     array(
       object({
-        /**
-         * The types whose fields to add the argument to. The argument will be added to all fields on each type. If omitted, the argument will be added to all fields on all types.
-         */
-        typeNames: optional(array(string())),
-        /**
-         * The name of the argument to add.
-         */
-        argumentName: string(),
-        /**
-         * The type of the argument to add.
-         */
-        argumentType: string(),
+        typeName: string(),
+        classMethods: optional(
+          union([literal("SUSPEND"), literal("COMPLETABLE_FUTURE")]),
+        ),
       }),
     ),
   ),

@@ -68,14 +68,9 @@ data class MyTypeToConsolidateInputParent(
     val field: MyTypeToConsolidate? = null
 )
 
-@GraphQLIgnore
-interface MyTypeToConsolidateParent2 {
-    suspend fun field(input: MyTypeToConsolidate, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = null
-}
-
-@GraphQLIgnore
-interface MyTypeToConsolidateParent2CompletableFuture {
-    fun field(input: MyTypeToConsolidate, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<String?>
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
+open class MyTypeToConsolidateParent2 {
+    open fun field(input: MyTypeToConsolidate, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = throw NotImplementedError("MyTypeToConsolidateParent2.field must be implemented.")
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])

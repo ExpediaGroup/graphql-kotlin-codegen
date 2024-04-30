@@ -1,0 +1,48 @@
+type MyIncludedResolverType {
+  nullableField: String
+  nonNullableField: String!
+  nullableResolver(arg: String!): String
+  nonNullableResolver(arg: String!): String!
+  nullableListResolver(arg1: Int, arg2: Int!): [String]
+  nonNullableListResolver(arg1: Int!, arg2: Int): [String!]!
+}
+
+type MyIncludedResolverTypeWithNoFieldArgs {
+  nullableField: String
+  nonNullableField: String!
+}
+
+type MySuspendResolverType {
+  nullableField: String
+  nonNullableField: String!
+  nullableResolver(arg: String!): String
+  nonNullableResolver(arg: String!): String!
+  nullableListResolver(arg1: Int, arg2: Int!): [String]
+  nonNullableListResolver(arg1: Int!, arg2: Int): [String!]!
+}
+
+type MyCompletableFutureResolverType {
+  nullableField: String
+  nonNullableField: String!
+  nullableResolver(arg: String!): String
+  nonNullableResolver(arg: String!): String!
+  nullableListResolver(arg1: Int, arg2: Int!): [String]
+  nonNullableListResolver(arg1: Int!, arg2: Int): [String!]!
+}
+
+type MyExcludedResolverType {
+  nullableField: String
+  nonNullableField: String!
+}
+
+interface MyIncludedInterface {
+  field: String
+}
+
+interface MyIncludedInterfaceSuspend {
+  field: String
+}
+
+interface MyExcludedInterface {
+  field: String
+}

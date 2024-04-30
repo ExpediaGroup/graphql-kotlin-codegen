@@ -13,11 +13,11 @@ limitations under the License.
 
 import { GraphQLSchema, InterfaceTypeDefinitionNode } from "graphql";
 import { buildAnnotations } from "../helpers/build-annotations";
-import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
 import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
 import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
+import { getDependentInterfaceNames } from "../helpers/dependent-type-utils";
 
 export function buildInterfaceDefinition(
   node: InterfaceTypeDefinitionNode,
@@ -30,25 +30,15 @@ export function buildInterfaceDefinition(
 
   const classMembers = node.fields
     ?.map((fieldNode) => {
-      const typeToUse = buildTypeMetadata(fieldNode.type, schema, config);
-
-      const annotations = buildAnnotations({
-        config,
-        definitionNode: fieldNode,
-      });
-      const fieldDefinition = buildFieldDefinition(
-        fieldNode,
+      const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
+      return buildFieldDefinition(
         node,
+        fieldNode,
         schema,
         config,
+        typeMetadata,
+        Boolean(fieldNode.arguments?.length),
       );
-      const fieldText = indent(
-        `${fieldDefinition}: ${typeToUse.typeName}${
-          typeToUse.isNullable ? "?" : ""
-        }`,
-        2,
-      );
-      return `${annotations}${fieldText}`;
     })
     .join("\n");
 
@@ -56,7 +46,11 @@ export function buildInterfaceDefinition(
     config,
     definitionNode: node,
   });
-  return `${annotations}interface ${node.name.value} {
+
+  const interfacesToInherit = getDependentInterfaceNames(node);
+  const interfaceInheritance = `${interfacesToInherit.length ? ` : ${interfacesToInherit.join(", ")}` : ""}`;
+
+  return `${annotations}interface ${node.name.value}${interfaceInheritance} {
 ${classMembers}
 }`;
 }
