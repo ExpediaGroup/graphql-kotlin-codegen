@@ -31,7 +31,7 @@ export function buildFieldDefinition(
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
   typeMetadata: TypeMetadata,
-  shouldUseFunction?: boolean,
+  shouldGenerateFunctions?: boolean,
 ) {
   const modifier = buildFieldModifier(node, fieldNode, schema, config);
   const fieldArguments = buildFieldArguments(node, fieldNode, schema, config);
@@ -51,7 +51,7 @@ export function buildFieldDefinition(
 
   const notImplementedError = ` = throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`;
   const defaultFunctionValue = `${typeMetadata.isNullable ? "?" : ""}${notImplementedError}`;
-  const defaultValue = shouldUseFunction
+  const defaultValue = shouldGenerateFunctions
     ? defaultFunctionValue
     : typeMetadata.defaultValue;
   const defaultDefinition = `${typeMetadata.typeName}${defaultValue}`;
