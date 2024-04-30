@@ -1,6 +1,6 @@
 {
   "name": "@expediagroup/graphql-kotlin-codegen",
-  "packageManager": "bun@1.1.4",
+  "packageManager": "bun@1.1.6",
   "main": "dist/plugin.cjs",
   "types": "dist/plugin.d.cts",
   "files": [
