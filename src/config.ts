@@ -104,10 +104,34 @@ export const configSchema = object({
   ),
   /**
    * Denotes types that should be generated as classes. Resolver classes can inherit from these to enforce a type contract.
-   * @description Two interfaces will be generated: one with suspend functions, and one with `java.util.concurrent.CompletableFuture` functions.
-   * @example ["MyResolverType1", "MyResolverType2"]
+   * @description Type names can be passed as strings to generate default functions.
+   * Also, suspend functions or `java.util.concurrent.CompletableFuture` functions can be generated per type.
+   * @example
+   * [
+   *   "MyResolverType",
+   *   {
+   *     typeName: "MySuspendResolverType",
+   *     classMethods: "SUSPEND",
+   *   },
+   *   {
+   *     typeName: "MyCompletableFutureResolverType",
+   *     classMethods: "COMPLETABLE_FUTURE",
+   *   }
+   * ]
    */
-  resolverClasses: optional(array(string())),
+  resolverClasses: optional(
+    array(
+      union([
+        string(),
+        object({
+          typeName: string(),
+          classMethods: optional(
+            union([literal("SUSPEND"), literal("COMPLETABLE_FUTURE")]),
+          ),
+        }),
+      ]),
+    ),
+  ),
   /**
    * Denotes the generation strategy for union types. Defaults to `MARKER_INTERFACE`.
    * @description The `MARKER_INTERFACE` option is highly recommended, since it is more type-safe than using annotation classes.

@@ -2,17 +2,14 @@ import { GraphQLKotlinCodegenConfig } from "../../../src/plugin";
 
 export default {
   resolverClasses: [
+    "MyResolverType",
     {
-      typeName: "MyResolverType",
-      methodType: "DEFAULT",
+      typeName: "MySuspendResolverType",
+      classMethods: "SUSPEND",
     },
     {
-      typeName: "MyResolverType",
-      methodType: "SUSPEND",
-    },
-    {
-      typeName: "MyResolverType",
-      methodType: "COMPLETABLE_FUTURE",
+      typeName: "MyCompletableFutureResolverType",
+      classMethods: "COMPLETABLE_FUTURE",
     },
   ],
 } satisfies GraphQLKotlinCodegenConfig;
