@@ -47,8 +47,8 @@ Source code:
 
 ```kotlin
 import com.expediagroup.graphql.server.operations.Query
-import com.expediagroup.sharedGraphql.generated.Query as QueryInterface
 import com.types.generated.MyType
+import com.types.generated.Query as QueryInterface
 
 class MyQuery : Query, QueryInterface() {
   override suspend fun resolveMyType(input: String): MyType =
@@ -113,6 +113,6 @@ class MyType : MyTypeInterface() {
 }
 ```
 
-This code is much more performant. The `MyType` class is no longer a data class, so the `field1` and `field2` properties
+This code is much more performant! The `MyType` class is no longer a data class, so the `field1` and `field2` properties
 can now be resolved independently of each other. If I query for only `field1`, only `myExpensiveCall1()` will be called, and
 if I query for only `field2`, only `myExpensiveCall2()` will be called.
