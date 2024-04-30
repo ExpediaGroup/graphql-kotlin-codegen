@@ -25,7 +25,7 @@ import {
   getDependentInterfaceNames,
   getDependentUnionsForType,
 } from "../helpers/dependent-type-utils";
-import { isResolverType } from "../helpers/is-resolver-type";
+import { shouldGenerateResolverClass } from "../helpers/should-generate-resolver-class";
 import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { isExternalField } from "../helpers/is-external-field";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
@@ -53,7 +53,7 @@ export function buildObjectTypeDefinition(
       : dependentInterfaces;
   const interfaceInheritance = `${interfacesToInherit.length ? ` : ${interfacesToInherit.join(", ")}` : ""}`;
 
-  if (isResolverType(node, config)) {
+  if (shouldGenerateResolverClass(node, config)) {
     return `${annotations}@GraphQLIgnore\ninterface ${name}${interfaceInheritance} {
 ${getDataClassMembers({ node, schema, config })}
 }
@@ -87,7 +87,7 @@ function getDataClassMembers({
   config: CodegenConfigWithDefaults;
   completableFuture?: boolean;
 }) {
-  const resolverType = isResolverType(node, config);
+  const resolverType = shouldGenerateResolverClass(node, config);
 
   return node.fields
     ?.map((fieldNode) => {

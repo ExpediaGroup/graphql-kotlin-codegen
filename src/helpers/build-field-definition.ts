@@ -19,7 +19,7 @@ import {
   Kind,
   ObjectTypeDefinitionNode,
 } from "graphql";
-import { isResolverType } from "./is-resolver-type";
+import { shouldGenerateResolverClass } from "./should-generate-resolver-class";
 import { isExternalField } from "./is-external-field";
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 
@@ -31,7 +31,8 @@ export function buildFieldDefinition(
   completableFuture?: boolean,
 ) {
   const shouldUseFunction =
-    isResolverType(definitionNode, config) && !isExternalField(fieldNode);
+    shouldGenerateResolverClass(definitionNode, config) &&
+    !isExternalField(fieldNode);
   const modifier = shouldUseFunction
     ? completableFuture
       ? "fun"
@@ -41,23 +42,12 @@ export function buildFieldDefinition(
     const typeMetadata = buildTypeMetadata(arg.type, schema, config);
     return `${arg.name.value}: ${typeMetadata.typeName}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : "?"}`;
   });
-  const additionalFieldArguments = config.extraResolverArguments
-    ?.map((resolverArgument) => {
-      const { argumentName, argumentType } = resolverArgument;
-      const shouldIncludeArg =
-        !("typeNames" in resolverArgument) ||
-        !resolverArgument.typeNames ||
-        resolverArgument.typeNames.some(
-          (typeName) => typeName === definitionNode.name.value,
-        );
-      return shouldUseFunction && shouldIncludeArg
-        ? `${argumentName}: ${argumentType}`
-        : undefined;
-    })
-    .filter(Boolean);
-  const allFieldArguments = existingFieldArguments?.concat(
-    additionalFieldArguments ?? [],
-  );
+  const dataFetchingEnvironmentArgument =
+    "dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment";
+  const extraFieldArguments = shouldUseFunction
+    ? [dataFetchingEnvironmentArgument]
+    : [];
+  const allFieldArguments = existingFieldArguments?.concat(extraFieldArguments);
   const fieldArguments = allFieldArguments?.length
     ? `(${allFieldArguments?.join(", ")})`
     : shouldUseFunction
