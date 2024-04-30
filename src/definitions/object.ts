@@ -74,6 +74,7 @@ export function buildObjectTypeDefinition(
       ? `(\n${fieldsWithNoArguments
           .map((fieldNode) => {
             const fieldDefinition = buildFieldDefinition(
+              node,
               fieldNode,
               schema,
               config,
@@ -94,11 +95,16 @@ export function buildObjectTypeDefinition(
                 );
               },
             );
-
-            return indent(
+            const annotations = buildAnnotations({
+              config,
+              definitionNode: fieldNode,
+              typeMetadata,
+            });
+            const field = indent(
               `${shouldOverrideField ? "override " : ""}${fieldDefinition}: ${typeMetadata.typeName}${typeMetadata.defaultValue}`,
               2,
             );
+            return `${annotations}${field}`;
           })
           .join(",\n")}\n)`
       : "";
@@ -152,7 +158,7 @@ function getDataClassMembers({
             completableFuture,
             shouldOverrideField,
           )
-        : buildFieldDefinition(fieldNode, schema, config);
+        : buildFieldDefinition(node, fieldNode, schema, config);
       const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}>`;
       const defaultValue = shouldGenerateFunctions
         ? `${typeMetadata.isNullable ? "?" : ""} = throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`

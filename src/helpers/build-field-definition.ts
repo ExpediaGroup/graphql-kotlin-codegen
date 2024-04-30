@@ -22,6 +22,7 @@ import {
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 
 export function buildFieldDefinition(
+  node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
   fieldNode: FieldDefinitionNode,
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
