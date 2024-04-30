@@ -6,8 +6,8 @@ sidebar_position: 4
 
 In general, the `resolverClasses` config should be used to generate more performant code. This is especially important
 when dealing with expensive operations, such as database queries or network requests. When at least one field has
-arguments in a type, we generate an extension class to be inherited in source code. However, when fields have no
-arguments, we generate data classes by default.
+arguments in a type, we generate an open class with function signatures to be inherited in source code.
+However, when fields have no arguments, we generate data classes by default.
 
 ## Example
 
