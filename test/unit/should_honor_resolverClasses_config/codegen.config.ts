@@ -6,6 +6,9 @@ export default {
       typeName: "MyIncludedResolverType",
     },
     {
+      typeName: "MyIncludedResolverTypeWithNoFieldArgs",
+    },
+    {
       typeName: "MySuspendResolverType",
       classMethods: "SUSPEND",
     },

@@ -13,6 +13,12 @@ open class MyIncludedResolverType {
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
+open class MyIncludedResolverTypeWithNoFieldArgs {
+    open fun nullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = throw NotImplementedError("MyIncludedResolverTypeWithNoFieldArgs.nullableField must be implemented.")
+    open fun nonNullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("MyIncludedResolverTypeWithNoFieldArgs.nonNullableField must be implemented.")
+}
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 open class MySuspendResolverType {
     open suspend fun nullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = throw NotImplementedError("MySuspendResolverType.nullableField must be implemented.")
     open suspend fun nonNullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("MySuspendResolverType.nonNullableField must be implemented.")

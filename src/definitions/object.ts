@@ -60,12 +60,13 @@ export function buildObjectTypeDefinition(
     ? ""
     : "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])\n";
 
-  const shouldGenerateFunctions = node.fields?.some(
-    (fieldNode) => fieldNode.arguments?.length,
-  );
   const typeInResolverClassesConfig = findTypeInResolverClassesConfig(
     node,
     config,
+  );
+  const shouldGenerateFunctions = Boolean(
+    typeInResolverClassesConfig ||
+      node.fields?.some((fieldNode) => fieldNode.arguments?.length),
   );
   if (shouldGenerateFunctions) {
     const fieldsWithNoArguments = node.fields?.filter(
