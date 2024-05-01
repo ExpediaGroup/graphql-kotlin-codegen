@@ -60,7 +60,7 @@ class MyQuery : Query, QueryInterface() {
 
 ```
 
-The resulting source code is at risk of being extremely unperformant. The `MyType` class is a data class, which means
+The resulting source code is extremely unperformant. The `MyType` class is a data class, which means
 that the `field1` and `field2` properties are both initialized when the `MyType` object is created, and
 `myExpensiveCall1()` and `myExpensiveCall2()` will both be called in sequence! Even if I only query for `field1`, not
 only will `myExpensiveCall2()` still run, but it will also wait until `myExpensiveCall1()` is totally finished.

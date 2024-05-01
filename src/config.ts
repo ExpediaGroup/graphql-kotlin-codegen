@@ -120,6 +120,7 @@ export const configSchema = object({
    *     classMethods: "COMPLETABLE_FUTURE",
    *   }
    * ]
+   * @link https://opensource.expediagroup.com/graphql-kotlin-codegen/docs/recommended-usage
    */
   resolverClasses: optional(
     array(
