@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "docs:start": "docusaurus start",
-    "docs:build": "tsc && docusaurus build"
+    "docs:build": "tsc && bun generate && docusaurus build",
+    "generate": "jsdoc2md --files ../dist/plugin.cjs --partial partials/main.hbs --partial partials/scope.hbs -c jsdoc.conf > docs/configuration.md"
   },
   "devDependencies": {
     "@docusaurus/core": "3.2.1",
@@ -13,7 +14,7 @@
     "@docusaurus/types": "3.2.1",
     "@mdx-js/react": "3.0.1",
     "clsx": "2.1.1",
-    "docusaurus-theme-github-codeblock": "2.0.2",
+    "jsdoc-to-markdown": "8.0.1",
     "prism-react-renderer": "2.3.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",

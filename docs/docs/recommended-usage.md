@@ -60,7 +60,7 @@ class MyQuery : Query, QueryInterface() {
 
 ```
 
-The resulting source code is at risk of being extremely unperformant. The `MyType` class is a data class, which means
+The resulting source code is extremely unperformant. The `MyType` class is a data class, which means
 that the `field1` and `field2` properties are both initialized when the `MyType` object is created, and
 `myExpensiveCall1()` and `myExpensiveCall2()` will both be called in sequence! Even if I only query for `field1`, not
 only will `myExpensiveCall2()` still run, but it will also wait until `myExpensiveCall1()` is totally finished.
@@ -116,3 +116,5 @@ class MyType : MyTypeInterface() {
 This code is much more performant! The `MyType` class is no longer a data class, so the `field1` and `field2` properties
 can now be resolved independently of each other. If I query for only `field1`, only `myExpensiveCall1()` will be called, and
 if I query for only `field2`, only `myExpensiveCall2()` will be called.
+
+Check out the [related GraphQL Kotlin docs](https://opensource.expediagroup.com/graphql-kotlin/docs/schema-generator/execution/fetching-data/) for more information on this topic.

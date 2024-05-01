@@ -1,9 +1,8 @@
 import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
-import * as path from "path";
 
-const config: Config = {
+export default {
   title: "GraphQL Kotlin Codegen",
   favicon: "img/favicon.ico",
 
@@ -29,15 +28,6 @@ const config: Config = {
         },
       } satisfies Preset.Options,
     ],
-  ],
-  themes: [
-    path.resolve(
-      __dirname,
-      "node_modules",
-      "docusaurus-theme-github-codeblock",
-      "build",
-      "index.js",
-    ),
   ],
   themeConfig: {
     navbar: {
@@ -76,6 +66,4 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     },
   } satisfies Preset.ThemeConfig,
-};
-
-export default config;
+} satisfies Config;
