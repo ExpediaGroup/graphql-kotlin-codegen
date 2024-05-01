@@ -29,7 +29,7 @@ jobs:
         run: bun tsc
 
       - name: Unit Tests
-        run: bun test
+        run: bun unit
 
       - uses: actions/setup-java@v4
         with:

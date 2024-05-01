@@ -1,9 +1,0 @@
-overwrite: true
-schema:
-  - "test/**/*.graphql"
-config:
-  namingConvention: "keep"
-generates:
-  test/integration/Types.kt:
-    plugins:
-      - "dist/plugin.cjs"
