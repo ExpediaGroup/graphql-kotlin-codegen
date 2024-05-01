@@ -51,7 +51,7 @@ import com.types.generated.MyType
 import com.types.generated.Query as QueryInterface
 
 class MyQuery : Query, QueryInterface() {
-  override suspend fun resolveMyType(input: String): MyType =
+  override fun resolveMyType(input: String): MyType =
     MyType(
       field1 = myExpensiveCall1(),
       field2 = myExpensiveCall2()
@@ -103,7 +103,7 @@ import com.types.generated.MyType as MyTypeInterface
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 
 class MyQuery : Query, QueryInterface() {
-    override suspend fun resolveMyType(input: String): MyType = MyType()
+    override fun resolveMyType(input: String): MyType = MyType()
 }
 
 @GraphQLIgnore
