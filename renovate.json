@@ -6,6 +6,11 @@
   "packageRules": [
     {
       "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "devDependencies",
+      "automerge": true
+    },
+    {
       "matchPackagePatterns": ["gradle", "graphql-kotlin"],
       "matchUpdateTypes": ["patch", "minor"],
       "groupName": "devDependencies",
