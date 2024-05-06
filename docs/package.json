@@ -7,11 +7,11 @@
     "generate": "jsdoc2md --files ../dist/plugin.cjs --partial partials/main.hbs --partial partials/scope.hbs -c jsdoc.conf > docs/configuration.md"
   },
   "devDependencies": {
-    "@docusaurus/core": "3.2.1",
-    "@docusaurus/module-type-aliases": "3.2.1",
-    "@docusaurus/preset-classic": "3.2.1",
-    "@docusaurus/tsconfig": "3.2.1",
-    "@docusaurus/types": "3.2.1",
+    "@docusaurus/core": "3.3.2",
+    "@docusaurus/module-type-aliases": "3.3.2",
+    "@docusaurus/preset-classic": "3.3.2",
+    "@docusaurus/tsconfig": "3.3.2",
+    "@docusaurus/types": "3.3.2",
     "@mdx-js/react": "3.0.1",
     "clsx": "2.1.1",
     "jsdoc-to-markdown": "8.0.1",
