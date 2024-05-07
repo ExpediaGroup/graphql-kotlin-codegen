@@ -8,8 +8,8 @@ open class MyIncludedResolverType {
     open fun nonNullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("MyIncludedResolverType.nonNullableField must be implemented.")
     open fun nullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = throw NotImplementedError("MyIncludedResolverType.nullableResolver must be implemented.")
     open fun nonNullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("MyIncludedResolverType.nonNullableResolver must be implemented.")
-    open fun nullableListResolver(arg1: Int?, arg2: Int, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String?>? = throw NotImplementedError("MyIncludedResolverType.nullableListResolver must be implemented.")
-    open fun nonNullableListResolver(arg1: Int, arg2: Int?, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String> = throw NotImplementedError("MyIncludedResolverType.nonNullableListResolver must be implemented.")
+    open fun nullableListResolver(arg1: Int? = null, arg2: Int, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String?>? = throw NotImplementedError("MyIncludedResolverType.nullableListResolver must be implemented.")
+    open fun nonNullableListResolver(arg1: Int, arg2: Int? = null, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String> = throw NotImplementedError("MyIncludedResolverType.nonNullableListResolver must be implemented.")
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
@@ -24,8 +24,8 @@ open class MySuspendResolverType {
     open suspend fun nonNullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("MySuspendResolverType.nonNullableField must be implemented.")
     open suspend fun nullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = throw NotImplementedError("MySuspendResolverType.nullableResolver must be implemented.")
     open suspend fun nonNullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("MySuspendResolverType.nonNullableResolver must be implemented.")
-    open suspend fun nullableListResolver(arg1: Int?, arg2: Int, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String?>? = throw NotImplementedError("MySuspendResolverType.nullableListResolver must be implemented.")
-    open suspend fun nonNullableListResolver(arg1: Int, arg2: Int?, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String> = throw NotImplementedError("MySuspendResolverType.nonNullableListResolver must be implemented.")
+    open suspend fun nullableListResolver(arg1: Int? = null, arg2: Int, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String?>? = throw NotImplementedError("MySuspendResolverType.nullableListResolver must be implemented.")
+    open suspend fun nonNullableListResolver(arg1: Int, arg2: Int? = null, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String> = throw NotImplementedError("MySuspendResolverType.nonNullableListResolver must be implemented.")
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
@@ -34,8 +34,8 @@ open class MyCompletableFutureResolverType {
     open fun nonNullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<String> = throw NotImplementedError("MyCompletableFutureResolverType.nonNullableField must be implemented.")
     open fun nullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<String?> = throw NotImplementedError("MyCompletableFutureResolverType.nullableResolver must be implemented.")
     open fun nonNullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<String> = throw NotImplementedError("MyCompletableFutureResolverType.nonNullableResolver must be implemented.")
-    open fun nullableListResolver(arg1: Int?, arg2: Int, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<List<String?>?> = throw NotImplementedError("MyCompletableFutureResolverType.nullableListResolver must be implemented.")
-    open fun nonNullableListResolver(arg1: Int, arg2: Int?, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<List<String>> = throw NotImplementedError("MyCompletableFutureResolverType.nonNullableListResolver must be implemented.")
+    open fun nullableListResolver(arg1: Int? = null, arg2: Int, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<List<String?>?> = throw NotImplementedError("MyCompletableFutureResolverType.nullableListResolver must be implemented.")
+    open fun nonNullableListResolver(arg1: Int, arg2: Int? = null, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<List<String>> = throw NotImplementedError("MyCompletableFutureResolverType.nonNullableListResolver must be implemented.")
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])

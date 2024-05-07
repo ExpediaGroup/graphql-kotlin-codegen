@@ -110,9 +110,15 @@ function buildFieldArguments(
   if (!typeIsInResolverClasses && !fieldNode.arguments?.length) {
     return "";
   }
+  const isOverrideFunction = shouldModifyFieldWithOverride(
+    node,
+    fieldNode,
+    schema,
+  );
+  const nullableSuffix = isOverrideFunction ? "?" : "? = null";
   const existingFieldArguments = fieldNode.arguments?.map((arg) => {
     const argMetadata = buildTypeMetadata(arg.type, schema, config);
-    return `${arg.name.value}: ${argMetadata.typeName}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : "?"}`;
+    return `${arg.name.value}: ${argMetadata.typeName}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : nullableSuffix}`;
   });
   const dataFetchingEnvironmentArgument =
     "dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment";
