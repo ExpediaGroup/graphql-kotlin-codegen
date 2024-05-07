@@ -17,5 +17,5 @@ open class FederatedTypeResolver(
     @com.expediagroup.graphql.generator.federation.directives.ExternalDirective
     val field2: String? = null
 ) {
-    open fun field(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("FederatedTypeResolver.field must be implemented.")
+    open fun field(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment? = null): String = throw NotImplementedError("FederatedTypeResolver.field must be implemented.")
 }
