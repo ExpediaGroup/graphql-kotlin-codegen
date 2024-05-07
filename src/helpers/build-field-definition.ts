@@ -120,7 +120,8 @@ function buildFieldArguments(
     const argMetadata = buildTypeMetadata(arg.type, schema, config);
     return `${arg.name.value}: ${argMetadata.typeName}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : nullableSuffix}`;
   });
-  const dataFetchingEnvironmentArgument = `dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment${nullableSuffix}`;
+  const dataFetchingEnvironmentArgument =
+    "dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment";
   const extraFieldArguments = [dataFetchingEnvironmentArgument];
   const allFieldArguments = existingFieldArguments?.concat(extraFieldArguments);
   return allFieldArguments?.length
