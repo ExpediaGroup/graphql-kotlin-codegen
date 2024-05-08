@@ -98,10 +98,8 @@ export function buildObjectTypeDefinition(
     const fieldNodes = typeInResolverInterfacesConfig
       ? node.fields
       : fieldsWithArguments;
-    const abstractModifier = constructor ? "abstract " : "";
-    const keyWord = constructor ? "abstract class" : "interface";
-    return `${annotations}${outputRestrictionAnnotation}${keyWord} ${name}${constructor}${interfaceInheritance} {
-${getDataClassMembers({ node, fieldNodes, schema, config, shouldGenerateFunctions, abstractModifier })}
+    return `${annotations}${outputRestrictionAnnotation}open class ${name}${constructor}${interfaceInheritance} {
+${getDataClassMembers({ node, fieldNodes, schema, config, shouldGenerateFunctions })}
 }`;
   }
 
@@ -115,14 +113,12 @@ function getDataClassMembers({
   fieldNodes,
   schema,
   config,
-  abstractModifier,
   shouldGenerateFunctions,
 }: {
   node: ObjectTypeDefinitionNode;
   fieldNodes?: readonly FieldDefinitionNode[];
   schema: GraphQLSchema;
   config: CodegenConfigWithDefaults;
-  abstractModifier?: string;
   shouldGenerateFunctions?: boolean;
 }) {
   return (fieldNodes ?? node.fields)
@@ -135,7 +131,6 @@ function getDataClassMembers({
         config,
         typeMetadata,
         shouldGenerateFunctions,
-        abstractModifier,
       );
     })
     .join(`${shouldGenerateFunctions ? "" : ","}\n`);

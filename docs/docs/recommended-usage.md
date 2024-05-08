@@ -4,9 +4,9 @@ sidebar_position: 4
 
 # Recommended Usage
 
-In general, the `resolverClasses` config should be used to generate more performant code. This is especially important
+In general, the `resolverInterfaces` config should be used to generate more performant code. This is especially important
 when dealing with expensive operations, such as database queries or network requests. When at least one field has
-arguments in a type, we generate an interface with function signatures to be inherited in source code.
+arguments in a type, we generate an open class with function signatures to be inherited in source code.
 However, when fields have no arguments, we generate data classes by default.
 
 ## Example
@@ -33,8 +33,8 @@ Generated Kotlin:
 ```kotlin
 package com.types.generated
 
-interface Query {
-  fun resolveMyType(input: String): MyType
+open class Query {
+  open fun resolveMyType(input: String): MyType = throw NotImplementedError("Query.resolveMyType must be implemented.")
 }
 
 data class MyType(
@@ -50,7 +50,7 @@ import com.expediagroup.graphql.server.operations.Query
 import com.types.generated.MyType
 import com.types.generated.Query as QueryInterface
 
-class MyQuery : Query, QueryInterface {
+class MyQuery : Query, QueryInterface() {
   override fun resolveMyType(input: String): MyType =
     MyType(
       field1 = myExpensiveCall1(),
@@ -65,7 +65,7 @@ that the `field1` and `field2` properties are both initialized when the `MyType`
 `myExpensiveCall1()` and `myExpensiveCall2()` will both be called in sequence! Even if I only query for `field1`, not
 only will `myExpensiveCall2()` still run, but it will also wait until `myExpensiveCall1()` is totally finished.
 
-### Instead, use the `resolverClasses` config!
+### Instead, use the `resolverInterfaces` config!
 
 Codegen config:
 
@@ -73,7 +73,7 @@ Codegen config:
 import { GraphQLKotlinCodegenConfig } from "@expediagroup/graphql-kotlin-codegen";
 
 export default {
-  resolverClasses: [
+  resolverInterfaces: [
     {
       typeName: "MyType",
     },
@@ -86,13 +86,13 @@ Generated Kotlin:
 ```kotlin
 package com.types.generated
 
-interface Query {
-  fun resolveMyType(input: String): MyType
+open class Query {
+  open fun resolveMyType(input: String): MyType = throw NotImplementedError("Query.resolveMyType must be implemented.")
 }
 
-interface MyType {
-  fun field1(): String
-  fun field2(): String?
+open class MyType {
+  open fun field1(): String = throw NotImplementedError("MyType.field1 must be implemented.")
+  open fun field2(): String? = throw NotImplementedError("MyType.field2 must be implemented.")
 }
 ```
 
@@ -102,12 +102,12 @@ Source code:
 import com.types.generated.MyType as MyTypeInterface
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 
-class MyQuery : Query, QueryInterface {
+class MyQuery : Query, QueryInterface() {
     override fun resolveMyType(input: String): MyType = MyType()
 }
 
 @GraphQLIgnore
-class MyType : MyTypeInterface {
+class MyType : MyTypeInterface() {
   override fun field1(): String = myExpensiveCall1()
   override fun field2(): String? = myExpensiveCall2()
 }
