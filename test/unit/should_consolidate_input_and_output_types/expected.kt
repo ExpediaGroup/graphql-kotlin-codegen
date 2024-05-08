@@ -106,3 +106,25 @@ data class MySuperSetTypeInput(
     val field2: String? = null,
     val field3: Int? = null
 )
+
+data class MyTypeWithEnums(
+    val field1: List<Enum1>? = null,
+    val field2: List<Enum2>? = null
+)
+
+enum class Enum1 {
+    This,
+    That;
+
+    companion object {
+        fun findByName(name: String, ignoreCase: Boolean = false): Enum1? = values().find { it.name.equals(name, ignoreCase = ignoreCase) }
+    }
+}
+
+enum class Enum2 {
+    The_Other;
+
+    companion object {
+        fun findByName(name: String, ignoreCase: Boolean = false): Enum2? = values().find { it.name.equals(name, ignoreCase = ignoreCase) }
+    }
+}
