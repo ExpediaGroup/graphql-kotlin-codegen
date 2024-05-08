@@ -30,7 +30,12 @@ function typesAreEquivalent(
 ): boolean {
   const typeNode = schema.getType(typeName);
   const inputNode = schema.getType(inputName);
-  if (!typeNode?.astNode && !inputNode?.astNode) {
+
+  if (
+    !isObjectType(typeNode) &&
+    !isInputObjectType(inputNode) &&
+    typeNode?.astNode?.kind === inputNode?.astNode?.kind
+  ) {
     return true;
   }
   if (

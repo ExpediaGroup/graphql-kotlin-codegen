@@ -130,3 +130,22 @@ input MySuperSetTypeInput {
   field2: String
   field3: Int
 }
+
+type MyTypeWithEnums {
+  field1: [Enum1!]
+  field2: [Enum2!]
+}
+
+input MyTypeWithEnumsInput {
+  field1: [Enum1!]
+  field2: [Enum2!]
+}
+
+enum Enum1 {
+  THIS
+  THAT
+}
+
+enum Enum2 {
+  THE_OTHER
+}
