@@ -32,14 +32,14 @@ export function buildFieldDefinition(
   config: CodegenConfigWithDefaults,
   typeMetadata: TypeMetadata,
   shouldGenerateFunctions?: boolean,
-  hasConstructor?: boolean,
+  abstractModifier: string = "",
 ) {
   const modifier = buildFieldModifier(
     node,
     fieldNode,
     schema,
     config,
-    hasConstructor,
+    abstractModifier,
   );
   const fieldArguments = buildFieldArguments(node, fieldNode, schema, config);
   const fieldDefinition = `${modifier} ${fieldNode.name.value}${fieldArguments}`;
@@ -80,7 +80,7 @@ function buildFieldModifier(
   fieldNode: FieldDefinitionNode,
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
-  hasConstructor?: boolean,
+  abstractModifier: string,
 ) {
   const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
     node,
@@ -102,7 +102,6 @@ function buildFieldModifier(
   if (node.kind === Kind.INTERFACE_TYPE_DEFINITION) {
     return `${functionModifier}fun`;
   }
-  const abstractModifier = hasConstructor ? "abstract " : "";
 
   return `${abstractModifier}${overrideModifier}${functionModifier}fun`;
 }
