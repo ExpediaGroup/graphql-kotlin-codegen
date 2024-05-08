@@ -12,7 +12,7 @@ In essence, it unlocks a schema-first approach to [code-first GraphQL](https://w
 
 ## 📋 Docs
 
-Check out our <a href="https://opensource.expediagroup.com/graphql-kotlin-codegen/" target="_blank">documentation site</a>!.
+<a href="https://opensource.expediagroup.com/graphql-kotlin-codegen/" target="_blank">Check out our docs site!</a>
 
 ## ✏️ Contributions
 

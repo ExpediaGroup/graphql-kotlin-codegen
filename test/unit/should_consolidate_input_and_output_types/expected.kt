@@ -69,8 +69,8 @@ data class MyTypeToConsolidateInputParent(
 )
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
-interface MyTypeToConsolidateParent2 {
-    fun field(input: MyTypeToConsolidate, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String?
+open class MyTypeToConsolidateParent2 {
+    open fun field(input: MyTypeToConsolidate, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = throw NotImplementedError("MyTypeToConsolidateParent2.field must be implemented.")
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
