@@ -108,7 +108,8 @@ export const configSchema = object({
    */
   packageName: optional(string()),
   /**
-   * Denotes types that should be generated as interfaces rather than classes. Resolver classes should inherit from these to enforce a type contract.
+   * Denotes types that should be generated as interfaces rather than classes. Resolver classes should implement the
+   * interface functions to enforce a type contract.
    *
    * Type names can be optionally passed with the classMethods config to generate the interface with `suspend` functions or
    * `java.util.concurrent.CompletableFuture` functions.
