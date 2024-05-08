@@ -6,7 +6,7 @@ sidebar_position: 4
 
 In general, the `resolverClasses` config should be used to generate more performant code. This is especially important
 when dealing with expensive operations, such as database queries or network requests. When at least one field has
-arguments in a type, we generate an open class with function signatures to be inherited in source code.
+arguments in a type, we generate an interface with function signatures to be inherited in source code.
 However, when fields have no arguments, we generate data classes by default.
 
 ## Example
@@ -33,8 +33,8 @@ Generated Kotlin:
 ```kotlin
 package com.types.generated
 
-open class Query {
-  open fun resolveMyType(input: String): MyType = throw NotImplementedError("Query.resolveMyType must be implemented.")
+interface Query {
+  fun resolveMyType(input: String): MyType
 }
 
 data class MyType(
@@ -50,7 +50,7 @@ import com.expediagroup.graphql.server.operations.Query
 import com.types.generated.MyType
 import com.types.generated.Query as QueryInterface
 
-class MyQuery : Query, QueryInterface() {
+class MyQuery : Query, QueryInterface {
   override fun resolveMyType(input: String): MyType =
     MyType(
       field1 = myExpensiveCall1(),
@@ -86,13 +86,13 @@ Generated Kotlin:
 ```kotlin
 package com.types.generated
 
-open class Query {
-  open fun resolveMyType(input: String): MyType = throw NotImplementedError("Query.resolveMyType must be implemented.")
+interface Query {
+  fun resolveMyType(input: String): MyType
 }
 
-open class MyType {
-  open fun field1(): String = throw NotImplementedError("MyType.field1 must be implemented.")
-  open fun field2(): String? = throw NotImplementedError("MyType.field2 must be implemented.")
+interface MyType {
+  fun field1(): String
+  fun field2(): String?
 }
 ```
 
@@ -102,12 +102,12 @@ Source code:
 import com.types.generated.MyType as MyTypeInterface
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 
-class MyQuery : Query, QueryInterface() {
+class MyQuery : Query, QueryInterface {
     override fun resolveMyType(input: String): MyType = MyType()
 }
 
 @GraphQLIgnore
-class MyType : MyTypeInterface() {
+class MyType : MyTypeInterface {
   override fun field1(): String = myExpensiveCall1()
   override fun field2(): String? = myExpensiveCall2()
 }

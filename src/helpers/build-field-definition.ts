@@ -32,8 +32,15 @@ export function buildFieldDefinition(
   config: CodegenConfigWithDefaults,
   typeMetadata: TypeMetadata,
   shouldGenerateFunctions?: boolean,
+  hasConstructor?: boolean,
 ) {
-  const modifier = buildFieldModifier(node, fieldNode, schema, config);
+  const modifier = buildFieldModifier(
+    node,
+    fieldNode,
+    schema,
+    config,
+    hasConstructor,
+  );
   const fieldArguments = buildFieldArguments(node, fieldNode, schema, config);
   const fieldDefinition = `${modifier} ${fieldNode.name.value}${fieldArguments}`;
   const annotations = buildAnnotations({
@@ -49,8 +56,7 @@ export function buildFieldDefinition(
     );
   }
 
-  const notImplementedError = ` = throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`;
-  const defaultFunctionValue = `${typeMetadata.isNullable ? "?" : ""}${notImplementedError}`;
+  const defaultFunctionValue = `${typeMetadata.isNullable ? "?" : ""}`;
   const defaultValue = shouldGenerateFunctions
     ? defaultFunctionValue
     : typeMetadata.defaultValue;
@@ -61,7 +67,7 @@ export function buildFieldDefinition(
   );
   const isCompletableFuture =
     typeInResolverClassesConfig?.classMethods === "COMPLETABLE_FUTURE";
-  const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}>${notImplementedError}`;
+  const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}>`;
   const field = indent(
     `${fieldDefinition}: ${isCompletableFuture ? completableFutureDefinition : defaultDefinition}`,
     2,
@@ -74,6 +80,7 @@ function buildFieldModifier(
   fieldNode: FieldDefinitionNode,
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
+  hasConstructor?: boolean,
 ) {
   const typeInResolverClassesConfig = findTypeInResolverClassesConfig(
     node,
@@ -94,10 +101,12 @@ function buildFieldModifier(
   }
   const isCompletableFuture =
     typeInResolverClassesConfig?.classMethods === "COMPLETABLE_FUTURE";
+  const abstractModifier = hasConstructor ? "abstract " : "";
+
   if (shouldOverrideField && !isCompletableFuture) {
-    return "override fun";
+    return `${abstractModifier}override fun`;
   }
-  return `open ${functionModifier}fun`;
+  return `${abstractModifier}${functionModifier}fun`;
 }
 
 function buildFieldArguments(
