@@ -91,22 +91,18 @@ function buildFieldModifier(
     fieldNode,
     schema,
   );
+  const overrideModifier = shouldOverrideField ? "override " : "";
   if (!typeInResolverClassesConfig && !fieldNode.arguments?.length) {
-    return shouldOverrideField ? "override val" : "val";
+    return `${overrideModifier}val`;
   }
   const functionModifier =
     typeInResolverClassesConfig?.classMethods === "SUSPEND" ? "suspend " : "";
   if (node.kind === Kind.INTERFACE_TYPE_DEFINITION) {
     return `${functionModifier}fun`;
   }
-  const isCompletableFuture =
-    typeInResolverClassesConfig?.classMethods === "COMPLETABLE_FUTURE";
   const abstractModifier = hasConstructor ? "abstract " : "";
 
-  if (shouldOverrideField && !isCompletableFuture) {
-    return `${abstractModifier}override fun`;
-  }
-  return `${abstractModifier}${functionModifier}fun`;
+  return `${abstractModifier}${overrideModifier}${functionModifier}fun`;
 }
 
 function buildFieldArguments(
