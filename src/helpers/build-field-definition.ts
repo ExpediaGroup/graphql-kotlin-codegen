@@ -23,7 +23,7 @@ import {
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildAnnotations } from "./build-annotations";
-import { findTypeInResolverClassesConfig } from "./findTypeInResolverClassesConfig";
+import { findTypeInResolverInterfacesConfig } from "./findTypeInResolverInterfacesConfig";
 
 export function buildFieldDefinition(
   node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
@@ -32,8 +32,15 @@ export function buildFieldDefinition(
   config: CodegenConfigWithDefaults,
   typeMetadata: TypeMetadata,
   shouldGenerateFunctions?: boolean,
+  abstractModifier: string = "",
 ) {
-  const modifier = buildFieldModifier(node, fieldNode, schema, config);
+  const modifier = buildFieldModifier(
+    node,
+    fieldNode,
+    schema,
+    config,
+    abstractModifier,
+  );
   const fieldArguments = buildFieldArguments(node, fieldNode, schema, config);
   const fieldDefinition = `${modifier} ${fieldNode.name.value}${fieldArguments}`;
   const annotations = buildAnnotations({
@@ -49,19 +56,18 @@ export function buildFieldDefinition(
     );
   }
 
-  const notImplementedError = ` = throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`;
-  const defaultFunctionValue = `${typeMetadata.isNullable ? "?" : ""}${notImplementedError}`;
+  const defaultFunctionValue = `${typeMetadata.isNullable ? "?" : ""}`;
   const defaultValue = shouldGenerateFunctions
     ? defaultFunctionValue
     : typeMetadata.defaultValue;
   const defaultDefinition = `${typeMetadata.typeName}${defaultValue}`;
-  const typeInResolverClassesConfig = findTypeInResolverClassesConfig(
+  const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
     node,
     config,
   );
   const isCompletableFuture =
-    typeInResolverClassesConfig?.classMethods === "COMPLETABLE_FUTURE";
-  const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}>${notImplementedError}`;
+    typeInResolverInterfacesConfig?.classMethods === "COMPLETABLE_FUTURE";
+  const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}>`;
   const field = indent(
     `${fieldDefinition}: ${isCompletableFuture ? completableFutureDefinition : defaultDefinition}`,
     2,
@@ -74,8 +80,9 @@ function buildFieldModifier(
   fieldNode: FieldDefinitionNode,
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
+  abstractModifier: string,
 ) {
-  const typeInResolverClassesConfig = findTypeInResolverClassesConfig(
+  const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
     node,
     config,
   );
@@ -84,20 +91,19 @@ function buildFieldModifier(
     fieldNode,
     schema,
   );
-  if (!typeInResolverClassesConfig && !fieldNode.arguments?.length) {
-    return shouldOverrideField ? "override val" : "val";
+  const overrideModifier = shouldOverrideField ? "override " : "";
+  if (!typeInResolverInterfacesConfig && !fieldNode.arguments?.length) {
+    return `${overrideModifier}val`;
   }
   const functionModifier =
-    typeInResolverClassesConfig?.classMethods === "SUSPEND" ? "suspend " : "";
+    typeInResolverInterfacesConfig?.classMethods === "SUSPEND"
+      ? "suspend "
+      : "";
   if (node.kind === Kind.INTERFACE_TYPE_DEFINITION) {
     return `${functionModifier}fun`;
   }
-  const isCompletableFuture =
-    typeInResolverClassesConfig?.classMethods === "COMPLETABLE_FUTURE";
-  if (shouldOverrideField && !isCompletableFuture) {
-    return "override fun";
-  }
-  return `open ${functionModifier}fun`;
+
+  return `${abstractModifier}${overrideModifier}${functionModifier}fun`;
 }
 
 function buildFieldArguments(
@@ -106,8 +112,11 @@ function buildFieldArguments(
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  const typeIsInResolverClasses = findTypeInResolverClassesConfig(node, config);
-  if (!typeIsInResolverClasses && !fieldNode.arguments?.length) {
+  const typeIsInResolverInterfaces = findTypeInResolverInterfacesConfig(
+    node,
+    config,
+  );
+  if (!typeIsInResolverInterfaces && !fieldNode.arguments?.length) {
     return "";
   }
   const isOverrideFunction = shouldModifyFieldWithOverride(

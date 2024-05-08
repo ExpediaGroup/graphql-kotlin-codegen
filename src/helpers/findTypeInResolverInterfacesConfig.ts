@@ -1,11 +1,11 @@
 import { InterfaceTypeDefinitionNode, ObjectTypeDefinitionNode } from "graphql";
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 
-export function findTypeInResolverClassesConfig(
+export function findTypeInResolverInterfacesConfig(
   node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
   config: CodegenConfigWithDefaults,
 ) {
-  return config.resolverClasses?.find(
-    (resolverClass) => resolverClass.typeName === node.name.value,
+  return config.resolverInterfaces?.find(
+    (resolverInterface) => resolverInterface.typeName === node.name.value,
   );
 }
