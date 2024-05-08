@@ -12,7 +12,7 @@ export default {
       plugins: [
         {
           "dist/plugin.cjs": {
-            resolverClasses: [
+            resolverInterfaces: [
               {
                 typeName: "Query",
               },

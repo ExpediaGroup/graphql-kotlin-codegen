@@ -1,7 +1,7 @@
 import { GraphQLKotlinCodegenConfig } from "../../../src/plugin";
 
 export default {
-  resolverClasses: [
+  resolverInterfaces: [
     {
       typeName: "MyIncludedResolverType",
     },

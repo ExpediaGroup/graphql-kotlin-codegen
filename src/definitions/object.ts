@@ -27,7 +27,7 @@ import {
 import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 import { inputTypeHasMatchingOutputType } from "../helpers/input-type-has-matching-output-type";
-import { findTypeInResolverClassesConfig } from "../helpers/findTypeInResolverClassesConfig";
+import { findTypeInResolverInterfacesConfig } from "../helpers/findTypeInResolverInterfacesConfig";
 
 export function buildObjectTypeDefinition(
   node: ObjectTypeDefinitionNode,
@@ -60,12 +60,12 @@ export function buildObjectTypeDefinition(
     ? ""
     : "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])\n";
 
-  const typeInResolverClassesConfig = findTypeInResolverClassesConfig(
+  const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
     node,
     config,
   );
   const shouldGenerateFunctions = Boolean(
-    typeInResolverClassesConfig ||
+    typeInResolverInterfacesConfig ||
       node.fields?.some((fieldNode) => fieldNode.arguments?.length),
   );
   if (shouldGenerateFunctions) {
@@ -73,7 +73,7 @@ export function buildObjectTypeDefinition(
       (fieldNode) => !fieldNode.arguments?.length,
     );
     const constructor =
-      !typeInResolverClassesConfig && fieldsWithNoArguments?.length
+      !typeInResolverInterfacesConfig && fieldsWithNoArguments?.length
         ? `(\n${fieldsWithNoArguments
             .map((fieldNode) => {
               const typeMetadata = buildTypeMetadata(
@@ -95,7 +95,7 @@ export function buildObjectTypeDefinition(
     const fieldsWithArguments = node.fields?.filter(
       (fieldNode) => fieldNode.arguments?.length,
     );
-    const fieldNodes = typeInResolverClassesConfig
+    const fieldNodes = typeInResolverInterfacesConfig
       ? node.fields
       : fieldsWithArguments;
     const hasConstructor = Boolean(constructor);

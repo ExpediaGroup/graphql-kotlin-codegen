@@ -23,7 +23,7 @@ import {
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildAnnotations } from "./build-annotations";
-import { findTypeInResolverClassesConfig } from "./findTypeInResolverClassesConfig";
+import { findTypeInResolverInterfacesConfig } from "./findTypeInResolverInterfacesConfig";
 
 export function buildFieldDefinition(
   node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
@@ -61,12 +61,12 @@ export function buildFieldDefinition(
     ? defaultFunctionValue
     : typeMetadata.defaultValue;
   const defaultDefinition = `${typeMetadata.typeName}${defaultValue}`;
-  const typeInResolverClassesConfig = findTypeInResolverClassesConfig(
+  const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
     node,
     config,
   );
   const isCompletableFuture =
-    typeInResolverClassesConfig?.classMethods === "COMPLETABLE_FUTURE";
+    typeInResolverInterfacesConfig?.classMethods === "COMPLETABLE_FUTURE";
   const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}>`;
   const field = indent(
     `${fieldDefinition}: ${isCompletableFuture ? completableFutureDefinition : defaultDefinition}`,
@@ -82,7 +82,7 @@ function buildFieldModifier(
   config: CodegenConfigWithDefaults,
   hasConstructor?: boolean,
 ) {
-  const typeInResolverClassesConfig = findTypeInResolverClassesConfig(
+  const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
     node,
     config,
   );
@@ -92,11 +92,13 @@ function buildFieldModifier(
     schema,
   );
   const overrideModifier = shouldOverrideField ? "override " : "";
-  if (!typeInResolverClassesConfig && !fieldNode.arguments?.length) {
+  if (!typeInResolverInterfacesConfig && !fieldNode.arguments?.length) {
     return `${overrideModifier}val`;
   }
   const functionModifier =
-    typeInResolverClassesConfig?.classMethods === "SUSPEND" ? "suspend " : "";
+    typeInResolverInterfacesConfig?.classMethods === "SUSPEND"
+      ? "suspend "
+      : "";
   if (node.kind === Kind.INTERFACE_TYPE_DEFINITION) {
     return `${functionModifier}fun`;
   }
@@ -111,8 +113,11 @@ function buildFieldArguments(
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  const typeIsInResolverClasses = findTypeInResolverClassesConfig(node, config);
-  if (!typeIsInResolverClasses && !fieldNode.arguments?.length) {
+  const typeIsInResolverInterfaces = findTypeInResolverInterfacesConfig(
+    node,
+    config,
+  );
+  if (!typeIsInResolverInterfaces && !fieldNode.arguments?.length) {
     return "";
   }
   const isOverrideFunction = shouldModifyFieldWithOverride(

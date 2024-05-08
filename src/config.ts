@@ -108,9 +108,9 @@ export const configSchema = object({
    */
   packageName: optional(string()),
   /**
-   * Denotes types that should be generated as classes. Resolver classes can inherit from these to enforce a type contract.
+   * Denotes types that should be generated as interfaces rather than classes. Resolver classes should inherit from these to enforce a type contract.
    *
-   * Type names can be optionally passed with the classMethods config to generate `suspend` functions or
+   * Type names can be optionally passed with the classMethods config to generate the interface with `suspend` functions or
    * `java.util.concurrent.CompletableFuture` functions.
    * @example
    * [
@@ -128,7 +128,7 @@ export const configSchema = object({
    * ]
    * @link https://opensource.expediagroup.com/graphql-kotlin-codegen/docs/recommended-usage
    */
-  resolverClasses: optional(
+  resolverInterfaces: optional(
     array(
       object({
         typeName: string(),
