@@ -11,10 +11,12 @@ open class TypeWithOnlyFieldArgs {
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 open class HybridType(
     val nullableField: String? = null,
-    val nonNullableField: String
+    val nonNullableField: String,
+    private val nullableResolver: String? = null,
+    private val nonNullableResolver: String
 ) {
-    open fun nullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = throw NotImplementedError("HybridType.nullableResolver must be implemented.")
-    open fun nonNullableResolver(arg: InputTypeForResolver, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("HybridType.nonNullableResolver must be implemented.")
+    open fun nullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = nullableResolver
+    open fun nonNullableResolver(arg: InputTypeForResolver, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = nonNullableResolver
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
@@ -36,8 +38,10 @@ open class TypeImplementingInterface(
     val booleanField1: Boolean? = null,
     val booleanField2: Boolean = false,
     val integerField1: Int? = null,
-    val integerField2: Int
+    val integerField2: Int,
+    private val nullableListResolver: List<String?>? = null,
+    private val nonNullableListResolver: List<String>
 ) : HybridInterface {
-    override fun nullableListResolver(arg1: Int?, arg2: Int, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String?>? = throw NotImplementedError("TypeImplementingInterface.nullableListResolver must be implemented.")
-    override fun nonNullableListResolver(arg1: Int, arg2: Int?, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String> = throw NotImplementedError("TypeImplementingInterface.nonNullableListResolver must be implemented.")
+    override fun nullableListResolver(arg1: Int?, arg2: Int, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String?>? = nullableListResolver
+    override fun nonNullableListResolver(arg1: Int, arg2: Int?, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String> = nonNullableListResolver
 }
