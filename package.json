@@ -20,8 +20,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@graphql-codegen/java-common": "3.0.0",
-    "@graphql-codegen/plugin-helpers": "5.0.3",
-    "@graphql-codegen/visitor-plugin-common": "5.1.0",
+    "@graphql-codegen/plugin-helpers": "5.0.4",
+    "@graphql-codegen/visitor-plugin-common": "5.2.0",
     "valibot": "0.30.0"
   },
   "devDependencies": {
