@@ -4,12 +4,20 @@ import com.expediagroup.graphql.generator.annotations.*
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 open class MyIncludedResolverType {
-    open fun nullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = throw NotImplementedError("MyIncludedResolverType.nullableField must be implemented.")
+    open fun nullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): MyChildType? = throw NotImplementedError("MyIncludedResolverType.nullableField must be implemented.")
     open fun nonNullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("MyIncludedResolverType.nonNullableField must be implemented.")
     open fun nullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = throw NotImplementedError("MyIncludedResolverType.nullableResolver must be implemented.")
     open fun nonNullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("MyIncludedResolverType.nonNullableResolver must be implemented.")
     open fun nullableListResolver(arg1: Int? = null, arg2: Int, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String?>? = throw NotImplementedError("MyIncludedResolverType.nullableListResolver must be implemented.")
     open fun nonNullableListResolver(arg1: Int, arg2: Int? = null, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String> = throw NotImplementedError("MyIncludedResolverType.nonNullableListResolver must be implemented.")
+}
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
+open class MyChildType(
+    val field: String? = null,
+    private val field2: String? = null
+) {
+    open fun field2(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = field2
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])

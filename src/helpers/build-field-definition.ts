@@ -62,8 +62,12 @@ export function buildFieldDefinition(
   const atLeastOneFieldHasNoArguments = node.fields?.some(
     (fieldNode) => !fieldNode.arguments?.length,
   );
+  const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
+    node,
+    config,
+  );
   const defaultImplementation =
-    atLeastOneFieldHasNoArguments && !config.resolverInterfaces
+    !typeInResolverInterfacesConfig && atLeastOneFieldHasNoArguments
       ? fieldNode.name.value
       : notImplementedError;
   const defaultFunctionValue = `${typeMetadata.isNullable ? "?" : ""} = ${defaultImplementation}`;
@@ -72,10 +76,7 @@ export function buildFieldDefinition(
       ? defaultFunctionValue
       : typeMetadata.defaultValue;
   const defaultDefinition = `${typeMetadata.typeName}${defaultValue}`;
-  const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
-    node,
-    config,
-  );
+
   const isCompletableFuture =
     typeInResolverInterfacesConfig?.classMethods === "COMPLETABLE_FUTURE";
   const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}> = ${defaultImplementation}`;
