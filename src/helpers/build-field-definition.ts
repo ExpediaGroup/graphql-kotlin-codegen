@@ -32,16 +32,16 @@ export function buildFieldDefinition(
   config: CodegenConfigWithDefaults,
   typeMetadata: TypeMetadata,
   shouldGenerateFunctions?: boolean,
-  isConstructor?: boolean,
+  isConstructorField?: boolean,
 ) {
   const modifier = buildFieldModifier(
     node,
     fieldNode,
     schema,
     config,
-    isConstructor,
+    isConstructorField,
   );
-  const fieldArguments = isConstructor
+  const fieldArguments = isConstructorField
     ? ""
     : buildFieldArguments(node, fieldNode, schema, config);
   const fieldDefinition = `${modifier} ${fieldNode.name.value}${fieldArguments}`;
@@ -67,9 +67,10 @@ export function buildFieldDefinition(
       ? fieldNode.name.value
       : notImplementedError;
   const defaultFunctionValue = `${typeMetadata.isNullable ? "?" : ""} = ${defaultImplementation}`;
-  const defaultValue = shouldGenerateFunctions
-    ? defaultFunctionValue
-    : typeMetadata.defaultValue;
+  const defaultValue =
+    shouldGenerateFunctions && !isConstructorField
+      ? defaultFunctionValue
+      : typeMetadata.defaultValue;
   const defaultDefinition = `${typeMetadata.typeName}${defaultValue}`;
   const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
     node,
@@ -90,7 +91,7 @@ function buildFieldModifier(
   fieldNode: FieldDefinitionNode,
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
-  isConstructor?: boolean,
+  isConstructorField?: boolean,
 ) {
   const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
     node,
@@ -102,11 +103,7 @@ function buildFieldModifier(
     schema,
   );
 
-  if (
-    !typeInResolverInterfacesConfig &&
-    isConstructor &&
-    fieldNode.arguments?.length
-  ) {
+  if (isConstructorField && fieldNode.arguments?.length) {
     return "private val";
   }
   if (!typeInResolverInterfacesConfig && !fieldNode.arguments?.length) {

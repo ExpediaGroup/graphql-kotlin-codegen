@@ -87,7 +87,7 @@ export function buildObjectTypeDefinition(
                 schema,
                 config,
                 typeMetadata,
-                false,
+                shouldGenerateFunctions,
                 true,
               );
             })
