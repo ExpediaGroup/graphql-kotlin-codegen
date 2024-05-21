@@ -30,7 +30,13 @@ directive @specifiedBy(
   ) on SCALAR
 
 type Query {
-  testQuery: SomeType!
+  testQuery1: SomeType!
+  testQuery2: SomeHybridType!
+}
+
+type SomeHybridType {
+  someField: String!
+  someField2(input: String!): String
 }
 
 type SomeType {

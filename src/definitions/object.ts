@@ -69,13 +69,13 @@ export function buildObjectTypeDefinition(
       node.fields?.some((fieldNode) => fieldNode.arguments?.length),
   );
   if (shouldGenerateFunctions) {
-    const fieldsWithNoArguments = node.fields?.filter(
+    const atLeastOneFieldHasNoArguments = node.fields?.some(
       (fieldNode) => !fieldNode.arguments?.length,
     );
     const constructor =
-      !typeInResolverInterfacesConfig && fieldsWithNoArguments?.length
-        ? `(\n${fieldsWithNoArguments
-            .map((fieldNode) => {
+      !typeInResolverInterfacesConfig && atLeastOneFieldHasNoArguments
+        ? `(\n${node.fields
+            ?.map((fieldNode) => {
               const typeMetadata = buildTypeMetadata(
                 fieldNode.type,
                 schema,
@@ -87,6 +87,8 @@ export function buildObjectTypeDefinition(
                 schema,
                 config,
                 typeMetadata,
+                shouldGenerateFunctions,
+                true,
               );
             })
             .join(",\n")}\n)`

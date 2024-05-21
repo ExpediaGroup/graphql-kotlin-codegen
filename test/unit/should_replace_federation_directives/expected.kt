@@ -14,8 +14,9 @@ data class FederatedType(
 @com.expediagroup.graphql.generator.federation.directives.KeyDirective(com.expediagroup.graphql.generator.federation.directives.FieldSet("some other field"))
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 open class FederatedTypeResolver(
+    private val field: String,
     @com.expediagroup.graphql.generator.federation.directives.ExternalDirective
     val field2: String? = null
 ) {
-    open fun field(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("FederatedTypeResolver.field must be implemented.")
+    open fun field(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = field
 }

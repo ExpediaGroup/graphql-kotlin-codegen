@@ -1,10 +1,15 @@
 type MyIncludedResolverType {
-  nullableField: String
+  nullableField: MyChildType
   nonNullableField: String!
   nullableResolver(arg: String!): String
   nonNullableResolver(arg: String!): String!
   nullableListResolver(arg1: Int, arg2: Int!): [String]
   nonNullableListResolver(arg1: Int!, arg2: Int): [String!]!
+}
+
+type MyChildType {
+  field: String
+  field2(arg: String!): String
 }
 
 type MyIncludedResolverTypeWithNoFieldArgs {
