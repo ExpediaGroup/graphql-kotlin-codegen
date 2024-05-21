@@ -32,9 +32,18 @@ export function buildFieldDefinition(
   config: CodegenConfigWithDefaults,
   typeMetadata: TypeMetadata,
   shouldGenerateFunctions?: boolean,
+  isConstructor?: boolean,
 ) {
-  const modifier = buildFieldModifier(node, fieldNode, schema, config);
-  const fieldArguments = buildFieldArguments(node, fieldNode, schema, config);
+  const modifier = buildFieldModifier(
+    node,
+    fieldNode,
+    schema,
+    config,
+    isConstructor,
+  );
+  const fieldArguments = isConstructor
+    ? ""
+    : buildFieldArguments(node, fieldNode, schema, config);
   const fieldDefinition = `${modifier} ${fieldNode.name.value}${fieldArguments}`;
   const annotations = buildAnnotations({
     config,
@@ -49,8 +58,15 @@ export function buildFieldDefinition(
     );
   }
 
-  const notImplementedError = ` = throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`;
-  const defaultFunctionValue = `${typeMetadata.isNullable ? "?" : ""}${notImplementedError}`;
+  const notImplementedError = `throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`;
+  const atLeastOneFieldHasNoArguments = node.fields?.some(
+    (fieldNode) => !fieldNode.arguments?.length,
+  );
+  const defaultImplementation =
+    atLeastOneFieldHasNoArguments && !config.resolverInterfaces
+      ? fieldNode.name.value
+      : notImplementedError;
+  const defaultFunctionValue = `${typeMetadata.isNullable ? "?" : ""} = ${defaultImplementation}`;
   const defaultValue = shouldGenerateFunctions
     ? defaultFunctionValue
     : typeMetadata.defaultValue;
@@ -61,7 +77,7 @@ export function buildFieldDefinition(
   );
   const isCompletableFuture =
     typeInResolverInterfacesConfig?.classMethods === "COMPLETABLE_FUTURE";
-  const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}>${notImplementedError}`;
+  const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}> = ${defaultImplementation}`;
   const field = indent(
     `${fieldDefinition}: ${isCompletableFuture ? completableFutureDefinition : defaultDefinition}`,
     2,
@@ -74,6 +90,7 @@ function buildFieldModifier(
   fieldNode: FieldDefinitionNode,
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
+  isConstructor?: boolean,
 ) {
   const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
     node,
@@ -84,6 +101,14 @@ function buildFieldModifier(
     fieldNode,
     schema,
   );
+
+  if (
+    !typeInResolverInterfacesConfig &&
+    isConstructor &&
+    fieldNode.arguments?.length
+  ) {
+    return "private val";
+  }
   if (!typeInResolverInterfacesConfig && !fieldNode.arguments?.length) {
     return shouldOverrideField ? "override val" : "val";
   }

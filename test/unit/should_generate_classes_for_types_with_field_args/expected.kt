@@ -40,7 +40,7 @@ open class TypeImplementingInterface(
     val integerField1: Int? = null,
     val integerField2: Int,
     private val nullableListResolver: List<String?>? = null,
-    private val nonNullableListResolver: List<String>
+    private val nonNullableListResolver: List<String> = emptyList()
 ) : HybridInterface {
     override fun nullableListResolver(arg1: Int?, arg2: Int, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String?>? = nullableListResolver
     override fun nonNullableListResolver(arg1: Int, arg2: Int?, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String> = nonNullableListResolver
