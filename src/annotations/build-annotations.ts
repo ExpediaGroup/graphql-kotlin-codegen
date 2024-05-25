@@ -21,8 +21,8 @@ import {
 } from "graphql";
 import { buildDescriptionAnnotation } from "./build-description-annotation";
 import { buildDirectiveAnnotations } from "./build-directive-annotations";
-import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
-import { TypeMetadata } from "./build-type-metadata";
+import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
+import { TypeMetadata } from "../utils/build-type-metadata";
 
 export type DefinitionNode =
   | TypeDefinitionNode

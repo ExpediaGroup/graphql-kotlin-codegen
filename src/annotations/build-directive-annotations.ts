@@ -11,9 +11,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
+import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { DefinitionNode } from "./build-annotations";
-import { getFederationDirectiveReplacement } from "./get-federation-directive-replacement";
 import { ConstDirectiveNode } from "graphql/language";
 import { Kind } from "graphql";
 
@@ -74,4 +73,24 @@ function buildKotlinAnnotations(
       .join(", ");
     return `@${kotlinAnnotation.annotationName}(${directiveArguments})`;
   });
+}
+
+function getFederationDirectiveReplacement(directive: ConstDirectiveNode) {
+  const federationDirectivePrefix =
+    "com.expediagroup.graphql.generator.federation.directives.";
+  switch (directive.name.value) {
+    case "key":
+      if (
+        directive.arguments?.[0] &&
+        directive.arguments[0].value.kind === Kind.STRING
+      ) {
+        const fieldArg = directive.arguments[0]?.value.value;
+        return `@${federationDirectivePrefix}KeyDirective(${federationDirectivePrefix}FieldSet("${fieldArg}"))`;
+      }
+      return undefined;
+    case "extends":
+      return `@${federationDirectivePrefix}ExtendsDirective`;
+    case "external":
+      return `@${federationDirectivePrefix}ExternalDirective`;
+  }
 }

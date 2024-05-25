@@ -12,12 +12,12 @@ limitations under the License.
 */
 
 import { UnionTypeDefinitionNode } from "graphql";
-import { shouldExcludeTypeDefinition } from "../helpers/should-exclude-type-definition";
-import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
+import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-definition";
+import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import {
   buildAnnotations,
   trimDescription,
-} from "../helpers/build-annotations";
+} from "../annotations/build-annotations";
 
 export function buildUnionTypeDefinition(
   node: UnionTypeDefinitionNode,

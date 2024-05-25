@@ -1,5 +1,5 @@
-import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
-import { TypeMetadata } from "./build-type-metadata";
+import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
+import { TypeMetadata } from "../utils/build-type-metadata";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { Kind } from "graphql/index";
 import { DefinitionNode, trimDescription } from "./build-annotations";

@@ -22,7 +22,7 @@ import {
 } from "graphql";
 import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
 import { wrapTypeWithModifiers } from "@graphql-codegen/java-common";
-import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
+import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import {
   getTypeNameWithoutInput,
   inputTypeHasMatchingOutputType,

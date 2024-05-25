@@ -17,17 +17,17 @@ import {
   isInputObjectType,
   ObjectTypeDefinitionNode,
 } from "graphql";
-import { buildAnnotations } from "../helpers/build-annotations";
-import { buildTypeMetadata } from "../helpers/build-type-metadata";
-import { shouldExcludeTypeDefinition } from "../helpers/should-exclude-type-definition";
+import { buildAnnotations } from "../annotations/build-annotations";
+import { buildTypeMetadata } from "../utils/build-type-metadata";
+import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-definition";
 import {
   getDependentInterfaceNames,
   getDependentUnionsForType,
-} from "../helpers/dependent-type-utils";
-import { buildFieldDefinition } from "../helpers/build-field-definition";
-import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
-import { inputTypeHasMatchingOutputType } from "../helpers/input-type-has-matching-output-type";
-import { findTypeInResolverInterfacesConfig } from "../helpers/find-type-in-resolver-interfaces-config";
+} from "../utils/dependent-type-utils";
+import { buildFieldDefinition } from "./field";
+import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
+import { inputTypeHasMatchingOutputType } from "../utils/input-type-has-matching-output-type";
+import { findTypeInResolverInterfacesConfig } from "../config/find-type-in-resolver-interfaces-config";
 
 export function buildObjectTypeDefinition(
   node: ObjectTypeDefinitionNode,

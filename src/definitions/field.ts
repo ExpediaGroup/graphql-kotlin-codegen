@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { buildTypeMetadata, TypeMetadata } from "./build-type-metadata";
+import { buildTypeMetadata, TypeMetadata } from "../utils/build-type-metadata";
 import {
   FieldDefinitionNode,
   GraphQLSchema,
@@ -20,10 +20,10 @@ import {
   ObjectTypeDefinitionNode,
   isInterfaceType,
 } from "graphql";
-import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
+import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
-import { buildAnnotations } from "./build-annotations";
-import { findTypeInResolverInterfacesConfig } from "./find-type-in-resolver-interfaces-config";
+import { buildAnnotations } from "../annotations/build-annotations";
+import { findTypeInResolverInterfacesConfig } from "../config/find-type-in-resolver-interfaces-config";
 
 export function buildFieldDefinition({
   node,

@@ -1,5 +1,5 @@
 import { InterfaceTypeDefinitionNode, ObjectTypeDefinitionNode } from "graphql";
-import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
+import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 
 export function findTypeInResolverInterfacesConfig(
   node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,

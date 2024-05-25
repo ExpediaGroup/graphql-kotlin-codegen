@@ -20,7 +20,7 @@ import {
   ObjectTypeDefinitionNode,
   UnionTypeDefinitionNode,
 } from "graphql";
-import { CodegenConfigWithDefaults } from "./helpers/build-config-with-defaults";
+import { CodegenConfigWithDefaults } from "./config/build-config-with-defaults";
 import { buildEnumTypeDefinition } from "./definitions/enum";
 import { buildInterfaceDefinition } from "./definitions/interface";
 import { buildInputObjectDefinition } from "./definitions/input";

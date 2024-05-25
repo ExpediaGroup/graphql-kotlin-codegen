@@ -19,7 +19,7 @@ import {
   TypeDefinitionNode,
   TypeNode,
 } from "graphql";
-import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
+import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
 
 export function getDependentFieldTypeNames(
