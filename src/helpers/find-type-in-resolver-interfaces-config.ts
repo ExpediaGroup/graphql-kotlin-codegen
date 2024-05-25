@@ -5,7 +5,7 @@ export function findTypeInResolverInterfacesConfig(
   node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
   config: CodegenConfigWithDefaults,
 ) {
-  return config.resolverInterfaces.find(
+  return config.resolverInterfaces.findLast(
     (resolverInterface) => resolverInterface.typeName === node.name.value,
   );
 }

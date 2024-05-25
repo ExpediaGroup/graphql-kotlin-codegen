@@ -23,7 +23,7 @@ import {
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildAnnotations } from "./build-annotations";
-import { findTypeInResolverInterfacesConfig } from "./findTypeInResolverInterfacesConfig";
+import { findTypeInResolverInterfacesConfig } from "./find-type-in-resolver-interfaces-config";
 
 export function buildFieldDefinition(
   node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,

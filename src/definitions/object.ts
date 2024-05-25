@@ -27,7 +27,7 @@ import {
 import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 import { inputTypeHasMatchingOutputType } from "../helpers/input-type-has-matching-output-type";
-import { findTypeInResolverInterfacesConfig } from "../helpers/findTypeInResolverInterfacesConfig";
+import { findTypeInResolverInterfacesConfig } from "../helpers/find-type-in-resolver-interfaces-config";
 import { titleCase } from "title-case";
 
 export function buildObjectTypeDefinition(
@@ -78,7 +78,7 @@ export function buildObjectTypeDefinition(
 
   if (node.name.value === "Query" || node.name.value === "Mutation") {
     const individualQueryClasses = node.fields?.map((fieldNode) => {
-      const className = `${titleCase(fieldNode.name.value)}Query`;
+      const className = `${titleCase(fieldNode.name.value)}${node.name.value}`;
       return `${annotations}${outputRestrictionAnnotation}open class ${className}${interfaceInheritance} {
 ${getDataClassMembers({ node, fieldNodes: [fieldNode], schema, config, shouldGenerateFunctions })}
 }`;
