@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { buildTypeMetadata, TypeMetadata } from "../utils/build-type-metadata";
+import { buildTypeMetadata } from "../utils/build-type-metadata";
 import {
   FieldDefinitionNode,
   GraphQLSchema,
@@ -30,16 +30,12 @@ export function buildObjectFieldDefinition({
   fieldNode,
   schema,
   config,
-  typeMetadata,
-  shouldGenerateFunctions,
   isConstructorField,
 }: {
   node: ObjectTypeDefinitionNode;
   fieldNode: FieldDefinitionNode;
   schema: GraphQLSchema;
   config: CodegenConfigWithDefaults;
-  typeMetadata: TypeMetadata;
-  shouldGenerateFunctions?: boolean;
   isConstructorField?: boolean;
 }) {
   const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
@@ -54,6 +50,7 @@ export function buildObjectFieldDefinition({
     config,
     isConstructorField,
   );
+  const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
   const annotations = buildAnnotations({
     config,
     definitionNode: fieldNode,
@@ -69,6 +66,10 @@ export function buildObjectFieldDefinition({
       ? fieldNode.name.value
       : notImplementedError;
   const defaultFunctionValue = `${typeMetadata.isNullable ? "?" : ""} = ${defaultImplementation}`;
+  const shouldGenerateFunctions = Boolean(
+    typeInResolverInterfacesConfig ||
+      node.fields?.some((fieldNode) => fieldNode.arguments?.length),
+  );
   const defaultValue =
     shouldGenerateFunctions && !isConstructorField
       ? defaultFunctionValue
@@ -82,7 +83,12 @@ export function buildObjectFieldDefinition({
     `${functionDefinition}: ${isCompletableFuture ? completableFutureDefinition : defaultDefinition}`,
     2,
   );
-  return `${annotations}${field}`;
+  const fieldIndex = node.fields?.findIndex(
+    (field) => field.name.value === fieldNode.name.value,
+  );
+  const isLastFieldInType =
+    node.fields && fieldIndex === node.fields.length - 1;
+  return `${annotations}${field}${shouldGenerateFunctions || isLastFieldInType ? "" : ","}`;
 }
 
 function buildFunctionDefinition(
@@ -202,14 +208,12 @@ export function buildInterfaceFieldDefinition({
   fieldNode,
   schema,
   config,
-  typeMetadata,
   isConstructorField,
 }: {
   node: InterfaceTypeDefinitionNode;
   fieldNode: FieldDefinitionNode;
   schema: GraphQLSchema;
   config: CodegenConfigWithDefaults;
-  typeMetadata: TypeMetadata;
   isConstructorField?: boolean;
 }) {
   const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
@@ -224,6 +228,7 @@ export function buildInterfaceFieldDefinition({
     config,
     isConstructorField,
   );
+  const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
   const fieldText = indent(
     `${functionDefinition}: ${typeMetadata.typeName}${
       typeMetadata.isNullable ? "?" : ""

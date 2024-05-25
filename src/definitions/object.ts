@@ -18,7 +18,6 @@ import {
   ObjectTypeDefinitionNode,
 } from "graphql";
 import { buildAnnotations } from "../annotations/build-annotations";
-import { buildTypeMetadata } from "../utils/build-type-metadata";
 import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-definition";
 import {
   getDependentInterfaceNames,
@@ -79,11 +78,11 @@ export function buildObjectTypeDefinition(
     const individualQueryClasses = node.fields?.map((fieldNode) => {
       const className = `${titleCase(fieldNode.name.value)}${node.name.value}`;
       return `${annotations}${outputRestrictionAnnotation}open class ${className}${interfaceInheritance} {
-${getDataClassMembers({ node, fieldNodes: [fieldNode], schema, config, shouldGenerateFunctions })}
+${getClassMembers({ node, fieldNodes: [fieldNode], schema, config })}
 }`;
     });
     const consolidatedQueryClass = `${annotations}${outputRestrictionAnnotation}open class ${name}${interfaceInheritance} {
-${getDataClassMembers({ node, fieldNodes, schema, config, shouldGenerateFunctions })}
+${getClassMembers({ node, fieldNodes, schema, config })}
 }`;
     return [consolidatedQueryClass, ...(individualQueryClasses ?? [])].join(
       "\n\n",
@@ -98,18 +97,11 @@ ${getDataClassMembers({ node, fieldNodes, schema, config, shouldGenerateFunction
       !typeInResolverInterfacesConfig && atLeastOneFieldHasNoArguments
         ? `(\n${node.fields
             ?.map((fieldNode) => {
-              const typeMetadata = buildTypeMetadata(
-                fieldNode.type,
-                schema,
-                config,
-              );
               return buildObjectFieldDefinition({
                 node,
                 fieldNode,
                 schema,
                 config,
-                typeMetadata,
-                shouldGenerateFunctions,
                 isConstructorField: true,
               });
             })
@@ -117,41 +109,36 @@ ${getDataClassMembers({ node, fieldNodes, schema, config, shouldGenerateFunction
         : "";
 
     return `${annotations}${outputRestrictionAnnotation}open class ${name}${constructor}${interfaceInheritance} {
-${getDataClassMembers({ node, fieldNodes, schema, config, shouldGenerateFunctions })}
+${getClassMembers({ node, fieldNodes, schema, config })}
 }`;
   }
 
   return `${annotations}${outputRestrictionAnnotation}data class ${name}(
-${getDataClassMembers({ node, schema, config })}
+${getClassMembers({ node, schema, config })}
 )${interfaceInheritance}`;
 }
 
-function getDataClassMembers({
+function getClassMembers({
   node,
   fieldNodes,
   schema,
   config,
-  shouldGenerateFunctions,
 }: {
   node: ObjectTypeDefinitionNode;
   fieldNodes?: readonly FieldDefinitionNode[];
   schema: GraphQLSchema;
   config: CodegenConfigWithDefaults;
-  shouldGenerateFunctions?: boolean;
 }) {
   return (fieldNodes ?? node.fields)
     ?.map((fieldNode) => {
-      const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
       return buildObjectFieldDefinition({
         node,
         fieldNode,
         schema,
         config,
-        typeMetadata,
-        shouldGenerateFunctions,
       });
     })
-    .join(`${shouldGenerateFunctions ? "" : ","}\n`);
+    .join("\n");
 }
 
 function titleCase(str: string) {
