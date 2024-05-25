@@ -10,7 +10,7 @@ open class Query {
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 open class GetStuffQuery {
-    open fun getStuff(): String = throw NotImplementedError("Query.getStuff must be implemented.")
+    open fun getStuff(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("Query.getStuff must be implemented.")
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])

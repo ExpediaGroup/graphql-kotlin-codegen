@@ -28,6 +28,7 @@ import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 import { inputTypeHasMatchingOutputType } from "../helpers/input-type-has-matching-output-type";
 import { findTypeInResolverInterfacesConfig } from "../helpers/findTypeInResolverInterfacesConfig";
+import { titleCase } from "title-case";
 
 export function buildObjectTypeDefinition(
   node: ObjectTypeDefinitionNode,
@@ -64,10 +65,32 @@ export function buildObjectTypeDefinition(
     node,
     config,
   );
+  const fieldsWithArguments = node.fields?.filter(
+    (fieldNode) => fieldNode.arguments?.length,
+  );
+  const fieldNodes = typeInResolverInterfacesConfig
+    ? node.fields
+    : fieldsWithArguments;
   const shouldGenerateFunctions = Boolean(
     typeInResolverInterfacesConfig ||
       node.fields?.some((fieldNode) => fieldNode.arguments?.length),
   );
+
+  if (node.name.value === "Query" || node.name.value === "Mutation") {
+    const individualQueryClasses = node.fields?.map((fieldNode) => {
+      const className = `${titleCase(fieldNode.name.value)}Query`;
+      return `${annotations}${outputRestrictionAnnotation}open class ${className}${interfaceInheritance} {
+${getDataClassMembers({ node, fieldNodes: [fieldNode], schema, config, shouldGenerateFunctions })}
+}`;
+    });
+    const consolidatedQueryClass = `${annotations}${outputRestrictionAnnotation}open class ${name}${interfaceInheritance} {
+${getDataClassMembers({ node, fieldNodes, schema, config, shouldGenerateFunctions })}
+}`;
+    return [consolidatedQueryClass, ...(individualQueryClasses ?? [])].join(
+      "\n\n",
+    );
+  }
+
   if (shouldGenerateFunctions) {
     const atLeastOneFieldHasNoArguments = node.fields?.some(
       (fieldNode) => !fieldNode.arguments?.length,
@@ -94,12 +117,6 @@ export function buildObjectTypeDefinition(
             .join(",\n")}\n)`
         : "";
 
-    const fieldsWithArguments = node.fields?.filter(
-      (fieldNode) => fieldNode.arguments?.length,
-    );
-    const fieldNodes = typeInResolverInterfacesConfig
-      ? node.fields
-      : fieldsWithArguments;
     return `${annotations}${outputRestrictionAnnotation}open class ${name}${constructor}${interfaceInheritance} {
 ${getDataClassMembers({ node, fieldNodes, schema, config, shouldGenerateFunctions })}
 }`;
