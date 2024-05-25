@@ -25,25 +25,43 @@ import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildAnnotations } from "./build-annotations";
 import { findTypeInResolverInterfacesConfig } from "./find-type-in-resolver-interfaces-config";
 
-export function buildFieldDefinition(
-  node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
-  fieldNode: FieldDefinitionNode,
-  schema: GraphQLSchema,
-  config: CodegenConfigWithDefaults,
-  typeMetadata: TypeMetadata,
-  shouldGenerateFunctions?: boolean,
-  isConstructorField?: boolean,
-) {
+export function buildFieldDefinition({
+  node,
+  fieldNode,
+  schema,
+  config,
+  typeMetadata,
+  shouldGenerateFunctions,
+  isConstructorField,
+}: {
+  node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode;
+  fieldNode: FieldDefinitionNode;
+  schema: GraphQLSchema;
+  config: CodegenConfigWithDefaults;
+  typeMetadata: TypeMetadata;
+  shouldGenerateFunctions?: boolean;
+  isConstructorField?: boolean;
+}) {
+  const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
+    node,
+    config,
+  );
   const modifier = buildFieldModifier(
     node,
     fieldNode,
     schema,
-    config,
+    typeInResolverInterfacesConfig,
     isConstructorField,
   );
   const fieldArguments = isConstructorField
     ? ""
-    : buildFieldArguments(node, fieldNode, schema, config);
+    : buildFieldArguments(
+        node,
+        fieldNode,
+        schema,
+        typeInResolverInterfacesConfig,
+        config,
+      );
   const fieldDefinition = `${modifier} ${fieldNode.name.value}${fieldArguments}`;
   const annotations = buildAnnotations({
     config,
@@ -61,10 +79,6 @@ export function buildFieldDefinition(
   const notImplementedError = `throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`;
   const atLeastOneFieldHasNoArguments = node.fields?.some(
     (fieldNode) => !fieldNode.arguments?.length,
-  );
-  const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
-    node,
-    config,
   );
   const defaultImplementation =
     !typeInResolverInterfacesConfig && atLeastOneFieldHasNoArguments
@@ -91,13 +105,11 @@ function buildFieldModifier(
   node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
   fieldNode: FieldDefinitionNode,
   schema: GraphQLSchema,
-  config: CodegenConfigWithDefaults,
+  typeInResolverInterfacesConfig: ReturnType<
+    typeof findTypeInResolverInterfacesConfig
+  >,
   isConstructorField?: boolean,
 ) {
-  const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
-    node,
-    config,
-  );
   const shouldOverrideField = shouldModifyFieldWithOverride(
     node,
     fieldNode,
@@ -129,13 +141,12 @@ function buildFieldArguments(
   node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
   fieldNode: FieldDefinitionNode,
   schema: GraphQLSchema,
+  typeInResolverInterfacesConfig: ReturnType<
+    typeof findTypeInResolverInterfacesConfig
+  >,
   config: CodegenConfigWithDefaults,
 ) {
-  const typeIsInResolverInterfaces = findTypeInResolverInterfacesConfig(
-    node,
-    config,
-  );
-  if (!typeIsInResolverInterfaces && !fieldNode.arguments?.length) {
+  if (!typeInResolverInterfacesConfig && !fieldNode.arguments?.length) {
     return "";
   }
   const isOverrideFunction = shouldModifyFieldWithOverride(

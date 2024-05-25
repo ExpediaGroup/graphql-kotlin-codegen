@@ -31,14 +31,14 @@ export function buildInterfaceDefinition(
   const classMembers = node.fields
     ?.map((fieldNode) => {
       const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
-      return buildFieldDefinition(
+      return buildFieldDefinition({
         node,
         fieldNode,
         schema,
         config,
         typeMetadata,
-        Boolean(fieldNode.arguments?.length),
-      );
+        shouldGenerateFunctions: Boolean(fieldNode.arguments?.length),
+      });
     })
     .join("\n");
 

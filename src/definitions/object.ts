@@ -103,15 +103,15 @@ ${getDataClassMembers({ node, fieldNodes, schema, config, shouldGenerateFunction
                 schema,
                 config,
               );
-              return buildFieldDefinition(
+              return buildFieldDefinition({
                 node,
                 fieldNode,
                 schema,
                 config,
                 typeMetadata,
                 shouldGenerateFunctions,
-                true,
-              );
+                isConstructorField: true,
+              });
             })
             .join(",\n")}\n)`
         : "";
@@ -142,14 +142,14 @@ function getDataClassMembers({
   return (fieldNodes ?? node.fields)
     ?.map((fieldNode) => {
       const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
-      return buildFieldDefinition(
+      return buildFieldDefinition({
         node,
         fieldNode,
         schema,
         config,
         typeMetadata,
         shouldGenerateFunctions,
-      );
+      });
     })
     .join(`${shouldGenerateFunctions ? "" : ","}\n`);
 }
