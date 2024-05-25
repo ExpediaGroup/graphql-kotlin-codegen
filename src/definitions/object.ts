@@ -23,7 +23,10 @@ import {
   getDependentInterfaceNames,
   getDependentUnionsForType,
 } from "../utils/dependent-type-utils";
-import { buildObjectFieldDefinition } from "./field";
+import {
+  buildConstructorFieldDefinition,
+  buildObjectFieldDefinition,
+} from "./field";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { inputTypeHasMatchingOutputType } from "../utils/input-type-has-matching-output-type";
 import { findTypeInResolverInterfacesConfig } from "../config/find-type-in-resolver-interfaces-config";
@@ -97,12 +100,11 @@ ${getClassMembers({ node, fieldNodes, schema, config })}
       !typeInResolverInterfacesConfig && atLeastOneFieldHasNoArguments
         ? `(\n${node.fields
             ?.map((fieldNode) => {
-              return buildObjectFieldDefinition({
+              return buildConstructorFieldDefinition({
                 node,
                 fieldNode,
                 schema,
                 config,
-                isConstructorField: true,
               });
             })
             .join(",\n")}\n)`

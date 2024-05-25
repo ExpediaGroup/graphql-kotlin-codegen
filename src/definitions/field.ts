@@ -30,13 +30,11 @@ export function buildObjectFieldDefinition({
   fieldNode,
   schema,
   config,
-  isConstructorField,
 }: {
   node: ObjectTypeDefinitionNode;
   fieldNode: FieldDefinitionNode;
   schema: GraphQLSchema;
   config: CodegenConfigWithDefaults;
-  isConstructorField?: boolean;
 }) {
   const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
     node,
@@ -48,7 +46,6 @@ export function buildObjectFieldDefinition({
     schema,
     typeInResolverInterfacesConfig,
     config,
-    isConstructorField,
   );
   const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
   const annotations = buildAnnotations({
@@ -70,10 +67,67 @@ export function buildObjectFieldDefinition({
     typeInResolverInterfacesConfig ||
       node.fields?.some((fieldNode) => fieldNode.arguments?.length),
   );
-  const defaultValue =
-    shouldGenerateFunctions && !isConstructorField
-      ? defaultFunctionValue
-      : typeMetadata.defaultValue;
+  const defaultValue = shouldGenerateFunctions
+    ? defaultFunctionValue
+    : typeMetadata.defaultValue;
+  const defaultDefinition = `${typeMetadata.typeName}${defaultValue}`;
+
+  const isCompletableFuture =
+    typeInResolverInterfacesConfig?.classMethods === "COMPLETABLE_FUTURE";
+  const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}> = ${defaultImplementation}`;
+  const field = indent(
+    `${functionDefinition}: ${isCompletableFuture ? completableFutureDefinition : defaultDefinition}`,
+    2,
+  );
+  const fieldIndex = node.fields?.findIndex(
+    (field) => field.name.value === fieldNode.name.value,
+  );
+  const isLastFieldInType =
+    node.fields && fieldIndex === node.fields.length - 1;
+  return `${annotations}${field}${shouldGenerateFunctions || isLastFieldInType ? "" : ","}`;
+}
+
+export function buildConstructorFieldDefinition({
+  node,
+  fieldNode,
+  schema,
+  config,
+}: {
+  node: ObjectTypeDefinitionNode;
+  fieldNode: FieldDefinitionNode;
+  schema: GraphQLSchema;
+  config: CodegenConfigWithDefaults;
+}) {
+  const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
+    node,
+    config,
+  );
+  const functionDefinition = buildConstructorFunctionDefinition(
+    node,
+    fieldNode,
+    schema,
+    typeInResolverInterfacesConfig,
+  );
+  const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
+  const annotations = buildAnnotations({
+    config,
+    definitionNode: fieldNode,
+    typeMetadata,
+  });
+
+  const notImplementedError = `throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`;
+  const atLeastOneFieldHasNoArguments = node.fields?.some(
+    (fieldNode) => !fieldNode.arguments?.length,
+  );
+  const defaultImplementation =
+    !typeInResolverInterfacesConfig && atLeastOneFieldHasNoArguments
+      ? fieldNode.name.value
+      : notImplementedError;
+  const shouldGenerateFunctions = Boolean(
+    typeInResolverInterfacesConfig ||
+      node.fields?.some((fieldNode) => fieldNode.arguments?.length),
+  );
+  const defaultValue = typeMetadata.defaultValue;
   const defaultDefinition = `${typeMetadata.typeName}${defaultValue}`;
 
   const isCompletableFuture =
@@ -99,24 +153,40 @@ function buildFunctionDefinition(
     typeof findTypeInResolverInterfacesConfig
   >,
   config: CodegenConfigWithDefaults,
-  isConstructorField?: boolean,
 ) {
   const modifier = buildFieldModifier(
     node,
     fieldNode,
     schema,
     typeInResolverInterfacesConfig,
-    isConstructorField,
   );
-  const fieldArguments = isConstructorField
-    ? ""
-    : buildFieldArguments(
+  const fieldArguments = buildFieldArguments(
+    node,
+    fieldNode,
+    schema,
+    typeInResolverInterfacesConfig,
+    config,
+  );
+  return `${modifier} ${fieldNode.name.value}${fieldArguments}`;
+}
+
+function buildConstructorFunctionDefinition(
+  node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
+  fieldNode: FieldDefinitionNode,
+  schema: GraphQLSchema,
+  typeInResolverInterfacesConfig: ReturnType<
+    typeof findTypeInResolverInterfacesConfig
+  >,
+) {
+  const modifier = fieldNode.arguments?.length
+    ? "private val"
+    : buildFieldModifier(
         node,
         fieldNode,
         schema,
         typeInResolverInterfacesConfig,
-        config,
       );
+  const fieldArguments = "";
   return `${modifier} ${fieldNode.name.value}${fieldArguments}`;
 }
 
@@ -127,7 +197,6 @@ function buildFieldModifier(
   typeInResolverInterfacesConfig: ReturnType<
     typeof findTypeInResolverInterfacesConfig
   >,
-  isConstructorField?: boolean,
 ) {
   const shouldOverrideField = shouldModifyFieldWithOverride(
     node,
@@ -135,9 +204,6 @@ function buildFieldModifier(
     schema,
   );
 
-  if (isConstructorField && fieldNode.arguments?.length) {
-    return "private val";
-  }
   if (!typeInResolverInterfacesConfig && !fieldNode.arguments?.length) {
     return shouldOverrideField ? "override val" : "val";
   }
@@ -208,13 +274,11 @@ export function buildInterfaceFieldDefinition({
   fieldNode,
   schema,
   config,
-  isConstructorField,
 }: {
   node: InterfaceTypeDefinitionNode;
   fieldNode: FieldDefinitionNode;
   schema: GraphQLSchema;
   config: CodegenConfigWithDefaults;
-  isConstructorField?: boolean;
 }) {
   const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
     node,
@@ -226,7 +290,6 @@ export function buildInterfaceFieldDefinition({
     schema,
     typeInResolverInterfacesConfig,
     config,
-    isConstructorField,
   );
   const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
   const fieldText = indent(
