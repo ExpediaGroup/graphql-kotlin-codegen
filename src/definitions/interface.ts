@@ -15,7 +15,7 @@ import { GraphQLSchema, InterfaceTypeDefinitionNode } from "graphql";
 import { buildAnnotations } from "../annotations/build-annotations";
 import { buildTypeMetadata } from "../utils/build-type-metadata";
 import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-definition";
-import { buildFieldDefinition } from "./field";
+import { buildInterfaceFieldDefinition } from "./field";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { getDependentInterfaceNames } from "../utils/dependent-type-utils";
 
@@ -31,13 +31,12 @@ export function buildInterfaceDefinition(
   const classMembers = node.fields
     ?.map((fieldNode) => {
       const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
-      return buildFieldDefinition({
+      return buildInterfaceFieldDefinition({
         node,
         fieldNode,
         schema,
         config,
         typeMetadata,
-        shouldGenerateFunctions: Boolean(fieldNode.arguments?.length),
       });
     })
     .join("\n");

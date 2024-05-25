@@ -25,7 +25,7 @@ import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildAnnotations } from "../annotations/build-annotations";
 import { findTypeInResolverInterfacesConfig } from "../config/find-type-in-resolver-interfaces-config";
 
-export function buildFieldDefinition({
+export function buildObjectFieldDefinition({
   node,
   fieldNode,
   schema,
@@ -34,7 +34,7 @@ export function buildFieldDefinition({
   shouldGenerateFunctions,
   isConstructorField,
 }: {
-  node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode;
+  node: ObjectTypeDefinitionNode;
   fieldNode: FieldDefinitionNode;
   schema: GraphQLSchema;
   config: CodegenConfigWithDefaults;
@@ -46,35 +46,19 @@ export function buildFieldDefinition({
     node,
     config,
   );
-  const modifier = buildFieldModifier(
+  const functionDefinition = buildFunctionDefinition(
     node,
     fieldNode,
     schema,
     typeInResolverInterfacesConfig,
+    config,
     isConstructorField,
   );
-  const fieldArguments = isConstructorField
-    ? ""
-    : buildFieldArguments(
-        node,
-        fieldNode,
-        schema,
-        typeInResolverInterfacesConfig,
-        config,
-      );
-  const fieldDefinition = `${modifier} ${fieldNode.name.value}${fieldArguments}`;
   const annotations = buildAnnotations({
     config,
     definitionNode: fieldNode,
     typeMetadata,
   });
-  if (node.kind === Kind.INTERFACE_TYPE_DEFINITION) {
-    return buildInterfaceFieldDefinition(
-      fieldDefinition,
-      typeMetadata,
-      annotations,
-    );
-  }
 
   const notImplementedError = `throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`;
   const atLeastOneFieldHasNoArguments = node.fields?.some(
@@ -95,10 +79,39 @@ export function buildFieldDefinition({
     typeInResolverInterfacesConfig?.classMethods === "COMPLETABLE_FUTURE";
   const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}> = ${defaultImplementation}`;
   const field = indent(
-    `${fieldDefinition}: ${isCompletableFuture ? completableFutureDefinition : defaultDefinition}`,
+    `${functionDefinition}: ${isCompletableFuture ? completableFutureDefinition : defaultDefinition}`,
     2,
   );
   return `${annotations}${field}`;
+}
+
+function buildFunctionDefinition(
+  node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
+  fieldNode: FieldDefinitionNode,
+  schema: GraphQLSchema,
+  typeInResolverInterfacesConfig: ReturnType<
+    typeof findTypeInResolverInterfacesConfig
+  >,
+  config: CodegenConfigWithDefaults,
+  isConstructorField?: boolean,
+) {
+  const modifier = buildFieldModifier(
+    node,
+    fieldNode,
+    schema,
+    typeInResolverInterfacesConfig,
+    isConstructorField,
+  );
+  const fieldArguments = isConstructorField
+    ? ""
+    : buildFieldArguments(
+        node,
+        fieldNode,
+        schema,
+        typeInResolverInterfacesConfig,
+        config,
+      );
+  return `${modifier} ${fieldNode.name.value}${fieldArguments}`;
 }
 
 function buildFieldModifier(
@@ -184,16 +197,43 @@ function shouldModifyFieldWithOverride(
   });
 }
 
-function buildInterfaceFieldDefinition(
-  fieldDefinition: string,
-  typeMetadata: TypeMetadata,
-  annotations: string,
-) {
+export function buildInterfaceFieldDefinition({
+  node,
+  fieldNode,
+  schema,
+  config,
+  typeMetadata,
+  isConstructorField,
+}: {
+  node: InterfaceTypeDefinitionNode;
+  fieldNode: FieldDefinitionNode;
+  schema: GraphQLSchema;
+  config: CodegenConfigWithDefaults;
+  typeMetadata: TypeMetadata;
+  isConstructorField?: boolean;
+}) {
+  const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
+    node,
+    config,
+  );
+  const functionDefinition = buildFunctionDefinition(
+    node,
+    fieldNode,
+    schema,
+    typeInResolverInterfacesConfig,
+    config,
+    isConstructorField,
+  );
   const fieldText = indent(
-    `${fieldDefinition}: ${typeMetadata.typeName}${
+    `${functionDefinition}: ${typeMetadata.typeName}${
       typeMetadata.isNullable ? "?" : ""
     }`,
     2,
   );
+  const annotations = buildAnnotations({
+    config,
+    definitionNode: fieldNode,
+    typeMetadata,
+  });
   return `${annotations}${fieldText}`;
 }

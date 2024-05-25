@@ -24,7 +24,7 @@ import {
   getDependentInterfaceNames,
   getDependentUnionsForType,
 } from "../utils/dependent-type-utils";
-import { buildFieldDefinition } from "./field";
+import { buildObjectFieldDefinition } from "./field";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { inputTypeHasMatchingOutputType } from "../utils/input-type-has-matching-output-type";
 import { findTypeInResolverInterfacesConfig } from "../config/find-type-in-resolver-interfaces-config";
@@ -103,7 +103,7 @@ ${getDataClassMembers({ node, fieldNodes, schema, config, shouldGenerateFunction
                 schema,
                 config,
               );
-              return buildFieldDefinition({
+              return buildObjectFieldDefinition({
                 node,
                 fieldNode,
                 schema,
@@ -142,7 +142,7 @@ function getDataClassMembers({
   return (fieldNodes ?? node.fields)
     ?.map((fieldNode) => {
       const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
-      return buildFieldDefinition({
+      return buildObjectFieldDefinition({
         node,
         fieldNode,
         schema,
