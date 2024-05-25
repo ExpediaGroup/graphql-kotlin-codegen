@@ -30,6 +30,8 @@ directive @specifiedBy(
   ) on SCALAR
 
 type Query {
+  getStuff: String!
+  getStuffWithInput(input: String!): String!
   testQuery1: SomeType!
   testQuery2: SomeHybridType!
 }

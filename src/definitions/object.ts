@@ -28,7 +28,6 @@ import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 import { inputTypeHasMatchingOutputType } from "../helpers/input-type-has-matching-output-type";
 import { findTypeInResolverInterfacesConfig } from "../helpers/find-type-in-resolver-interfaces-config";
-import { titleCase } from "title-case";
 
 export function buildObjectTypeDefinition(
   node: ObjectTypeDefinitionNode,
@@ -153,4 +152,8 @@ function getDataClassMembers({
       );
     })
     .join(`${shouldGenerateFunctions ? "" : ","}\n`);
+}
+
+function titleCase(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
