@@ -1,5 +1,4 @@
 type Query {
   getStuff: String!
   getStuffWithInput(input: String!): String!
-  getMoreStuffWithInput(input: String!): String!
 }

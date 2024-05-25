@@ -12,7 +12,7 @@ limitations under the License.
 */
 
 import { UnionTypeDefinitionNode } from "graphql";
-import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
+import { shouldExcludeTypeDefinition } from "../helpers/should-exclude-type-definition";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 import {
   buildAnnotations,
@@ -23,7 +23,7 @@ export function buildUnionTypeDefinition(
   node: UnionTypeDefinitionNode,
   config: CodegenConfigWithDefaults,
 ) {
-  if (!shouldIncludeTypeDefinition(node, config)) {
+  if (shouldExcludeTypeDefinition(node, config)) {
     return "";
   }
   const annotations = buildAnnotations({

@@ -14,7 +14,7 @@ limitations under the License.
 import { GraphQLSchema, InterfaceTypeDefinitionNode } from "graphql";
 import { buildAnnotations } from "../helpers/build-annotations";
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
-import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
+import { shouldExcludeTypeDefinition } from "../helpers/should-exclude-type-definition";
 import { buildFieldDefinition } from "../helpers/build-field-definition";
 import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
 import { getDependentInterfaceNames } from "../helpers/dependent-type-utils";
@@ -24,7 +24,7 @@ export function buildInterfaceDefinition(
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  if (!shouldIncludeTypeDefinition(node, config)) {
+  if (shouldExcludeTypeDefinition(node, config)) {
     return "";
   }
 

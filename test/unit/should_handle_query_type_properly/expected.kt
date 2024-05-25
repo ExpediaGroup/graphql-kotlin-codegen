@@ -4,7 +4,7 @@ import com.expediagroup.graphql.generator.annotations.*
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 open class Query {
-    open fun getStuff(): String = throw NotImplementedError("Query.getStuff must be implemented.")
+    open fun getStuff(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("Query.getStuff must be implemented.")
     open fun getStuffWithInput(input: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("Query.getStuffWithInput must be implemented.")
 }
 

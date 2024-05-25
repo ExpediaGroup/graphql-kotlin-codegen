@@ -14,9 +14,9 @@ limitations under the License.
 import { TypeDefinitionNode } from "graphql";
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 
-export function shouldIncludeTypeDefinition(
+export function shouldExcludeTypeDefinition(
   node: TypeDefinitionNode,
   config: CodegenConfigWithDefaults,
 ) {
-  return !config.onlyTypes || config.onlyTypes.includes(node.name.value);
+  return config.onlyTypes && !config.onlyTypes.includes(node.name.value);
 }

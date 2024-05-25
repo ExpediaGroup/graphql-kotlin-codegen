@@ -19,7 +19,7 @@ import {
 } from "graphql";
 import { buildAnnotations } from "../helpers/build-annotations";
 import { buildTypeMetadata } from "../helpers/build-type-metadata";
-import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
+import { shouldExcludeTypeDefinition } from "../helpers/should-exclude-type-definition";
 import {
   getDependentInterfaceNames,
   getDependentUnionsForType,
@@ -34,7 +34,7 @@ export function buildObjectTypeDefinition(
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  if (!shouldIncludeTypeDefinition(node, config)) {
+  if (shouldExcludeTypeDefinition(node, config)) {
     return "";
   }
 
