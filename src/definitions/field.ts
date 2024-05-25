@@ -145,22 +145,25 @@ export function buildInterfaceFieldDefinition({
     config,
   );
   const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
-  const fieldText = indent(
-    `${functionDefinition}: ${typeMetadata.typeName}${
-      typeMetadata.isNullable ? "?" : ""
-    }`,
-    2,
+  const defaultDefinitionValue = typeMetadata.isNullable ? "?" : "";
+  const field = buildField(
+    node,
+    fieldNode,
+    functionDefinition,
+    defaultDefinitionValue,
+    typeInResolverInterfacesConfig,
+    typeMetadata,
   );
   const annotations = buildAnnotations({
     config,
     definitionNode: fieldNode,
     typeMetadata,
   });
-  return `${annotations}${fieldText}`;
+  return `${annotations}${field}`;
 }
 
 function buildField(
-  node: ObjectTypeDefinitionNode,
+  node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
   fieldNode: FieldDefinitionNode,
   functionDefinition: string,
   defaultDefinitionValue: string,
@@ -309,7 +312,7 @@ function shouldModifyFieldWithOverride(
 }
 
 function getDefaultImplementation(
-  node: ObjectTypeDefinitionNode,
+  node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
   fieldNode: FieldDefinitionNode,
   typeInResolverInterfacesConfig: ReturnType<
     typeof findTypeInResolverInterfacesConfig
