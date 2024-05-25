@@ -72,12 +72,10 @@ export function buildObjectTypeDefinition(
   const fieldNodes = typeInResolverInterfacesConfig
     ? node.fields
     : fieldsWithArguments;
-  const shouldGenerateFunctions = Boolean(
-    typeInResolverInterfacesConfig ||
-      node.fields?.some((fieldNode) => fieldNode.arguments?.length),
-  );
 
-  if (node.name.value === "Query" || node.name.value === "Mutation") {
+  const isTopLevelType =
+    node.name.value === "Query" || node.name.value === "Mutation";
+  if (isTopLevelType) {
     const individualQueryClasses = node.fields?.map((fieldNode) => {
       const className = `${titleCase(fieldNode.name.value)}${node.name.value}`;
       return `${annotations}${outputRestrictionAnnotation}open class ${className}${interfaceInheritance} {
@@ -92,6 +90,10 @@ ${getClassMembers({ node, fieldNodes, schema, config })}
     );
   }
 
+  const shouldGenerateFunctions = shouldGenerateFunctionsInClass(
+    node,
+    typeInResolverInterfacesConfig,
+  );
   if (shouldGenerateFunctions) {
     const atLeastOneFieldHasNoArguments = node.fields?.some(
       (fieldNode) => !fieldNode.arguments?.length,
@@ -141,6 +143,18 @@ function getClassMembers({
       });
     })
     .join("\n");
+}
+
+export function shouldGenerateFunctionsInClass(
+  node: ObjectTypeDefinitionNode,
+  typeInResolverInterfacesConfig: ReturnType<
+    typeof findTypeInResolverInterfacesConfig
+  >,
+) {
+  return Boolean(
+    typeInResolverInterfacesConfig ||
+      node.fields?.some((fieldNode) => fieldNode.arguments?.length),
+  );
 }
 
 function titleCase(str: string) {
