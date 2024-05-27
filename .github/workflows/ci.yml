@@ -38,3 +38,6 @@ jobs:
 
       - name: Integration Test
         run: bun integration
+
+      - name: Build Docs
+        run: bun docs:build

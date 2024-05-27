@@ -38,6 +38,8 @@
   },
   "scripts": {
     "build": "tsup src/plugin.ts --clean --dts --external graphql",
+    "docs:build": "bun run build && bun --filter docs build",
+    "docs:start": "bun --filter docs start",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "integration": "bun run build && graphql-codegen && ./gradlew graphqlGenerateSDL && bun test ./test/integration.test.ts",
@@ -46,5 +48,8 @@
     "prepare": "husky",
     "unit": "bun test ./test/plugin.test.ts"
   },
-  "type": "module"
+  "type": "module",
+  "workspaces": [
+    "docs"
+  ]
 }
