@@ -1,4 +1,6 @@
-/*
+import { Glob } from "bun";
+
+const copyrightHeader = `/*
 Copyright 2024 Expedia, Inc.
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -11,14 +13,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { InterfaceTypeDefinitionNode, ObjectTypeDefinitionNode } from "graphql";
-import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
+`;
 
-export function findTypeInResolverInterfacesConfig(
-  node: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode,
-  config: CodegenConfigWithDefaults,
-) {
-  return config.resolverInterfaces.findLast(
-    (resolverInterface) => resolverInterface.typeName === node.name.value,
-  );
+const filePaths = new Glob("src/**/*.ts").scan();
+for await (const filePath of filePaths) {
+  const fileContents = await Bun.file(filePath).text();
+  if (!fileContents.startsWith("/*\nCopyright")) {
+    await Bun.write(filePath, `${copyrightHeader}${fileContents}`);
+  }
 }
