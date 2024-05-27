@@ -12,7 +12,6 @@ export function buildConfigWithDefaults(
     includeDependentTypes: true,
     unionGeneration: "MARKER_INTERFACE",
     extraImports: ["com.expediagroup.graphql.generator.annotations.*"],
-    resolverInterfaces: [{ typeName: "Query" }, { typeName: "Mutation" }],
   } as const satisfies GraphQLKotlinCodegenConfig;
 
   return merge(defaultConfig, config) as GraphQLKotlinCodegenConfig &

@@ -1,3 +1,4 @@
+import { GraphQLKotlinCodegenConfig } from "./src/plugin";
 import { CodegenConfig } from "@graphql-codegen/cli";
 
 export default {
@@ -8,7 +9,17 @@ export default {
   },
   generates: {
     "test/integration/Types.kt": {
-      plugins: ["dist/plugin.cjs"],
+      plugins: [
+        {
+          "dist/plugin.cjs": {
+            resolverInterfaces: [
+              {
+                typeName: "Query",
+              },
+            ],
+          } satisfies GraphQLKotlinCodegenConfig,
+        },
+      ],
     },
   },
 } satisfies CodegenConfig;

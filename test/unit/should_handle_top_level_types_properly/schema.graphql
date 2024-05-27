@@ -1,9 +1,0 @@
-type Query {
-  getStuff: String!
-  getStuffWithInput(input: String!): String!
-}
-
-type Mutation {
-  mutateStuff: String!
-  mutateStuffWithInput(input: String!): String!
-}

@@ -73,23 +73,6 @@ export function buildObjectTypeDefinition(
     ? node.fields
     : fieldsWithArguments;
 
-  const isTopLevelType =
-    node.name.value === "Query" || node.name.value === "Mutation";
-  if (isTopLevelType) {
-    const individualQueryClasses = node.fields?.map((fieldNode) => {
-      const className = `${titleCase(fieldNode.name.value)}${node.name.value}`;
-      return `${annotations}${outputRestrictionAnnotation}open class ${className}${interfaceInheritance} {
-${getClassMembers({ node, fieldNodes: [fieldNode], schema, config })}
-}`;
-    });
-    const consolidatedQueryClass = `${annotations}${outputRestrictionAnnotation}open class ${name}${interfaceInheritance} {
-${getClassMembers({ node, fieldNodes, schema, config })}
-}`;
-    return [consolidatedQueryClass, ...(individualQueryClasses ?? [])].join(
-      "\n\n",
-    );
-  }
-
   const shouldGenerateFunctions = shouldGenerateFunctionsInClass(
     node,
     typeInResolverInterfacesConfig,
@@ -155,8 +138,4 @@ export function shouldGenerateFunctionsInClass(
     typeInResolverInterfacesConfig ||
       node.fields?.some((fieldNode) => fieldNode.arguments?.length),
   );
-}
-
-function titleCase(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
 }
