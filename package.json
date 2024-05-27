@@ -43,7 +43,8 @@
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "integration": "bun run build && graphql-codegen && ./gradlew graphqlGenerateSDL && bun test ./test/integration.test.ts",
-    "lint": "eslint .",
+    "lint": "bun ./scripts/check-headers.ts && eslint .",
+    "lint:fix": "bun ./scripts/fix-headers.ts && eslint --fix .",
     "prepack": "bun run build",
     "prepare": "husky",
     "unit": "bun test ./test/plugin.test.ts"
