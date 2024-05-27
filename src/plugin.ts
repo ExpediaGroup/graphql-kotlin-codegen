@@ -21,10 +21,10 @@ import {
   RawConfig,
 } from "@graphql-codegen/visitor-plugin-common";
 import { Input, safeParse } from "valibot";
-import { configSchema } from "./config";
-import { addDependentTypesToOnlyTypes } from "./helpers/add-dependent-types-to-only-types";
+import { configSchema } from "./config/schema";
+import { buildConfigWithDefaults } from "./config/build-config-with-defaults";
+import { addDependentTypesToOnlyTypes } from "./config/add-dependent-types-to-only-types";
 import { visit } from "graphql";
-import { buildConfigWithDefaults } from "./helpers/build-config-with-defaults";
 
 export type GraphQLKotlinCodegenConfig = Partial<RawConfig & ParsedConfig> &
   Input<typeof configSchema>;

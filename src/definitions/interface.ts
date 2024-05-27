@@ -12,33 +12,29 @@ limitations under the License.
 */
 
 import { GraphQLSchema, InterfaceTypeDefinitionNode } from "graphql";
-import { buildAnnotations } from "../helpers/build-annotations";
-import { buildTypeMetadata } from "../helpers/build-type-metadata";
-import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
-import { buildFieldDefinition } from "../helpers/build-field-definition";
-import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
-import { getDependentInterfaceNames } from "../helpers/dependent-type-utils";
+import { buildAnnotations } from "../annotations/build-annotations";
+import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-definition";
+import { buildInterfaceFieldDefinition } from "./field";
+import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
+import { getDependentInterfaceNames } from "../utils/dependent-type-utils";
 
 export function buildInterfaceDefinition(
   node: InterfaceTypeDefinitionNode,
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  if (!shouldIncludeTypeDefinition(node, config)) {
+  if (shouldExcludeTypeDefinition(node, config)) {
     return "";
   }
 
   const classMembers = node.fields
     ?.map((fieldNode) => {
-      const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
-      return buildFieldDefinition(
+      return buildInterfaceFieldDefinition({
         node,
         fieldNode,
         schema,
         config,
-        typeMetadata,
-        Boolean(fieldNode.arguments?.length),
-      );
+      });
     })
     .join("\n");
 

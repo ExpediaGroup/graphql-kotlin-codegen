@@ -17,24 +17,26 @@ import {
   isInputObjectType,
   ObjectTypeDefinitionNode,
 } from "graphql";
-import { buildAnnotations } from "../helpers/build-annotations";
-import { buildTypeMetadata } from "../helpers/build-type-metadata";
-import { shouldIncludeTypeDefinition } from "../helpers/should-include-type-definition";
+import { buildAnnotations } from "../annotations/build-annotations";
+import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-definition";
 import {
   getDependentInterfaceNames,
   getDependentUnionsForType,
-} from "../helpers/dependent-type-utils";
-import { buildFieldDefinition } from "../helpers/build-field-definition";
-import { CodegenConfigWithDefaults } from "../helpers/build-config-with-defaults";
-import { inputTypeHasMatchingOutputType } from "../helpers/input-type-has-matching-output-type";
-import { findTypeInResolverInterfacesConfig } from "../helpers/findTypeInResolverInterfacesConfig";
+} from "../utils/dependent-type-utils";
+import {
+  buildConstructorFieldDefinition,
+  buildObjectFieldDefinition,
+} from "./field";
+import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
+import { inputTypeHasMatchingOutputType } from "../utils/input-type-has-matching-output-type";
+import { findTypeInResolverInterfacesConfig } from "../config/find-type-in-resolver-interfaces-config";
 
 export function buildObjectTypeDefinition(
   node: ObjectTypeDefinitionNode,
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  if (!shouldIncludeTypeDefinition(node, config)) {
+  if (shouldExcludeTypeDefinition(node, config)) {
     return "";
   }
 
@@ -64,9 +66,16 @@ export function buildObjectTypeDefinition(
     node,
     config,
   );
-  const shouldGenerateFunctions = Boolean(
-    typeInResolverInterfacesConfig ||
-      node.fields?.some((fieldNode) => fieldNode.arguments?.length),
+  const fieldsWithArguments = node.fields?.filter(
+    (fieldNode) => fieldNode.arguments?.length,
+  );
+  const fieldNodes = typeInResolverInterfacesConfig
+    ? node.fields
+    : fieldsWithArguments;
+
+  const shouldGenerateFunctions = shouldGenerateFunctionsInClass(
+    node,
+    typeInResolverInterfacesConfig,
   );
   if (shouldGenerateFunctions) {
     const atLeastOneFieldHasNoArguments = node.fields?.some(
@@ -76,64 +85,57 @@ export function buildObjectTypeDefinition(
       !typeInResolverInterfacesConfig && atLeastOneFieldHasNoArguments
         ? `(\n${node.fields
             ?.map((fieldNode) => {
-              const typeMetadata = buildTypeMetadata(
-                fieldNode.type,
-                schema,
-                config,
-              );
-              return buildFieldDefinition(
+              return buildConstructorFieldDefinition({
                 node,
                 fieldNode,
                 schema,
                 config,
-                typeMetadata,
-                shouldGenerateFunctions,
-                true,
-              );
+              });
             })
             .join(",\n")}\n)`
         : "";
 
-    const fieldsWithArguments = node.fields?.filter(
-      (fieldNode) => fieldNode.arguments?.length,
-    );
-    const fieldNodes = typeInResolverInterfacesConfig
-      ? node.fields
-      : fieldsWithArguments;
     return `${annotations}${outputRestrictionAnnotation}open class ${name}${constructor}${interfaceInheritance} {
-${getDataClassMembers({ node, fieldNodes, schema, config, shouldGenerateFunctions })}
+${getClassMembers({ node, fieldNodes, schema, config })}
 }`;
   }
 
   return `${annotations}${outputRestrictionAnnotation}data class ${name}(
-${getDataClassMembers({ node, schema, config })}
+${getClassMembers({ node, schema, config })}
 )${interfaceInheritance}`;
 }
 
-function getDataClassMembers({
+function getClassMembers({
   node,
   fieldNodes,
   schema,
   config,
-  shouldGenerateFunctions,
 }: {
   node: ObjectTypeDefinitionNode;
   fieldNodes?: readonly FieldDefinitionNode[];
   schema: GraphQLSchema;
   config: CodegenConfigWithDefaults;
-  shouldGenerateFunctions?: boolean;
 }) {
   return (fieldNodes ?? node.fields)
     ?.map((fieldNode) => {
-      const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
-      return buildFieldDefinition(
+      return buildObjectFieldDefinition({
         node,
         fieldNode,
         schema,
         config,
-        typeMetadata,
-        shouldGenerateFunctions,
-      );
+      });
     })
-    .join(`${shouldGenerateFunctions ? "" : ","}\n`);
+    .join("\n");
+}
+
+export function shouldGenerateFunctionsInClass(
+  node: ObjectTypeDefinitionNode,
+  typeInResolverInterfacesConfig: ReturnType<
+    typeof findTypeInResolverInterfacesConfig
+  >,
+) {
+  return Boolean(
+    typeInResolverInterfacesConfig ||
+      node.fields?.some((fieldNode) => fieldNode.arguments?.length),
+  );
 }

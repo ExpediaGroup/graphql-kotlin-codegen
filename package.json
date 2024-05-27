@@ -1,6 +1,6 @@
 {
   "name": "@expediagroup/graphql-kotlin-codegen",
-  "packageManager": "bun@1.1.6",
+  "packageManager": "bun@1.1.10",
   "main": "dist/plugin.cjs",
   "types": "dist/plugin.d.cts",
   "files": [
@@ -22,6 +22,7 @@
     "@graphql-codegen/java-common": "3.0.0",
     "@graphql-codegen/plugin-helpers": "5.0.4",
     "@graphql-codegen/visitor-plugin-common": "5.2.0",
+    "ts-deepmerge": "7.0.0",
     "valibot": "0.30.0"
   },
   "devDependencies": {
@@ -37,13 +38,19 @@
   },
   "scripts": {
     "build": "tsup src/plugin.ts --clean --dts --external graphql",
+    "docs:build": "bun run build && bun --filter docs build",
+    "docs:start": "bun --filter docs start",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "integration": "bun run build && graphql-codegen && ./gradlew graphqlGenerateSDL && bun test ./test/integration.test.ts",
-    "lint": "eslint .",
+    "lint": "bun ./scripts/check-headers.ts && eslint .",
+    "lint:fix": "bun ./scripts/fix-headers.ts && eslint --fix .",
     "prepack": "bun run build",
     "prepare": "husky",
     "unit": "bun test ./test/plugin.test.ts"
   },
-  "type": "module"
+  "type": "module",
+  "workspaces": [
+    "docs"
+  ]
 }
