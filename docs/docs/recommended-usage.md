@@ -21,8 +21,8 @@ type Query {
 }
 
 type MyType {
-  field1: String!
-  field2: String
+  foo: String!
+  bar: String
 }
 ```
 
@@ -38,8 +38,8 @@ open class Query {
 }
 
 data class MyType(
-  val field1: String,
-  val field2: String? = null
+  val foo: String,
+  val bar: String? = null
 )
 ```
 
@@ -53,16 +53,15 @@ import com.types.generated.Query as QueryInterface
 class MyQuery : Query, QueryInterface() {
   override fun resolveMyType(input: String): MyType =
     MyType(
-      field1 = myExpensiveCall1(),
-      field2 = myExpensiveCall2()
+      foo = myExpensiveCall1(),
+      bar = myExpensiveCall2()
     )
 }
-
 ```
 
 The resulting source code is extremely unperformant. The `MyType` class is a data class, which means
-that the `field1` and `field2` properties are both initialized when the `MyType` object is created, and
-`myExpensiveCall1()` and `myExpensiveCall2()` will both be called in sequence! Even if I only query for `field1`, not
+that the `foo` and `bar` properties are both initialized when the `MyType` object is created, and
+`myExpensiveCall1()` and `myExpensiveCall2()` will both be called in sequence! Even if I only query for `foo`, not
 only will `myExpensiveCall2()` still run, but it will also wait until `myExpensiveCall1()` is totally finished.
 
 ### Instead, use the `resolverInterfaces` config!
@@ -91,8 +90,8 @@ open class Query {
 }
 
 open class MyType {
-  open fun field1(): String = throw NotImplementedError("MyType.field1 must be implemented.")
-  open fun field2(): String? = throw NotImplementedError("MyType.field2 must be implemented.")
+  open fun foo(): String = throw NotImplementedError("MyType.foo must be implemented.")
+  open fun bar(): String? = throw NotImplementedError("MyType.bar must be implemented.")
 }
 ```
 
@@ -108,13 +107,13 @@ class MyQuery : Query, QueryInterface() {
 
 @GraphQLIgnore
 class MyType : MyTypeInterface() {
-  override fun field1(): String = myExpensiveCall1()
-  override fun field2(): String? = myExpensiveCall2()
+  override fun foo(): String = myExpensiveCall1()
+  override fun bar(): String? = myExpensiveCall2()
 }
 ```
 
-This code is much more performant! The `MyType` class is no longer a data class, so the `field1` and `field2` properties
-can now be resolved independently of each other. If I query for only `field1`, only `myExpensiveCall1()` will be called, and
-if I query for only `field2`, only `myExpensiveCall2()` will be called.
+This code is much more performant! The `MyType` class is no longer a data class, so the `foo` and `bar` properties
+can now be resolved independently of each other. If I query for only `foo`, only `myExpensiveCall1()` will be called, and
+if I query for only `bar`, only `myExpensiveCall2()` will be called.
 
 Check out the [related GraphQL Kotlin docs](https://opensource.expediagroup.com/graphql-kotlin/docs/schema-generator/execution/fetching-data/) for more information on this topic.
