@@ -99,13 +99,11 @@ Source code:
 
 ```kotlin
 import com.types.generated.MyType as MyTypeInterface
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 
 class MyQuery : Query, QueryInterface() {
     override fun resolveMyType(input: String): MyType = MyType()
 }
 
-@GraphQLIgnore
 class MyType : MyTypeInterface() {
   override fun foo(): String = myExpensiveCall1()
   override fun bar(): String? = myExpensiveCall2()
