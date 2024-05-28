@@ -77,7 +77,7 @@ export function buildObjectTypeDefinition(
     node.name.value === "Query" || node.name.value === "Mutation";
   if (isTopLevelType) {
     const individualQueryClasses = node.fields?.map((fieldNode) => {
-      const className = `${titleCase(fieldNode.name.value)}${node.name.value}`;
+      const className = `${titleCase(fieldNode.name.value)}${node.name.value}Interface`;
       return `${annotations}${outputRestrictionAnnotation}open class ${className}${interfaceInheritance} {
 ${getClassMembers({ node, fieldNodes: [fieldNode], schema, config })}
 }`;
