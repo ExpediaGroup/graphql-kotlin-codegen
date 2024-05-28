@@ -114,8 +114,8 @@ Instead, you should inherit from the field-level generated `Query` classes like 
 
 ```kotlin
 import com.expediagroup.graphql.server.operations.Query
-import com.types.generated.FooQuery as FooQueryInterface
-import com.types.generated.BarQuery as BarQueryInterface
+import com.types.generated.FooQueryInterface
+import com.types.generated.BarQueryInterface
 
 class FooQuery : Query, FooQueryInterface() {
   override fun foo(): String = "Hello"

@@ -9,12 +9,12 @@ open class Query {
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
-open class GetStuffQuery {
+open class GetStuffQueryInterface {
     open fun getStuff(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("Query.getStuff must be implemented.")
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
-open class GetStuffWithInputQuery {
+open class GetStuffWithInputQueryInterface {
     open fun getStuffWithInput(input: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("Query.getStuffWithInput must be implemented.")
 }
 
@@ -25,11 +25,11 @@ open class Mutation {
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
-open class MutateStuffMutation {
+open class MutateStuffMutationInterface {
     open suspend fun mutateStuff(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("Mutation.mutateStuff must be implemented.")
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
-open class MutateStuffWithInputMutation {
+open class MutateStuffWithInputMutationInterface {
     open suspend fun mutateStuffWithInput(input: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("Mutation.mutateStuffWithInput must be implemented.")
 }
