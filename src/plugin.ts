@@ -20,14 +20,14 @@ import {
   ParsedConfig,
   RawConfig,
 } from "@graphql-codegen/visitor-plugin-common";
-import { Input, safeParse } from "valibot";
+import { InferInput, safeParse } from "valibot";
 import { configSchema } from "./config/schema";
 import { buildConfigWithDefaults } from "./config/build-config-with-defaults";
 import { addDependentTypesToOnlyTypes } from "./config/add-dependent-types-to-only-types";
 import { visit } from "graphql";
 
 export type GraphQLKotlinCodegenConfig = Partial<RawConfig & ParsedConfig> &
-  Input<typeof configSchema>;
+  InferInput<typeof configSchema>;
 
 export const plugin: PluginFunction<GraphQLKotlinCodegenConfig> = (
   schema,
@@ -40,14 +40,7 @@ export const plugin: PluginFunction<GraphQLKotlinCodegenConfig> = (
   }
   const { issues } = safeParse(configSchema, config);
   if (issues) {
-    throw new Error(
-      issues
-        .map(
-          (issue) =>
-            `${issue.path?.[0]?.key} must be ${issue.expected} (${issue.input} was provided)`,
-        )
-        .join("\n"),
-    );
+    throw new Error(issues.map((issue) => issue.message).join("\n"));
   }
 
   const configWithDefaults = buildConfigWithDefaults(config, info.outputFile);
