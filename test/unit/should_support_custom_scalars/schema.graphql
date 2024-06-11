@@ -4,6 +4,7 @@ type MyScalarType {
   idField: ID
   field: URL
   field2: URL!
+  field3: [URL!]
 }
 
 scalar CustomScalar
@@ -11,4 +12,5 @@ scalar CustomScalar
 type MyCustomScalarType {
   field: CustomScalar
   field2: CustomScalar!
+  field3: [CustomScalar!]
 }
