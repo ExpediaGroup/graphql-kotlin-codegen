@@ -11,10 +11,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export function sanitizeFieldName(fieldName: string) {
-  return RESERVED_KEYWORDS.includes(fieldName) ? `\`${fieldName}\`` : fieldName;
+/**
+ * Sanitizes a name of a field or type if it is a reserved keyword in Kotlin.
+ */
+export function sanitizeName(name: string) {
+  return RESERVED_KEYWORDS.includes(name) ? `\`${name}\`` : name;
 }
 
+/**
+ * https://kotlinlang.org/docs/keyword-reference.html#hard-keywords
+ */
 const RESERVED_KEYWORDS = [
   "as",
   "break",
@@ -37,6 +43,7 @@ const RESERVED_KEYWORDS = [
   "this",
   "throw",
   "true",
+  "try",
   "typealias",
   "typeof",
   "val",

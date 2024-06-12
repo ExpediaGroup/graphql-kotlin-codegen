@@ -9,6 +9,19 @@ data class TypeWithReservedKotlinKeywords(
     val `is`: String? = null
 )
 
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
+open class TypeWithReservedKotlinKeywordsAndFieldArgs(
+    val `typeof`: String? = null,
+    private val `throw`: String? = null
+) {
+    open fun `throw`(`else`: String? = null, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = `throw`
+}
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
+data class `true`(
+    val field: String? = null
+)
+
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
 data class InputWithReservedKotlinKeywords(
     val `continue`: String? = null,

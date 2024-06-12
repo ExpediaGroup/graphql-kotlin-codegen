@@ -18,7 +18,7 @@ import {
   buildAnnotations,
   trimDescription,
 } from "../annotations/build-annotations";
-import { sanitizeFieldName } from "../utils/sanitize-field-name";
+import { sanitizeName } from "../utils/sanitize-name";
 
 export function buildUnionTypeDefinition(
   node: UnionTypeDefinitionNode,
@@ -32,15 +32,17 @@ export function buildUnionTypeDefinition(
     definitionNode: node,
   });
   if (config.unionGeneration === "MARKER_INTERFACE") {
-    return `${annotations}interface ${sanitizeFieldName(node.name.value)}`;
+    return `${annotations}interface ${sanitizeName(node.name.value)}`;
   }
 
   const possibleTypes =
-    node.types?.map((type) => `${type.name.value}::class`).join(", ") || "";
+    node.types
+      ?.map((type) => `${sanitizeName(type.name.value)}::class`)
+      .join(", ") || "";
   return `${annotations}@GraphQLUnion(
     name = "${node.name.value}",
     possibleTypes = [${possibleTypes}],
     description = "${trimDescription(node.description?.value)}"
 )
-annotation class ${sanitizeFieldName(node.name.value)}`;
+annotation class ${sanitizeName(node.name.value)}`;
 }

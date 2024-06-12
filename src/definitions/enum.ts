@@ -16,7 +16,7 @@ import { indentMultiline } from "@graphql-codegen/visitor-plugin-common";
 import { buildAnnotations } from "../annotations/build-annotations";
 import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-definition";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
-import { sanitizeFieldName } from "../utils/sanitize-field-name";
+import { sanitizeName } from "../utils/sanitize-name";
 
 export function buildEnumTypeDefinition(
   node: EnumTypeDefinitionNode,
@@ -26,7 +26,7 @@ export function buildEnumTypeDefinition(
     return "";
   }
 
-  const enumName = node.name.value;
+  const enumName = sanitizeName(node.name.value);
   const enumValues =
     node.values?.map((valueNode) => {
       return buildEnumValueDefinition(valueNode, config);
@@ -56,6 +56,6 @@ function buildEnumValueDefinition(
   if (!config.convert) {
     throw new Error("Convert function was somehow not found in the config.");
   }
-  const fieldName = sanitizeFieldName(config.convert(node));
+  const fieldName = sanitizeName(config.convert(node));
   return `${annotations}${fieldName}`;
 }
