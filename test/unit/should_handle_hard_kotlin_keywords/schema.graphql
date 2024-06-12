@@ -19,5 +19,14 @@ enum EnumWithReservedKotlinKeywords {
 interface InterfaceWithReservedKotlinKeywords {
   null: String
   return: String
-  super: String
+  object: String
 }
+
+type TypeForUnion1 {
+  field: String
+}
+type TypeForUnion2 {
+  field: String
+}
+
+union this = TypeForUnion1 | TypeForUnion2

@@ -29,5 +29,17 @@ enum class EnumWithReservedKotlinKeywords {
 interface InterfaceWithReservedKotlinKeywords {
     val `null`: String?
     val `return`: String?
-    val `this`: String?
+    val `object`: String?
 }
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
+data class TypeForUnion1(
+    val field: String? = null
+) : `this`
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
+data class TypeForUnion2(
+    val field: String? = null
+) : `this`
+
+interface `this`

@@ -18,6 +18,7 @@ import {
   buildAnnotations,
   trimDescription,
 } from "../annotations/build-annotations";
+import { sanitizeFieldName } from "../utils/sanitize-field-name";
 
 export function buildUnionTypeDefinition(
   node: UnionTypeDefinitionNode,
@@ -31,7 +32,7 @@ export function buildUnionTypeDefinition(
     definitionNode: node,
   });
   if (config.unionGeneration === "MARKER_INTERFACE") {
-    return `${annotations}interface ${node.name.value}`;
+    return `${annotations}interface ${sanitizeFieldName(node.name.value)}`;
   }
 
   const possibleTypes =
@@ -41,5 +42,5 @@ export function buildUnionTypeDefinition(
     possibleTypes = [${possibleTypes}],
     description = "${trimDescription(node.description?.value)}"
 )
-annotation class ${node.name.value}`;
+annotation class ${sanitizeFieldName(node.name.value)}`;
 }

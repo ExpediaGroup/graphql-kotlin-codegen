@@ -18,6 +18,7 @@ import { buildAnnotations } from "../annotations/build-annotations";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { inputTypeHasMatchingOutputType } from "../utils/input-type-has-matching-output-type";
+import { sanitizeFieldName } from "../utils/sanitize-field-name";
 
 export function buildInputObjectDefinition(
   node: InputObjectTypeDefinitionNode,
@@ -34,16 +35,16 @@ export function buildInputObjectDefinition(
   }
 
   const classMembers = (node.fields ?? [])
-    .map((arg) => {
-      const typeToUse = buildTypeMetadata(arg.type, schema, config);
+    .map((field) => {
+      const typeToUse = buildTypeMetadata(field.type, schema, config);
       const initial = typeToUse.isNullable ? " = null" : "";
 
       const annotations = buildAnnotations({
         config,
-        definitionNode: arg,
+        definitionNode: field,
       });
       return `${annotations}${indent(
-        `val ${arg.name.value}: ${typeToUse.typeName}${
+        `val ${sanitizeFieldName(field.name.value)}: ${typeToUse.typeName}${
           typeToUse.isNullable ? "?" : ""
         }${initial}`,
         2,

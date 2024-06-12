@@ -25,6 +25,7 @@ import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildAnnotations } from "../annotations/build-annotations";
 import { findTypeInResolverInterfacesConfig } from "../config/find-type-in-resolver-interfaces-config";
 import { shouldGenerateFunctionsInClass } from "./object";
+import { sanitizeFieldName } from "../utils/sanitize-field-name";
 
 export function buildObjectFieldDefinition({
   node,
@@ -209,7 +210,7 @@ function buildFunctionDefinition(
     typeInResolverInterfacesConfig,
     config,
   );
-  return `${modifier} ${fieldNode.name.value}${fieldArguments}`;
+  return `${modifier} ${sanitizeFieldName(fieldNode.name.value)}${fieldArguments}`;
 }
 
 function buildConstructorFunctionDefinition(

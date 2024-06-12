@@ -30,6 +30,7 @@ import {
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { inputTypeHasMatchingOutputType } from "../utils/input-type-has-matching-output-type";
 import { findTypeInResolverInterfacesConfig } from "../config/find-type-in-resolver-interfaces-config";
+import { sanitizeFieldName } from "../utils/sanitize-field-name";
 
 export function buildObjectTypeDefinition(
   node: ObjectTypeDefinitionNode,
@@ -51,7 +52,7 @@ export function buildObjectTypeDefinition(
     config.unionGeneration === "MARKER_INTERFACE"
       ? dependentInterfaces.concat(dependentUnions)
       : dependentInterfaces;
-  const interfaceInheritance = `${interfacesToInherit.length ? ` : ${interfacesToInherit.join(", ")}` : ""}`;
+  const interfaceInheritance = `${interfacesToInherit.length ? ` : ${interfacesToInherit.map((_interface) => sanitizeFieldName(_interface)).join(", ")}` : ""}`;
 
   const potentialMatchingInputType = schema.getType(`${name}Input`);
   const typeWillBeConsolidated =
