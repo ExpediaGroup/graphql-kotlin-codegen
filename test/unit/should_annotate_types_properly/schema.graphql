@@ -34,3 +34,10 @@ type TypeThatShouldBeProperlyAnnotated {
 }
 
 union UnionThatShouldBeProperlyAnnotated = TypeThatShouldBeProperlyAnnotated
+
+input InputTypeThatShouldBeProperlyAnnotated {
+  "DEPRECATED: this field is deprecated"
+  optionalField: String
+  "DEPRECATED: this field is deprecated"
+  requiredField: String!
+}
