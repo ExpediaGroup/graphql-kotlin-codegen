@@ -17,6 +17,7 @@ import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-defin
 import { buildInterfaceFieldDefinition } from "./field";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { getDependentInterfaceNames } from "../utils/dependent-type-utils";
+import { sanitizeName } from "../utils/sanitize-name";
 
 export function buildInterfaceDefinition(
   node: InterfaceTypeDefinitionNode,
@@ -46,7 +47,7 @@ export function buildInterfaceDefinition(
   const interfacesToInherit = getDependentInterfaceNames(node);
   const interfaceInheritance = `${interfacesToInherit.length ? ` : ${interfacesToInherit.join(", ")}` : ""}`;
 
-  return `${annotations}interface ${node.name.value}${interfaceInheritance} {
+  return `${annotations}interface ${sanitizeName(node.name.value)}${interfaceInheritance} {
 ${classMembers}
 }`;
 }

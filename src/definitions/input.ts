@@ -18,6 +18,7 @@ import { buildAnnotations } from "../annotations/build-annotations";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { inputTypeHasMatchingOutputType } from "../utils/input-type-has-matching-output-type";
+import { sanitizeName } from "../utils/sanitize-name";
 
 export function buildInputObjectDefinition(
   node: InputObjectTypeDefinitionNode,
@@ -34,16 +35,16 @@ export function buildInputObjectDefinition(
   }
 
   const classMembers = (node.fields ?? [])
-    .map((arg) => {
-      const typeToUse = buildTypeMetadata(arg.type, schema, config);
+    .map((field) => {
+      const typeToUse = buildTypeMetadata(field.type, schema, config);
       const initial = typeToUse.isNullable ? " = null" : "";
 
       const annotations = buildAnnotations({
         config,
-        definitionNode: arg,
+        definitionNode: field,
       });
       return `${annotations}${indent(
-        `val ${arg.name.value}: ${typeToUse.typeName}${
+        `val ${sanitizeName(field.name.value)}: ${typeToUse.typeName}${
           typeToUse.isNullable ? "?" : ""
         }${initial}`,
         2,
@@ -58,7 +59,7 @@ export function buildInputObjectDefinition(
 
   const inputRestrictionAnnotation =
     "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])\n";
-  return `${annotations}${inputRestrictionAnnotation}data class ${node.name.value}(
+  return `${annotations}${inputRestrictionAnnotation}data class ${sanitizeName(node.name.value)}(
 ${classMembers}
 )`;
 }

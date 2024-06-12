@@ -1,0 +1,41 @@
+type TypeWithReservedKotlinKeywords {
+  as: String
+  break: String
+  is: String
+}
+
+type TypeWithReservedKotlinKeywordsAndFieldArgs {
+  typeof: String
+  throw(else: String): String
+}
+
+type true {
+  field: String
+}
+
+input InputWithReservedKotlinKeywords {
+  continue: String
+  class: String
+  do: String
+}
+
+enum EnumWithReservedKotlinKeywords {
+  fun
+  package
+  val
+}
+
+interface InterfaceWithReservedKotlinKeywords {
+  null: String
+  return: String
+  object: String
+}
+
+type TypeForUnion1 {
+  field: String
+}
+type TypeForUnion2 {
+  field: String
+}
+
+union this = TypeForUnion1 | TypeForUnion2
