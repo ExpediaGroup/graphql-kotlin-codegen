@@ -27,7 +27,13 @@ export function buildDescriptionAnnotation(
   const isDeprecatedDescription = trimmedDescription.startsWith(
     deprecatedDescriptionPrefix,
   );
-  if (isDeprecatedDescription && typeMetadata?.unionAnnotation) {
+  const isRequiredInputField =
+    definitionNode.kind === Kind.INPUT_VALUE_DEFINITION &&
+    definitionNode.type.kind === Kind.NON_NULL_TYPE;
+  if (
+    isDeprecatedDescription &&
+    (typeMetadata?.unionAnnotation || isRequiredInputField)
+  ) {
     return `@GraphQLDescription("${trimmedDescription}")\n`;
   } else if (isDeprecatedDescription) {
     const descriptionValue = description.replace(

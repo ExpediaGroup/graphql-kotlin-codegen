@@ -30,3 +30,11 @@ data class TypeThatShouldBeProperlyAnnotated(
 ) : UnionThatShouldBeProperlyAnnotated
 
 interface UnionThatShouldBeProperlyAnnotated
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
+data class InputTypeThatShouldBeProperlyAnnotated(
+    @Deprecated("this field is deprecated")
+    val optionalField: String? = null,
+    @GraphQLDescription("DEPRECATED: this field is deprecated")
+    val requiredField: String
+)
