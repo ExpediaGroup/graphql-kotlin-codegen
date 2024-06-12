@@ -35,6 +35,6 @@ interface UnionThatShouldBeProperlyAnnotated
 data class InputTypeThatShouldBeProperlyAnnotated(
     @Deprecated("this field is deprecated")
     val optionalField: String? = null,
-    @GraphQLDescription("this field is deprecated")
+    @GraphQLDescription("DEPRECATED: this field is deprecated")
     val requiredField: String
 )
