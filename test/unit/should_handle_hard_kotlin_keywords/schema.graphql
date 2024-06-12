@@ -1,0 +1,23 @@
+type TypeWithReservedKotlinKeywords {
+  as: String
+  break: String
+  is: String
+}
+
+input InputWithReservedKotlinKeywords {
+  continue: String
+  class: String
+  do: String
+}
+
+enum EnumWithReservedKotlinKeywords {
+  fun
+  package
+  val
+}
+
+interface InterfaceWithReservedKotlinKeywords {
+  null: String
+  return: String
+  super: String
+}
