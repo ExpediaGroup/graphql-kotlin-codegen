@@ -25,6 +25,7 @@ import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { buildAnnotations } from "../annotations/build-annotations";
 import { findTypeInResolverInterfacesConfig } from "../config/find-type-in-resolver-interfaces-config";
 import { shouldGenerateFunctionsInClass } from "./object";
+import { sanitizeName } from "../utils/sanitize-name";
 
 export function buildObjectFieldDefinition({
   node,
@@ -209,7 +210,7 @@ function buildFunctionDefinition(
     typeInResolverInterfacesConfig,
     config,
   );
-  return `${modifier} ${fieldNode.name.value}${fieldArguments}`;
+  return `${modifier} ${sanitizeName(fieldNode.name.value)}${fieldArguments}`;
 }
 
 function buildConstructorFunctionDefinition(
@@ -229,7 +230,7 @@ function buildConstructorFunctionDefinition(
         typeInResolverInterfacesConfig,
       );
   const fieldArguments = "";
-  return `${modifier} ${fieldNode.name.value}${fieldArguments}`;
+  return `${modifier} ${sanitizeName(fieldNode.name.value)}${fieldArguments}`;
 }
 
 function buildFieldModifier(
@@ -284,7 +285,7 @@ function buildFieldArguments(
   const nullableSuffix = isOverrideFunction ? "?" : "? = null";
   const existingFieldArguments = fieldNode.arguments?.map((arg) => {
     const argMetadata = buildTypeMetadata(arg.type, schema, config);
-    return `${arg.name.value}: ${argMetadata.typeName}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : nullableSuffix}`;
+    return `${sanitizeName(arg.name.value)}: ${argMetadata.typeName}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : nullableSuffix}`;
   });
   const dataFetchingEnvironmentArgument =
     "dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment";
@@ -323,7 +324,7 @@ function getDefaultImplementation(
     (fieldNode) => !fieldNode.arguments?.length,
   );
   return !typeInResolverInterfacesConfig && atLeastOneFieldHasNoArguments
-    ? fieldNode.name.value
+    ? sanitizeName(fieldNode.name.value)
     : notImplementedError;
 }
 
