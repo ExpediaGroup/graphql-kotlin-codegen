@@ -4,8 +4,8 @@ import com.expediagroup.graphql.generator.annotations.*
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 open class TypeWithOnlyFieldArgs {
-    open fun nullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = throw NotImplementedError("TypeWithOnlyFieldArgs.nullableResolver must be implemented.")
-    open fun nonNullableResolver(arg: InputTypeForResolver, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("TypeWithOnlyFieldArgs.nonNullableResolver must be implemented.")
+    open fun nullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment? = null): String? = throw NotImplementedError("TypeWithOnlyFieldArgs.nullableResolver must be implemented.")
+    open fun nonNullableResolver(arg: InputTypeForResolver, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment? = null): String = throw NotImplementedError("TypeWithOnlyFieldArgs.nonNullableResolver must be implemented.")
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
@@ -15,8 +15,8 @@ open class HybridType(
     private val nullableResolver: String? = null,
     private val nonNullableResolver: String
 ) {
-    open fun nullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = nullableResolver
-    open fun nonNullableResolver(arg: InputTypeForResolver, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = nonNullableResolver
+    open fun nullableResolver(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment? = null): String? = nullableResolver
+    open fun nonNullableResolver(arg: InputTypeForResolver, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment? = null): String = nonNullableResolver
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
@@ -27,8 +27,8 @@ data class InputTypeForResolver(
 interface HybridInterface {
     val field1: String?
     val field2: String
-    fun nullableListResolver(arg1: Int? = null, arg2: Int, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String?>?
-    fun nonNullableListResolver(arg1: Int, arg2: Int? = null, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String>
+    fun nullableListResolver(arg1: Int? = null, arg2: Int, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment? = null): List<String?>?
+    fun nonNullableListResolver(arg1: Int, arg2: Int? = null, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment? = null): List<String>
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
@@ -42,6 +42,6 @@ open class TypeImplementingInterface(
     private val nullableListResolver: List<String?>? = null,
     private val nonNullableListResolver: List<String> = emptyList()
 ) : HybridInterface {
-    override fun nullableListResolver(arg1: Int?, arg2: Int, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String?>? = nullableListResolver
-    override fun nonNullableListResolver(arg1: Int, arg2: Int?, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): List<String> = nonNullableListResolver
+    override fun nullableListResolver(arg1: Int?, arg2: Int, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment? = null): List<String?>? = nullableListResolver
+    override fun nonNullableListResolver(arg1: Int, arg2: Int?, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment? = null): List<String> = nonNullableListResolver
 }

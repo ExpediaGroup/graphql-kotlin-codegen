@@ -288,7 +288,7 @@ function buildFieldArguments(
     return `${sanitizeName(arg.name.value)}: ${argMetadata.typeName}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : nullableSuffix}`;
   });
   const dataFetchingEnvironmentArgument =
-    "dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment";
+    "dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment? = null";
   const extraFieldArguments = [dataFetchingEnvironmentArgument];
   const allFieldArguments = existingFieldArguments?.concat(extraFieldArguments);
   return allFieldArguments?.length

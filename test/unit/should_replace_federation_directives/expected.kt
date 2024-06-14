@@ -18,5 +18,5 @@ open class FederatedTypeResolver(
     @com.expediagroup.graphql.generator.federation.directives.ExternalDirective
     val field2: String? = null
 ) {
-    open fun field(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = field
+    open fun field(arg: String, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment? = null): String = field
 }

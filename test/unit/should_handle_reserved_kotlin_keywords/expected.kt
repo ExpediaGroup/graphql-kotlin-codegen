@@ -14,7 +14,7 @@ open class TypeWithReservedKotlinKeywordsAndFieldArgs(
     val `typeof`: String? = null,
     private val `throw`: String? = null
 ) {
-    open fun `throw`(`else`: String? = null, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = `throw`
+    open fun `throw`(`else`: String? = null, dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment? = null): String? = `throw`
 }
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
