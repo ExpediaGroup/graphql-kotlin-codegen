@@ -23,5 +23,9 @@ export default {
       typeName: "MyIncludedInterfaceSuspend",
       classMethods: "SUSPEND",
     },
+    {
+      typeName: "MyIncludedResolverTypeWithNullDataFetchingEnvironment",
+      nullableDataFetchingEnvironment: true,
+    },
   ],
 } satisfies GraphQLKotlinCodegenConfig;
