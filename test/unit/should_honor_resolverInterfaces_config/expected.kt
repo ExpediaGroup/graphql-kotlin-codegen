@@ -63,3 +63,9 @@ interface MyIncludedInterfaceSuspend {
 interface MyExcludedInterface {
     val field: String?
 }
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
+open class MyIncludedResolverTypeWithNullDataFetchingEnvironment {
+    open fun nullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment? = null): String? = throw NotImplementedError("MyIncludedResolverTypeWithNullDataFetchingEnvironment.nullableField must be implemented.")
+    open fun nonNullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment? = null): String = throw NotImplementedError("MyIncludedResolverTypeWithNullDataFetchingEnvironment.nonNullableField must be implemented.")
+}

@@ -287,8 +287,7 @@ function buildFieldArguments(
     const argMetadata = buildTypeMetadata(arg.type, schema, config);
     return `${sanitizeName(arg.name.value)}: ${argMetadata.typeName}${arg.type.kind === Kind.NON_NULL_TYPE ? "" : nullableSuffix}`;
   });
-  const dataFetchingEnvironmentArgument =
-    "dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment";
+  const dataFetchingEnvironmentArgument = `dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment${typeInResolverInterfacesConfig?.nullableDataFetchingEnvironment ? "? = null" : ""}`;
   const extraFieldArguments = [dataFetchingEnvironmentArgument];
   const allFieldArguments = existingFieldArguments?.concat(extraFieldArguments);
   return allFieldArguments?.length

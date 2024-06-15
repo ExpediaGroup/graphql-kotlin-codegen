@@ -51,3 +51,8 @@ interface MyIncludedInterfaceSuspend {
 interface MyExcludedInterface {
   field: String
 }
+
+type MyIncludedResolverTypeWithNullDataFetchingEnvironment {
+  nullableField: String
+  nonNullableField: String!
+}
