@@ -23,7 +23,7 @@
     "@graphql-codegen/plugin-helpers": "5.0.4",
     "@graphql-codegen/visitor-plugin-common": "5.2.0",
     "ts-deepmerge": "7.0.0",
-    "valibot": "0.32.0"
+    "valibot": "0.33.3"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
