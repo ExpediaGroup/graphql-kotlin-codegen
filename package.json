@@ -28,13 +28,13 @@
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
     "@total-typescript/ts-reset": "0.5.1",
-    "bun-types": "1.1.16",
-    "eslint": "9.5.0",
+    "bun-types": "1.1.17",
+    "eslint": "9.6.0",
     "husky": "9.0.11",
     "prettier": "3.3.2",
     "tsup": "8.1.0",
     "typescript": "5.5.2",
-    "typescript-eslint": "7.13.1"
+    "typescript-eslint": "7.14.1"
   },
   "scripts": {
     "build": "tsup src/plugin.ts --clean --dts --external graphql",
