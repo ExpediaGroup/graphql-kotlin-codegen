@@ -43,13 +43,13 @@ function getFieldTypeName(fieldType: TypeNode) {
 
 export function getDependentInterfaceNames(node: TypeDefinitionNode) {
   return "interfaces" in node
-    ? node.interfaces?.map((interfaceNode) => interfaceNode.name.value) ?? []
+    ? (node.interfaces?.map((interfaceNode) => interfaceNode.name.value) ?? [])
     : [];
 }
 
 export function getDependentUnionNames(node: TypeDefinitionNode) {
   return node.kind === Kind.UNION_TYPE_DEFINITION
-    ? node.types?.map((type) => type.name.value) ?? []
+    ? (node.types?.map((type) => type.name.value) ?? [])
     : [];
 }
 
