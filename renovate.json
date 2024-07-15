@@ -11,7 +11,7 @@
       "automerge": true
     },
     {
-      "matchPackagePatterns": ["gradle", "graphql-kotlin"],
+      "matchPackagePatterns": ["gradle", "com.expediagroup"],
       "matchUpdateTypes": ["patch", "minor"],
       "groupName": "devDependencies",
       "automerge": true
