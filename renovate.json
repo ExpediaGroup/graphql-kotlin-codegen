@@ -5,21 +5,15 @@
   "assigneesFromCodeOwners": true,
   "packageRules": [
     {
-      "matchDepTypes": ["devDependencies"],
+      "matchDepTypes": ["dependencies", "devDependencies"],
       "matchUpdateTypes": ["patch", "minor"],
-      "groupName": "devDependencies",
+      "groupName": "dependencies",
       "automerge": true
     },
     {
       "matchPackagePatterns": ["gradle", "com.expediagroup"],
       "matchUpdateTypes": ["patch", "minor"],
-      "groupName": "devDependencies",
-      "automerge": true
-    },
-    {
-      "matchDepTypes": ["dependencies"],
-      "matchUpdateTypes": ["patch", "minor"],
-      "groupName": "dependencies",
+      "groupName": "kotlin deps",
       "automerge": true
     }
   ]
