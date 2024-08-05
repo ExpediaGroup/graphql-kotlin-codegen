@@ -12,9 +12,7 @@
     },
     {
       "matchPackagePatterns": ["gradle", "com.expediagroup"],
-      "matchUpdateTypes": ["patch", "minor"],
-      "groupName": "kotlin deps",
-      "automerge": true
+      "groupName": "dependencies"
     }
   ]
 }
