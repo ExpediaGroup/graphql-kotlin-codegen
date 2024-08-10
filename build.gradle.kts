@@ -5,7 +5,7 @@ repositories {
 }
 
 plugins {
-    kotlin("jvm") version "2.0.0"
+    kotlin("jvm") version "2.0.10"
     id("com.expediagroup.graphql") version "7.1.4"
 }
 
