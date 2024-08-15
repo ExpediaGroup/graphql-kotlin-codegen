@@ -28,7 +28,7 @@ import {
   buildObjectFieldDefinition,
 } from "./field";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
-import { inputTypeHasMatchingOutputType } from "../utils/input-type-has-matching-output-type";
+import { shouldConsolidateTypes } from "../utils/should-consolidate-types";
 import { findTypeInResolverInterfacesConfig } from "../config/find-type-in-resolver-interfaces-config";
 import { sanitizeName } from "../utils/sanitize-name";
 
@@ -61,7 +61,7 @@ export function buildObjectTypeDefinition(
   const typeWillBeConsolidated =
     isInputObjectType(potentialMatchingInputType) &&
     potentialMatchingInputType.astNode &&
-    inputTypeHasMatchingOutputType(potentialMatchingInputType.astNode, schema);
+    shouldConsolidateTypes(potentialMatchingInputType.astNode, schema, config);
   const outputRestrictionAnnotation = typeWillBeConsolidated
     ? ""
     : "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])\n";

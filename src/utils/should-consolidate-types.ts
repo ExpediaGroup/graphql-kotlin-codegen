@@ -18,11 +18,17 @@ import {
   isObjectType,
 } from "graphql";
 import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
+import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 
-export function inputTypeHasMatchingOutputType(
+export function shouldConsolidateTypes(
   inputNode: InputObjectTypeDefinitionNode,
   schema: GraphQLSchema,
+  config: CodegenConfigWithDefaults,
 ) {
+  if (!config.classConsolidationEnabled) {
+    return false;
+  }
+
   const inputName = inputNode.name.value;
   const typeNameWithoutInput = getTypeNameWithoutInput(inputName);
   const matchingTypeName =
