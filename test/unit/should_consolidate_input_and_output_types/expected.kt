@@ -128,3 +128,23 @@ enum class Enum2 {
         fun findByName(name: String, ignoreCase: Boolean = false): Enum2? = values().find { it.name.equals(name, ignoreCase = ignoreCase) }
     }
 }
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
+data class MyNullabilityType(
+    val field1: MyNestedNullabilityType
+)
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
+data class MyNullabilityTypeInput(
+    val field1: MyNestedNullabilityTypeInput
+)
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
+data class MyNestedNullabilityType(
+    val field2: String
+)
+
+@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
+data class MyNestedNullabilityTypeInput(
+    val field2: String
+)
