@@ -136,15 +136,9 @@ data class MyNullabilityType(
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
 data class MyNullabilityTypeInput(
-    val field1: MyNestedNullabilityTypeInput
+    val field1: MyNestedNullabilityType? = null
 )
 
-@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class MyNestedNullabilityType(
-    val field2: String
-)
-
-@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
-data class MyNestedNullabilityTypeInput(
     val field2: String
 )

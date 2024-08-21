@@ -71,7 +71,13 @@ function typesAreEquivalent(
     const matchingInputField = inputNode.astNode?.fields?.find(
       (inputField) => inputField.name.value === typeField.name.value,
     );
-    if (!matchingInputField?.type) return false;
+    if (
+      !matchingInputField?.type ||
+      typeField.type.kind !== matchingInputField.type.kind
+    ) {
+      return false;
+    }
+
     const baseTypeName = getBaseTypeNode(typeField.type).name.value;
     const baseInputTypeName = getBaseTypeNode(matchingInputField.type).name
       .value;
