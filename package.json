@@ -23,7 +23,7 @@
     "@graphql-codegen/plugin-helpers": "5.0.4",
     "@graphql-codegen/visitor-plugin-common": "5.3.1",
     "ts-deepmerge": "7.0.1",
-    "valibot": "0.39.0"
+    "valibot": "0.40.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
@@ -34,7 +34,7 @@
     "prettier": "3.3.3",
     "tsup": "8.2.4",
     "typescript": "5.5.4",
-    "typescript-eslint": "8.2.0"
+    "typescript-eslint": "8.3.0"
   },
   "scripts": {
     "build": "tsup src/plugin.ts --clean --dts --external graphql",
