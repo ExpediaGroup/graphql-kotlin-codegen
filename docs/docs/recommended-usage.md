@@ -98,6 +98,7 @@ open class MyType {
 Source code:
 
 ```kotlin
+import com.types.generated.Query as QueryInterface
 import com.types.generated.MyType as MyTypeInterface
 
 class MyQuery : Query, QueryInterface() {

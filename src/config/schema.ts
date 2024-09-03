@@ -25,6 +25,14 @@ import { Kind } from "graphql";
 
 export const configSchema = object({
   /**
+   * Denotes whether to consolidate classes for input and output types whose fields are equivalent.
+   *
+   * @default true
+   *
+   * @link https://opensource.expediagroup.com/graphql-kotlin-codegen/docs/class-consolidation
+   */
+  classConsolidationEnabled: optional(boolean()),
+  /**
    * Limits dependent types to include from `onlyTypes` list. Can be used to exclude classes that are imported from external packages.
    *
    * If `MyType` depends on `MyDependentType1` and `MyDependentType2`, we can allow `MyDependentType2` to be imported
@@ -64,14 +72,6 @@ export const configSchema = object({
       }),
     ),
   ),
-  /**
-   * Denotes whether to consolidate classes for input and output types whose fields are equivalent.
-   *
-   * @default true
-   *
-   * @link https://opensource.expediagroup.com/graphql-kotlin-codegen/docs/class-consolidation
-   */
-  classConsolidationEnabled: optional(boolean()),
   /**
    * Denotes Kotlin classes representing union types to be treated as interfaces rather than annotation classes.
    *
