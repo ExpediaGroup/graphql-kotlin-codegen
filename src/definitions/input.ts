@@ -40,6 +40,7 @@ export function buildInputObjectDefinition(
       const initial = typeToUse.isNullable ? " = null" : "";
 
       const annotations = buildAnnotations({
+        schema,
         config,
         definitionNode: field,
       });
@@ -53,6 +54,7 @@ export function buildInputObjectDefinition(
     .join(",\n");
 
   const annotations = buildAnnotations({
+    schema,
     config,
     definitionNode: node,
   });

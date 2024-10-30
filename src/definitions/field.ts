@@ -72,6 +72,7 @@ export function buildObjectFieldDefinition({
     typeMetadata,
   );
   const annotations = buildAnnotations({
+    schema,
     config,
     definitionNode: fieldNode,
     typeMetadata,
@@ -112,6 +113,7 @@ export function buildConstructorFieldDefinition({
     typeMetadata,
   );
   const annotations = buildAnnotations({
+    schema,
     config,
     definitionNode: fieldNode,
     typeMetadata,
@@ -156,6 +158,7 @@ export function buildInterfaceFieldDefinition({
     typeMetadata,
   );
   const annotations = buildAnnotations({
+    schema,
     config,
     definitionNode: fieldNode,
     typeMetadata,

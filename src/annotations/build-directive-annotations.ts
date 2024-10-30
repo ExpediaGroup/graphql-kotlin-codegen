@@ -14,12 +14,21 @@ limitations under the License.
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { DefinitionNode } from "./build-annotations";
 import { ConstDirectiveNode } from "graphql/language";
-import { Kind } from "graphql";
+import { GraphQLSchema, isInputObjectType, Kind } from "graphql";
+import { shouldConsolidateTypes } from "../utils/should-consolidate-types";
+import { sanitizeName } from "../utils/sanitize-name";
 
 export function buildDirectiveAnnotations(
   definitionNode: DefinitionNode,
   config: CodegenConfigWithDefaults,
+  schema: GraphQLSchema,
 ) {
+  const name = sanitizeName(definitionNode.name.value);
+  const potentialMatchingInputType = schema.getType(`${name}Input`);
+  const typeWillBeConsolidated =
+    isInputObjectType(potentialMatchingInputType) &&
+    potentialMatchingInputType.astNode &&
+    shouldConsolidateTypes(potentialMatchingInputType.astNode, schema, config);
   const directives = definitionNode.directives ?? [];
   return directives
     .map((directive) => {
@@ -29,9 +38,17 @@ export function buildDirectiveAnnotations(
       if (federationReplacement) return federationReplacement + "\n";
 
       const directiveReplacementFromConfig = config.directiveReplacements?.find(
-        ({ directive, definitionType }) =>
-          directive === directiveName &&
-          (!definitionType || definitionType === definitionNode.kind),
+        ({ directive, definitionType }) => {
+          if (directive !== directiveName) return false;
+          if (!definitionType) return true;
+          if (definitionType !== definitionNode.kind) return false;
+          if (
+            definitionType !== Kind.INPUT_OBJECT_TYPE_DEFINITION &&
+            definitionType !== Kind.OBJECT_TYPE_DEFINITION
+          )
+            return true;
+          return !typeWillBeConsolidated;
+        },
       );
       if (!directiveReplacementFromConfig) return "";
       const kotlinAnnotations = buildKotlinAnnotations(

@@ -15,6 +15,7 @@ import { indent } from "@graphql-codegen/visitor-plugin-common";
 import {
   EnumValueDefinitionNode,
   FieldDefinitionNode,
+  GraphQLSchema,
   InputValueDefinitionNode,
   Kind,
   TypeDefinitionNode,
@@ -31,10 +32,12 @@ export type DefinitionNode =
   | EnumValueDefinitionNode;
 
 export function buildAnnotations({
+  schema,
   config,
   definitionNode,
   typeMetadata,
 }: {
+  schema: GraphQLSchema;
   config: CodegenConfigWithDefaults;
   definitionNode: DefinitionNode;
   typeMetadata?: TypeMetadata;
@@ -49,6 +52,7 @@ export function buildAnnotations({
   const directiveAnnotations = buildDirectiveAnnotations(
     definitionNode,
     config,
+    schema,
   );
   const unionAnnotation = typeMetadata?.unionAnnotation
     ? `@${typeMetadata.unionAnnotation}\n`
