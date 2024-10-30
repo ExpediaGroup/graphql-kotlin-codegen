@@ -40,7 +40,7 @@ export class KotlinVisitor extends BaseVisitor<
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    return buildEnumTypeDefinition(node, this.config);
+    return buildEnumTypeDefinition(node, this._schema, this.config);
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
@@ -56,6 +56,6 @@ export class KotlinVisitor extends BaseVisitor<
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode): string {
-    return buildUnionTypeDefinition(node, this.config);
+    return buildUnionTypeDefinition(node, this._schema, this.config);
   }
 }

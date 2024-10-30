@@ -42,10 +42,10 @@ export function buildObjectTypeDefinition(
   }
 
   const annotations = buildAnnotations({
+    schema,
     config,
     definitionNode: node,
   });
-  const name = sanitizeName(node.name.value);
   const dependentInterfaces = getDependentInterfaceNames(node);
   const dependentUnions = getDependentUnionsForType(schema, node);
   const interfacesToInherit =
@@ -57,6 +57,7 @@ export function buildObjectTypeDefinition(
   );
   const interfaceInheritance = `${interfacesToInherit.length ? ` : ${sanitizedInterfaceNames.join(", ")}` : ""}`;
 
+  const name = sanitizeName(node.name.value);
   const potentialMatchingInputType = schema.getType(`${name}Input`);
   const typeWillBeConsolidated =
     isInputObjectType(potentialMatchingInputType) &&

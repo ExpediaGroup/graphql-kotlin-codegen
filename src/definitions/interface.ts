@@ -40,6 +40,7 @@ export function buildInterfaceDefinition(
     .join("\n");
 
   const annotations = buildAnnotations({
+    schema,
     config,
     definitionNode: node,
   });

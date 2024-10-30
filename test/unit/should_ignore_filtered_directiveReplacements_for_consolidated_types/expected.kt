@@ -14,6 +14,15 @@ data class InputTypeThatShouldNotGetDirectiveReplacement(
     val field: String? = null
 )
 
-data class MyDirectiveConsolidatedType(
+@SomeAnnotation2
+enum class MyEnumWithDirectives {
+    Value;
+
+    companion object {
+        fun findByName(name: String, ignoreCase: Boolean = false): MyEnumWithDirectives? = values().find { it.name.equals(name, ignoreCase = ignoreCase) }
+    }
+}
+
+data class MyConsolidatedTypeWithDirectives(
     val field: String? = null
 )

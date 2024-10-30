@@ -9,6 +9,11 @@ export default {
       kotlinAnnotations: ["@SomeAnnotation1"],
       definitionType: Kind.OBJECT_TYPE_DEFINITION,
     },
+    {
+      directive: "directive2",
+      kotlinAnnotations: ["@SomeAnnotation2"],
+      definitionType: Kind.ENUM_TYPE_DEFINITION,
+    },
   ],
   classConsolidationEnabled: true,
 } satisfies GraphQLKotlinCodegenConfig;
