@@ -12,7 +12,6 @@ export default {
     {
       directive: "directive2",
       kotlinAnnotations: ["@SomeAnnotation2"],
-      definitionType: Kind.ENUM_TYPE_DEFINITION,
     },
   ],
   classConsolidationEnabled: true,

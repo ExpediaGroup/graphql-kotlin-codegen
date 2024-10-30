@@ -1,5 +1,5 @@
 directive @directive1 on INPUT_OBJECT | OBJECT
-directive @directive2 on INPUT_OBJECT | OBJECT | ENUM
+directive @directive2 on INPUT_OBJECT | OBJECT
 
 type TypeHonoringDirectiveReplacementsDefinitionType @directive1 @directive2 {
   field: String
@@ -9,14 +9,18 @@ input InputTypeThatShouldNotGetDirectiveReplacement @directive1 @directive2 {
   field: String
 }
 
-enum MyEnumWithDirectives @directive2 {
-  VALUE
-}
-
-type MyConsolidatedTypeWithDirectives @directive1 @directive2 {
+type MyConsolidatedTypeWithDirectives @directive1 {
   field: String
 }
 
-input MyConsolidatedTypeWithDirectivesInput @directive1 @directive2 {
+input MyConsolidatedTypeWithDirectivesInput @directive1 {
+  field: String
+}
+
+type MyConsolidatedTypeWithDirectives2 @directive2 {
+  field: String
+}
+
+input MyConsolidatedTypeWithDirectives2Input @directive2 {
   field: String
 }
