@@ -6,7 +6,7 @@ import should_honor_directiveReplacements_config.*
 @SomeAnnotation1
 @SomeAnnotation2
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
-data class TypeThatShouldGetDirectiveReplacement(
+data class TypeHonoringDirectiveReplacementsDefinitionType(
     val field: String? = null
 )
 
