@@ -1,0 +1,18 @@
+directive @directive1 on INPUT_OBJECT | OBJECT
+directive @directive2 on INPUT_OBJECT | OBJECT
+
+type TypeHonoringDirectiveReplacementsDefinitionType @directive1 @directive2 {
+  field: String
+}
+
+input InputTypeThatShouldNotGetDirectiveReplacement @directive1 @directive2 {
+  field: String
+}
+
+type MyDirectiveConsolidatedType @directive1 @directive2 {
+  field: String
+}
+
+input MyDirectiveConsolidatedTypeInput @directive1 @directive2 {
+  field: String
+}
