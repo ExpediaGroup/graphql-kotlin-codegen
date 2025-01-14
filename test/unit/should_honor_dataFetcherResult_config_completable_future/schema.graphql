@@ -1,0 +1,12 @@
+type DataFetcherResultCompletableFutureType {
+  stringField1: String
+  stringField2: String!
+  booleanField1: Boolean
+  booleanField2: Boolean!
+  integerField1: Int
+  integerField2: Int!
+  listField: [String!]!
+  listField2: [String]!
+  listField3: [String!]
+  listField4: [String]
+}
