@@ -121,7 +121,8 @@ export const configSchema = object({
    *
    * Type names can be optionally passed with the classMethods config to generate the interface with `suspend` functions or
    * `java.util.concurrent.CompletableFuture` functions. Pass `nullableDataFetchingEnvironment: true` to make the
-   * `DataFetchingEnvironment` argument nullable in each resolver function for that class.
+   * `DataFetchingEnvironment` argument nullable in each resolver function for that class. Pass `dataFetcherResult: true`
+   * to make functions return `DataFetcherResult` to hold both data and errors.
    * @example
    * [
    *   {
@@ -138,6 +139,10 @@ export const configSchema = object({
    *   {
    *     typeName: "MyTypeWithNullableDataFetchingEnvironment",
    *     nullableDataFetchingEnvironment: true,
+   *   },
+   *   {
+   *     typeName: "MyTypeWithPartialData",
+   *     dataFetcherResult: true,
    *   }
    * ]
    * @link https://opensource.expediagroup.com/graphql-kotlin-codegen/docs/recommended-usage
@@ -150,6 +155,7 @@ export const configSchema = object({
           union([literal("SUSPEND"), literal("COMPLETABLE_FUTURE")]),
         ),
         nullableDataFetchingEnvironment: optional(boolean()),
+        dataFetcherResult: optional(boolean()),
       }),
     ),
   ),

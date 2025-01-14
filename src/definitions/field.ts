@@ -183,8 +183,13 @@ function buildField(
   );
   const isCompletableFuture =
     typeInResolverInterfacesConfig?.classMethods === "COMPLETABLE_FUTURE";
-  const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}> = ${defaultImplementation}`;
-  const defaultDefinition = `${typeMetadata.typeName}${defaultDefinitionValue}`;
+  let typeDefinition = `${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}`;
+  let defaultDefinition = `${typeMetadata.typeName}${defaultDefinitionValue}`;
+  if (typeInResolverInterfacesConfig?.dataFetcherResult) {
+    typeDefinition = `graphql.execution.DataFetcherResult<${typeDefinition}>`;
+    defaultDefinition = `${typeDefinition} = ${defaultImplementation}`;
+  }
+  const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeDefinition}> = ${defaultImplementation}`;
   return indent(
     `${functionDefinition}: ${isCompletableFuture ? completableFutureDefinition : defaultDefinition}`,
     2,

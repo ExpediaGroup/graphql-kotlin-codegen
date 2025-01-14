@@ -27,5 +27,9 @@ export default {
       typeName: "MyIncludedResolverTypeWithNullDataFetchingEnvironment",
       nullableDataFetchingEnvironment: true,
     },
+    {
+      typeName: "MyTypeWithPartialData",
+      dataFetcherResult: true,
+    },
   ],
 } satisfies GraphQLKotlinCodegenConfig;
