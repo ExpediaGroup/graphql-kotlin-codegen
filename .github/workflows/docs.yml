@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "docs/**"
+      - "src/config/schema.ts"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
 
