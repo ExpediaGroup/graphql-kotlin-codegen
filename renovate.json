@@ -11,8 +11,8 @@
       "automerge": true
     },
     {
-      "matchPackagePatterns": ["gradle", "com.expediagroup"],
-      "groupName": "dependencies"
+      "groupName": "dependencies",
+      "matchPackageNames": ["/gradle/", "/com.expediagroup/"]
     }
   ]
 }
