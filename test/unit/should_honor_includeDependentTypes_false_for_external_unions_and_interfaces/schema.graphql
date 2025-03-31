@@ -5,6 +5,13 @@ type MyIncludedType {
 
 union MyExcludedUnion = MyIncludedType
 
+type MyIncludedType2 {
+  field: String
+  field2: String!
+}
+
+union MyIncludedUnion = MyIncludedType2
+
 interface MyIncludedInterfaceInOnlyTypes {
   field: String
   field2: String!
