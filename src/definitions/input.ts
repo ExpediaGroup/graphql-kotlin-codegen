@@ -12,7 +12,7 @@ limitations under the License.
 */
 
 import { GraphQLSchema, InputObjectTypeDefinitionNode } from "graphql";
-import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-definition";
+import { shouldIncludeTypeDefinition } from "../config/should-include-type-definition";
 import { buildTypeMetadata } from "../utils/build-type-metadata";
 import { buildAnnotations } from "../annotations/build-annotations";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
@@ -25,7 +25,7 @@ export function buildInputObjectDefinition(
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  if (shouldExcludeTypeDefinition(node, config)) {
+  if (!shouldIncludeTypeDefinition(node.name.value, config)) {
     return "";
   }
 
