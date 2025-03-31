@@ -45,7 +45,7 @@ export function buildInterfaceDefinition(
     definitionNode: node,
   });
 
-  const interfacesToInherit = getDependentInterfaceNames(node, config);
+  const interfacesToInherit = getDependentInterfaceNames(node);
   const interfaceInheritance = `${interfacesToInherit.length ? ` : ${interfacesToInherit.join(", ")}` : ""}`;
 
   return `${annotations}interface ${sanitizeName(node.name.value)}${interfaceInheritance} {

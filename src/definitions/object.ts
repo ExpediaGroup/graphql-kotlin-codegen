@@ -46,8 +46,8 @@ export function buildObjectTypeDefinition(
     config,
     definitionNode: node,
   });
-  const dependentInterfaces = getDependentInterfaceNames(node, config);
-  const dependentUnions = getDependentUnionsForType(schema, node, config);
+  const dependentInterfaces = getDependentInterfaceNames(node);
+  const dependentUnions = getDependentUnionsForType(schema, node);
   const interfacesToInherit =
     config.unionGeneration === "MARKER_INTERFACE"
       ? dependentInterfaces.concat(dependentUnions)
