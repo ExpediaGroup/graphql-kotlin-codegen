@@ -49,8 +49,10 @@ export function getDependentInterfaceNames(
   return "interfaces" in node
     ? (node.interfaces
         ?.map((interfaceNode) => interfaceNode.name.value)
-        .filter((interfaceName) =>
-          shouldIncludeTypeDefinition(interfaceName, config),
+        .filter(
+          (interfaceName) =>
+            shouldIncludeTypeDefinition(interfaceName, config) ||
+            config.includeDependentTypes,
         ) ?? [])
     : [];
 }
@@ -75,5 +77,9 @@ export function getDependentUnionsForType(
       union.getTypes().some((type) => type.name === node.name.value),
     )
     .map((union) => union.name)
-    .filter((unionName) => shouldIncludeTypeDefinition(unionName, config));
+    .filter(
+      (unionName) =>
+        shouldIncludeTypeDefinition(unionName, config) ||
+        config.includeDependentTypes,
+    );
 }
