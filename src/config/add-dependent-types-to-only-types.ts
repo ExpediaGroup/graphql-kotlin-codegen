@@ -47,7 +47,7 @@ function getDependentTypeNames(
 ): string[] {
   const namedTypes = getDependentFieldTypeNames(node, config)
     .concat(getDependentUnionNames(node))
-    .concat(getDependentInterfaceNames(node, config));
+    .concat(getDependentInterfaceNames(node));
   const recursivelyFoundTypes = namedTypes
     .map((typeName) => schema.getType(typeName)?.astNode)
     .filter(Boolean)
