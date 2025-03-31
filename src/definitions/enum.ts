@@ -14,7 +14,7 @@ limitations under the License.
 import { EnumTypeDefinitionNode, EnumValueDefinitionNode } from "graphql";
 import { indentMultiline } from "@graphql-codegen/visitor-plugin-common";
 import { buildAnnotations } from "../annotations/build-annotations";
-import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-definition";
+import { shouldIncludeTypeDefinition } from "../config/should-include-type-definition";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { sanitizeName } from "../utils/sanitize-name";
 import { GraphQLSchema } from "graphql";
@@ -24,7 +24,7 @@ export function buildEnumTypeDefinition(
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  if (shouldExcludeTypeDefinition(node, config)) {
+  if (!shouldIncludeTypeDefinition(node.name.value, config)) {
     return "";
   }
 
