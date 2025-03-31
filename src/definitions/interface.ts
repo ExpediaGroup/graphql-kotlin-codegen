@@ -13,7 +13,7 @@ limitations under the License.
 
 import { GraphQLSchema, InterfaceTypeDefinitionNode } from "graphql";
 import { buildAnnotations } from "../annotations/build-annotations";
-import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-definition";
+import { shouldIncludeTypeDefinition } from "../config/should-include-type-definition";
 import { buildInterfaceFieldDefinition } from "./field";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { getDependentInterfaceNames } from "../utils/dependent-type-utils";
@@ -24,7 +24,7 @@ export function buildInterfaceDefinition(
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  if (shouldExcludeTypeDefinition(node, config)) {
+  if (!shouldIncludeTypeDefinition(node.name.value, config)) {
     return "";
   }
 
@@ -45,7 +45,7 @@ export function buildInterfaceDefinition(
     definitionNode: node,
   });
 
-  const interfacesToInherit = getDependentInterfaceNames(node);
+  const interfacesToInherit = getDependentInterfaceNames(node, config);
   const interfaceInheritance = `${interfacesToInherit.length ? ` : ${interfacesToInherit.join(", ")}` : ""}`;
 
   return `${annotations}interface ${sanitizeName(node.name.value)}${interfaceInheritance} {

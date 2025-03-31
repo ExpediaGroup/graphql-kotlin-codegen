@@ -21,6 +21,7 @@ import {
 } from "graphql";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
+import { shouldIncludeTypeDefinition } from "../config/should-include-type-definition";
 
 export function getDependentFieldTypeNames(
   node: TypeDefinitionNode,
@@ -41,9 +42,16 @@ function getFieldTypeName(fieldType: TypeNode) {
   return getBaseTypeNode(fieldType).name.value;
 }
 
-export function getDependentInterfaceNames(node: TypeDefinitionNode) {
+export function getDependentInterfaceNames(
+  node: TypeDefinitionNode,
+  config: CodegenConfigWithDefaults,
+) {
   return "interfaces" in node
-    ? (node.interfaces?.map((interfaceNode) => interfaceNode.name.value) ?? [])
+    ? (node.interfaces
+        ?.map((interfaceNode) => interfaceNode.name.value)
+        .filter((interfaceName) =>
+          shouldIncludeTypeDefinition(interfaceName, config),
+        ) ?? [])
     : [];
 }
 
@@ -56,6 +64,7 @@ export function getDependentUnionNames(node: TypeDefinitionNode) {
 export function getDependentUnionsForType(
   schema: GraphQLSchema,
   node: TypeDefinitionNode,
+  config: CodegenConfigWithDefaults,
 ) {
   const typeMap = schema.getTypeMap();
   const unions = Object.values(typeMap).filter((type) =>
@@ -65,5 +74,6 @@ export function getDependentUnionsForType(
     .filter((union) =>
       union.getTypes().some((type) => type.name === node.name.value),
     )
-    .map((union) => union.name);
+    .map((union) => union.name)
+    .filter((unionName) => shouldIncludeTypeDefinition(unionName, config));
 }

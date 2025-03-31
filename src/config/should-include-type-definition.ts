@@ -11,12 +11,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { TypeDefinitionNode } from "graphql";
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
 
-export function shouldExcludeTypeDefinition(
-  node: TypeDefinitionNode,
+export function shouldIncludeTypeDefinition(
+  typeName: string,
   config: CodegenConfigWithDefaults,
 ) {
-  return config.onlyTypes && !config.onlyTypes.includes(node.name.value);
+  return !config.onlyTypes || config.onlyTypes.includes(typeName);
 }

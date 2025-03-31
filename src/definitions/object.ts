@@ -18,7 +18,7 @@ import {
   ObjectTypeDefinitionNode,
 } from "graphql";
 import { buildAnnotations } from "../annotations/build-annotations";
-import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-definition";
+import { shouldIncludeTypeDefinition } from "../config/should-include-type-definition";
 import {
   getDependentInterfaceNames,
   getDependentUnionsForType,
@@ -37,7 +37,7 @@ export function buildObjectTypeDefinition(
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  if (shouldExcludeTypeDefinition(node, config)) {
+  if (!shouldIncludeTypeDefinition(node.name.value, config)) {
     return "";
   }
 
@@ -46,8 +46,8 @@ export function buildObjectTypeDefinition(
     config,
     definitionNode: node,
   });
-  const dependentInterfaces = getDependentInterfaceNames(node);
-  const dependentUnions = getDependentUnionsForType(schema, node);
+  const dependentInterfaces = getDependentInterfaceNames(node, config);
+  const dependentUnions = getDependentUnionsForType(schema, node, config);
   const interfacesToInherit =
     config.unionGeneration === "MARKER_INTERFACE"
       ? dependentInterfaces.concat(dependentUnions)
