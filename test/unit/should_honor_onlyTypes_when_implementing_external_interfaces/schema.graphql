@@ -1,0 +1,16 @@
+type MyIncludedType {
+  field: String
+  field2: String!
+}
+
+union MyExcludedUnion = MyIncludedType
+
+interface MyIncludedInterfaceInOnlyTypes {
+  field: String
+  field2: String!
+}
+
+type MyExcludedType implements MyIncludedInterfaceInOnlyTypes {
+  field: String
+  field2: String!
+}
