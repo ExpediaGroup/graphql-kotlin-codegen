@@ -13,6 +13,7 @@ limitations under the License.
 
 import { BaseVisitor, RawConfig } from "@graphql-codegen/visitor-plugin-common";
 import {
+  DirectiveDefinitionNode,
   EnumTypeDefinitionNode,
   GraphQLSchema,
   InputObjectTypeDefinitionNode,
@@ -24,7 +25,7 @@ import { CodegenConfigWithDefaults } from "./config/build-config-with-defaults";
 import { buildEnumTypeDefinition } from "./definitions/enum";
 import { buildInterfaceDefinition } from "./definitions/interface";
 import { buildInputObjectDefinition } from "./definitions/input";
-import { buildObjectTypeDefinition } from "./definitions/object";
+import { buildObjectTypeDefinition, titleCase } from "./definitions/object";
 import { buildUnionTypeDefinition } from "./definitions/union";
 import { ParsedConfig } from "@graphql-codegen/visitor-plugin-common/typings/base-visitor";
 
@@ -37,6 +38,10 @@ export class KotlinVisitor extends BaseVisitor<
     protected _schema: GraphQLSchema,
   ) {
     super(rawConfig, rawConfig);
+  }
+
+  DirectiveDefinition(node: DirectiveDefinitionNode): string {
+    return buildDirectiveDefinition(node);
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
@@ -58,4 +63,13 @@ export class KotlinVisitor extends BaseVisitor<
   UnionTypeDefinition(node: UnionTypeDefinitionNode): string {
     return buildUnionTypeDefinition(node, this._schema, this.config);
   }
+}
+
+function buildDirectiveDefinition(node: DirectiveDefinitionNode): string {
+  return `@GraphQLDirective(
+    name = "${titleCase(node.name.value)}",
+    description = "${node.description?.value ?? ""}",
+    locations = [${node.locations.map((location) => `graphql.introspection.Introspection.DirectiveLocation.${location.value}`).join(", ")}]
+)
+annotation class MyCustomDirective`;
 }

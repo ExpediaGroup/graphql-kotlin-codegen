@@ -5,7 +5,7 @@ import com.expediagroup.graphql.generator.annotations.*
 @GraphQLDirective(
     name = "MyCustomDirective",
     description = "A description for MyCustomDirective",
-    locations = [graphql.introspection.Introspection.DirectiveLocation.FIELD_DEFINITION]
+    locations = [graphql.introspection.Introspection.DirectiveLocation.OBJECT, graphql.introspection.Introspection.DirectiveLocation.FIELD_DEFINITION, graphql.introspection.Introspection.DirectiveLocation.INPUT_OBJECT, graphql.introspection.Introspection.DirectiveLocation.INPUT_FIELD_DEFINITION]
 )
 annotation class MyCustomDirective
 

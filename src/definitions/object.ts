@@ -162,6 +162,6 @@ export function shouldGenerateFunctionsInClass(
   );
 }
 
-function titleCase(str: string) {
+export function titleCase(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
