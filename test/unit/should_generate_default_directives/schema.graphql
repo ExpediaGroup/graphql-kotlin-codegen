@@ -1,0 +1,17 @@
+directive @myCustomDirective on OBJECT | FIELD_DEFINITION | INPUT_OBJECT | INPUT_FIELD_DEFINITION
+
+type MyTypeWithCustomDirectiveOnObject @myCustomDirective {
+  field: String
+}
+
+type MyTypeWithCustomDirectiveOnField {
+  field: String @myCustomDirective
+}
+
+input MyInputWithCustomDirectiveOnObject @myCustomDirective {
+  field: String
+}
+
+input MyInputWithCustomDirectiveOnField {
+  field: String @myCustomDirective
+}
