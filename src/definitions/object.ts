@@ -31,6 +31,7 @@ import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults"
 import { shouldConsolidateTypes } from "../utils/should-consolidate-types";
 import { findTypeInResolverInterfacesConfig } from "../config/find-type-in-resolver-interfaces-config";
 import { sanitizeName } from "../utils/sanitize-name";
+import { titleCase } from "../utils/title-case";
 
 export function buildObjectTypeDefinition(
   node: ObjectTypeDefinitionNode,
@@ -160,8 +161,4 @@ export function shouldGenerateFunctionsInClass(
     typeInResolverInterfacesConfig ||
       node.fields?.some((fieldNode) => fieldNode.arguments?.length),
   );
-}
-
-function titleCase(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
 }
