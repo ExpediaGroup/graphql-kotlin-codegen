@@ -41,7 +41,7 @@ export class KotlinVisitor extends BaseVisitor<
   }
 
   DirectiveDefinition(node: DirectiveDefinitionNode): string {
-    return buildDirectiveDefinition(node);
+    return buildDirectiveDefinition(node, this._schema, this.config);
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
@@ -65,7 +65,17 @@ export class KotlinVisitor extends BaseVisitor<
   }
 }
 
-function buildDirectiveDefinition(node: DirectiveDefinitionNode): string {
+function buildDirectiveDefinition(
+  node: DirectiveDefinitionNode,
+  schema: GraphQLSchema,
+  config: CodegenConfigWithDefaults,
+): string {
+  if (
+    config.directiveReplacements ||
+    ["extends", "external", "key"].includes(node.name.value)
+  ) {
+    return "";
+  }
   return `@GraphQLDirective(
     name = "${titleCase(node.name.value)}",
     description = "${node.description?.value ?? ""}",

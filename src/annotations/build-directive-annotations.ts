@@ -51,19 +51,35 @@ export function buildDirectiveAnnotations(
           return !typeWillBeConsolidated;
         },
       );
-      if (!directiveReplacementFromConfig)
-        return buildDefaultKotlinAnnotations(directive);
-      const kotlinAnnotationsFromConfig = buildKotlinAnnotationsFromConfig(
-        directive,
-        directiveReplacementFromConfig.kotlinAnnotations,
-      );
-      return kotlinAnnotationsFromConfig.join("\n") + "\n";
+
+      if (directiveReplacementFromConfig) {
+        return (
+          buildKotlinAnnotationsFromConfig(
+            directive,
+            directiveReplacementFromConfig.kotlinAnnotations,
+          ).join("\n") + "\n"
+        );
+      }
+      return buildDefaultKotlinAnnotations(directive, config);
     })
     .join("");
 }
 
-function buildDefaultKotlinAnnotations(directive: ConstDirectiveNode) {
-  return `@${titleCase(directive.name.value)}\n`;
+function buildDefaultKotlinAnnotations(
+  directive: ConstDirectiveNode,
+  config: CodegenConfigWithDefaults,
+) {
+  const directiveName = directive.name.value;
+  if (
+    config.directiveReplacements?.find(
+      ({ directive }) => directive === directiveName,
+    )
+  ) {
+    return "";
+  }
+  return directive.name.value === "deprecated"
+    ? ""
+    : `@${titleCase(directiveName)}\n`;
 }
 
 function buildKotlinAnnotationsFromConfig(
