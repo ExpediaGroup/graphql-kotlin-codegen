@@ -14,7 +14,7 @@ limitations under the License.
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { TypeMetadata } from "../utils/build-type-metadata";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
-import { Kind } from "graphql/index";
+import { Kind } from "graphql";
 import { DefinitionNode, trimDescription } from "./build-annotations";
 
 export function buildDescriptionAnnotation(

@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { DirectiveDefinitionNode } from "graphql/index";
+import { DirectiveDefinitionNode } from "graphql";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { titleCase } from "../utils/title-case";
 import { FEDERATION_DIRECTIVES } from "../annotations/build-directive-annotations";
@@ -21,7 +21,9 @@ export function buildDirectiveDefinition(
   config: CodegenConfigWithDefaults,
 ): string {
   if (
-    config.directiveReplacements ||
+    config.directiveReplacements?.find(
+      ({ directive }) => directive === node.name.value,
+    ) ||
     Object.values(FEDERATION_DIRECTIVES).includes(node.name.value)
   ) {
     return "";

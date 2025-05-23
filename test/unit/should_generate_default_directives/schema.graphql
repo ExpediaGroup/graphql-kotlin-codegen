@@ -1,7 +1,9 @@
 "A description for MyCustomDirective"
 directive @myCustomDirective on OBJECT | FIELD_DEFINITION | INPUT_OBJECT | INPUT_FIELD_DEFINITION
 
-type MyTypeWithCustomDirectiveOnObject @myCustomDirective {
+directive @someDirective1 on OBJECT
+
+type MyTypeWithCustomDirectiveOnObject @myCustomDirective @someDirective1 {
   field: String
 }
 

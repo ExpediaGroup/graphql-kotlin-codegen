@@ -12,8 +12,7 @@ limitations under the License.
 */
 
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
-import { GraphQLSchema } from "graphql";
-import { TypeDefinitionNode } from "graphql/index";
+import { GraphQLSchema, TypeDefinitionNode } from "graphql";
 import {
   getDependentFieldTypeNames,
   getDependentInterfaceNames,
