@@ -14,24 +14,20 @@ limitations under the License.
 import { DirectiveDefinitionNode } from "graphql";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { titleCase } from "../utils/title-case";
-import { FEDERATION_DIRECTIVES } from "../annotations/build-directive-annotations";
 
 export function buildDirectiveDefinition(
   node: DirectiveDefinitionNode,
   config: CodegenConfigWithDefaults,
 ): string {
-  if (
-    config.directiveReplacements?.find(
-      ({ directive }) => directive === node.name.value,
-    ) ||
-    Object.values(FEDERATION_DIRECTIVES).includes(node.name.value)
-  ) {
+  const directiveName = node.name.value;
+  const isCustomDirective = config.customDirectives?.includes(directiveName);
+  if (!isCustomDirective) {
     return "";
   }
   return `@GraphQLDirective(
-    name = "${titleCase(node.name.value)}",
+    name = "${titleCase(directiveName)}",
     description = "${node.description?.value ?? ""}",
     locations = [${node.locations.map((location) => `graphql.introspection.Introspection.DirectiveLocation.${location.value}`).join(", ")}]
 )
-annotation class MyCustomDirective`;
+annotation class ${titleCase(directiveName)}`;
 }
