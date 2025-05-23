@@ -13,7 +13,7 @@
       "devDependencies": {
         "@graphql-codegen/cli": "5.0.5",
         "@total-typescript/ts-reset": "0.6.1",
-        "bun-types": "1.2.7",
+        "bun-types": "1.2.14",
         "eslint": "9.23.0",
         "husky": "9.1.7",
         "prettier": "3.5.3",
@@ -1006,7 +1006,7 @@
 
     "buffer-from": ["buffer-from@1.1.2", "https://artylab.expedia.biz/api/npm/public-npm-virtual/buffer-from/-/buffer-from-1.1.2.tgz", {}, "sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ=="],
 
-    "bun-types": ["bun-types@1.2.7", "https://artylab.expedia.biz/api/npm/public-npm-virtual/bun-types/-/bun-types-1.2.7.tgz", { "dependencies": { "@types/node": "*", "@types/ws": "*" } }, "sha512-P4hHhk7kjF99acXqKvltyuMQ2kf/rzIw3ylEDpCxDS9Xa0X0Yp/gJu/vDCucmWpiur5qJ0lwB2bWzOXa2GlHqA=="],
+    "bun-types": ["bun-types@1.2.14", "https://artylab.expedia.biz/api/npm/public-npm-virtual/bun-types/-/bun-types-1.2.14.tgz", { "dependencies": { "@types/node": "*" } }, "sha512-Kuh4Ub28ucMRWeiUUWMHsT9Wcbr4H3kLIO72RZZElSDxSu7vpetRvxIUDUaW6QtaIeixIpm7OXtNnZPf82EzwA=="],
 
     "bundle-require": ["bundle-require@5.1.0", "https://artylab.expedia.biz/api/npm/public-npm-virtual/bundle-require/-/bundle-require-5.1.0.tgz", { "dependencies": { "load-tsconfig": "^0.2.3" }, "peerDependencies": { "esbuild": ">=0.18" } }, "sha512-3WrrOuZiyaaZPWiEt4G3+IffISVC9HYlWueJEBWED4ZH4aIAC2PnkdnuRrR94M+w6yGWn4AglWtJtBI8YqvgoA=="],
 
