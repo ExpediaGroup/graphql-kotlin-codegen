@@ -1,6 +1,6 @@
 {
   "name": "@expediagroup/graphql-kotlin-codegen",
-  "packageManager": "bun@1.2.7",
+  "packageManager": "bun@1.2.14",
   "main": "dist/plugin.cjs",
   "types": "dist/plugin.d.cts",
   "files": [
@@ -28,7 +28,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.5",
     "@total-typescript/ts-reset": "0.6.1",
-    "bun-types": "1.2.7",
+    "bun-types": "1.2.14",
     "eslint": "9.23.0",
     "husky": "9.1.7",
     "prettier": "3.5.3",

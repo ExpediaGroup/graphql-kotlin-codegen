@@ -17,7 +17,7 @@ import { ConstDirectiveNode } from "graphql/language";
 import { GraphQLSchema, isInputObjectType, Kind } from "graphql";
 import { shouldConsolidateTypes } from "../utils/should-consolidate-types";
 import { sanitizeName } from "../utils/sanitize-name";
-import { titleCase } from "../definitions/object";
+import { titleCase } from "../utils/title-case";
 
 export function buildDirectiveAnnotations(
   definitionNode: DefinitionNode,
@@ -118,7 +118,7 @@ function getFederationDirectiveReplacement(directive: ConstDirectiveNode) {
   const federationDirectivePrefix =
     "com.expediagroup.graphql.generator.federation.directives.";
   switch (directive.name.value) {
-    case "key":
+    case FEDERATION_DIRECTIVES.key:
       if (
         directive.arguments?.[0] &&
         directive.arguments[0].value.kind === Kind.STRING
@@ -127,9 +127,15 @@ function getFederationDirectiveReplacement(directive: ConstDirectiveNode) {
         return `@${federationDirectivePrefix}KeyDirective(${federationDirectivePrefix}FieldSet("${fieldArg}"))`;
       }
       return undefined;
-    case "extends":
+    case FEDERATION_DIRECTIVES.extends:
       return `@${federationDirectivePrefix}ExtendsDirective`;
-    case "external":
+    case FEDERATION_DIRECTIVES.external:
       return `@${federationDirectivePrefix}ExternalDirective`;
   }
 }
+
+export const FEDERATION_DIRECTIVES = {
+  extends: "extends",
+  external: "external",
+  key: "key",
+} as const;
