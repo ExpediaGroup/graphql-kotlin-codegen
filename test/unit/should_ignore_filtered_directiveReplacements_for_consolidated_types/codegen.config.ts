@@ -1,5 +1,5 @@
 import { GraphQLKotlinCodegenConfig } from "../../../src/plugin";
-import { Kind } from "graphql/index";
+import { Kind } from "graphql";
 
 export default {
   extraImports: ["should_honor_directiveReplacements_config.*"],
