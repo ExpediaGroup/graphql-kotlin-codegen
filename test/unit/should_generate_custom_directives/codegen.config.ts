@@ -1,7 +1,7 @@
 import { GraphQLKotlinCodegenConfig } from "../../../src/plugin";
 
 export default {
-  customDirectives: ["myCustomDirective", "myCustomDirectiveWithArgs"],
+  customDirectives: ["myCustomDirective", "myCustomDirective2"],
   extraImports: ["should_honor_directiveReplacements_config.*"],
   directiveReplacements: [
     {

@@ -60,43 +60,20 @@ export function buildDirectiveAnnotations(
           ).join("\n") + "\n"
         );
       }
-      if (config.customDirectives) {
-        return buildCustomDirectives(directive);
+      const customDirectiveFromConfig = config.customDirectives?.find(
+        (directive) => directive === directiveName,
+      );
+      if (customDirectiveFromConfig) {
+        return buildCustomDirective(directive);
       }
       return "";
     })
     .join("");
 }
 
-function buildCustomDirectives(directive: ConstDirectiveNode) {
+function buildCustomDirective(directive: ConstDirectiveNode) {
   const directiveName = directive.name.value;
   return `@${titleCase(directiveName)}\n`;
-}
-
-function buildDirectiveArguments(
-  directive: ConstDirectiveNode,
-  argumentsToRetain: string[],
-) {
-  return argumentsToRetain
-    .map((argumentToRetain) => {
-      const argumentValueNode = directive.arguments?.find(
-        (argument) => argument.name.value === argumentToRetain,
-      )?.value;
-      if (!argumentValueNode)
-        throw new Error(
-          `Argument ${argumentToRetain} was provided in argumentsToRetain config but was not found in directive ${directive.name.value}`,
-        );
-      if (!("value" in argumentValueNode))
-        throw new Error(
-          `Directive argument ${argumentToRetain} in directive ${directive.name.value} has an unsupported type. Only INT, FLOAT, STRING, BOOLEAN, and ENUM are supported.`,
-        );
-      const argumentValue =
-        argumentValueNode.kind === Kind.STRING
-          ? `"${argumentValueNode.value}"`
-          : argumentValueNode.value;
-      return `${argumentToRetain} = ${argumentValue}`;
-    })
-    .join(", ");
 }
 
 function buildKotlinAnnotationsFromConfig(
@@ -107,10 +84,26 @@ function buildKotlinAnnotationsFromConfig(
 ) {
   return kotlinAnnotations.map((kotlinAnnotation) => {
     if (typeof kotlinAnnotation === "string") return kotlinAnnotation;
-    const directiveArguments = buildDirectiveArguments(
-      directive,
-      kotlinAnnotation.argumentsToRetain,
-    );
+    const directiveArguments = kotlinAnnotation.argumentsToRetain
+      ?.map((argumentToRetain) => {
+        const argumentValueNode = directive.arguments?.find(
+          (argument) => argument.name.value === argumentToRetain,
+        )?.value;
+        if (!argumentValueNode)
+          throw new Error(
+            `Argument ${argumentToRetain} was provided in argumentsToRetain config but was not found in directive ${directive.name.value}`,
+          );
+        if (!("value" in argumentValueNode))
+          throw new Error(
+            `Directive argument ${argumentToRetain} in directive ${directive.name.value} has an unsupported type. Only INT, FLOAT, STRING, BOOLEAN, and ENUM are supported.`,
+          );
+        const argumentValue =
+          argumentValueNode.kind === Kind.STRING
+            ? `"${argumentValueNode.value}"`
+            : argumentValueNode.value;
+        return `${argumentToRetain} = ${argumentValue}`;
+      })
+      .join(", ");
     return `@${kotlinAnnotation.annotationName}(${directiveArguments})`;
   });
 }
