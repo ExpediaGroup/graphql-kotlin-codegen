@@ -13,6 +13,7 @@ limitations under the License.
 
 import { BaseVisitor, RawConfig } from "@graphql-codegen/visitor-plugin-common";
 import {
+  DirectiveDefinitionNode,
   EnumTypeDefinitionNode,
   GraphQLSchema,
   InputObjectTypeDefinitionNode,
@@ -21,6 +22,7 @@ import {
   UnionTypeDefinitionNode,
 } from "graphql";
 import { CodegenConfigWithDefaults } from "./config/build-config-with-defaults";
+import { buildDirectiveDefinition } from "./definitions/directive";
 import { buildEnumTypeDefinition } from "./definitions/enum";
 import { buildInterfaceDefinition } from "./definitions/interface";
 import { buildInputObjectDefinition } from "./definitions/input";
@@ -37,6 +39,10 @@ export class KotlinVisitor extends BaseVisitor<
     protected _schema: GraphQLSchema,
   ) {
     super(rawConfig, rawConfig);
+  }
+
+  DirectiveDefinition(node: DirectiveDefinitionNode): string {
+    return buildDirectiveDefinition(node, this.config);
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {

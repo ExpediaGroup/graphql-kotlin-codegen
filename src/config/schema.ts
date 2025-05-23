@@ -33,6 +33,16 @@ export const configSchema = object({
    */
   classConsolidationEnabled: optional(boolean()),
   /**
+   * Denotes directives to generate as @GraphQLDirective annotations.
+   *
+   * Directive arguments are not yet supported and will be ignored.
+   *
+   * @example ["myCustomDirective"]
+   *
+   * @link https://opensource.expediagroup.com/graphql-kotlin/docs/schema-generator/customizing-schemas/directives/#custom-directives
+   */
+  customDirectives: optional(array(string())),
+  /**
    * Limits dependent types to include from `onlyTypes` list. Can be used to exclude classes that are imported from external packages.
    *
    * If `MyType` depends on `MyDependentType1` and `MyDependentType2`, we can allow `MyDependentType2` to be imported

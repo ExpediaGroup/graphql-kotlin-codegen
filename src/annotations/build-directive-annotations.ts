@@ -17,6 +17,7 @@ import { ConstDirectiveNode } from "graphql/language";
 import { GraphQLSchema, isInputObjectType, Kind } from "graphql";
 import { shouldConsolidateTypes } from "../utils/should-consolidate-types";
 import { sanitizeName } from "../utils/sanitize-name";
+import { titleCase } from "../utils/title-case";
 
 export function buildDirectiveAnnotations(
   definitionNode: DefinitionNode,
@@ -50,17 +51,32 @@ export function buildDirectiveAnnotations(
           return !typeWillBeConsolidated;
         },
       );
-      if (!directiveReplacementFromConfig) return "";
-      const kotlinAnnotations = buildKotlinAnnotations(
-        directive,
-        directiveReplacementFromConfig.kotlinAnnotations,
+
+      if (directiveReplacementFromConfig) {
+        return (
+          buildKotlinAnnotationsFromConfig(
+            directive,
+            directiveReplacementFromConfig.kotlinAnnotations,
+          ).join("\n") + "\n"
+        );
+      }
+      const customDirectiveFromConfig = config.customDirectives?.find(
+        (directive) => directive === directiveName,
       );
-      return kotlinAnnotations.join("\n") + "\n";
+      if (customDirectiveFromConfig) {
+        return buildCustomDirective(directive);
+      }
+      return "";
     })
     .join("");
 }
 
-function buildKotlinAnnotations(
+function buildCustomDirective(directive: ConstDirectiveNode) {
+  const directiveName = directive.name.value;
+  return `@${titleCase(directiveName)}\n`;
+}
+
+function buildKotlinAnnotationsFromConfig(
   directive: ConstDirectiveNode,
   kotlinAnnotations: NonNullable<
     CodegenConfigWithDefaults["directiveReplacements"]
