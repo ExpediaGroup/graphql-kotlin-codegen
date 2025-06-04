@@ -1,4 +1,4 @@
-"A description for MyCustomDirective"
+"A description for myCustomDirective"
 directive @myCustomDirective on OBJECT | FIELD_DEFINITION | INPUT_OBJECT | INPUT_FIELD_DEFINITION
 directive @myCustomDirective2 on OBJECT | FIELD_DEFINITION | INPUT_OBJECT | INPUT_FIELD_DEFINITION
 

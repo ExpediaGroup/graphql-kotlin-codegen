@@ -25,7 +25,7 @@ export function buildDirectiveDefinition(
     return "";
   }
   return `@GraphQLDirective(
-    name = "${titleCase(directiveName)}",
+    name = "${directiveName}",
     description = "${node.description?.value ?? ""}",
     locations = [${node.locations.map((location) => `graphql.introspection.Introspection.DirectiveLocation.${location.value}`).join(", ")}]
 )
