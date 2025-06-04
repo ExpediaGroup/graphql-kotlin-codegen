@@ -4,14 +4,14 @@ import com.expediagroup.graphql.generator.annotations.*
 import should_honor_directiveReplacements_config.*
 
 @GraphQLDirective(
-    name = "MyCustomDirective",
-    description = "A description for MyCustomDirective",
+    name = "myCustomDirective",
+    description = "A description for myCustomDirective",
     locations = [graphql.introspection.Introspection.DirectiveLocation.OBJECT, graphql.introspection.Introspection.DirectiveLocation.FIELD_DEFINITION, graphql.introspection.Introspection.DirectiveLocation.INPUT_OBJECT, graphql.introspection.Introspection.DirectiveLocation.INPUT_FIELD_DEFINITION]
 )
 annotation class MyCustomDirective
 
 @GraphQLDirective(
-    name = "MyCustomDirective2",
+    name = "myCustomDirective2",
     description = "",
     locations = [graphql.introspection.Introspection.DirectiveLocation.OBJECT, graphql.introspection.Introspection.DirectiveLocation.FIELD_DEFINITION, graphql.introspection.Introspection.DirectiveLocation.INPUT_OBJECT, graphql.introspection.Introspection.DirectiveLocation.INPUT_FIELD_DEFINITION]
 )
