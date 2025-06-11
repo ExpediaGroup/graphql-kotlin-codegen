@@ -98,6 +98,8 @@ open class MyType {
 Source code:
 
 ```kotlin
+import com.expediagroup.graphql.server.operations.Query
+import com.types.generated.Query as QueryInterface
 import com.types.generated.MyType as MyTypeInterface
 
 class MyQuery : Query, QueryInterface() {

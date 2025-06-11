@@ -1,6 +1,6 @@
 {
   "name": "@expediagroup/graphql-kotlin-codegen",
-  "packageManager": "bun@1.1.10",
+  "packageManager": "bun@1.2.15",
   "main": "dist/plugin.cjs",
   "types": "dist/plugin.d.cts",
   "files": [
@@ -19,22 +19,22 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@graphql-codegen/java-common": "3.0.0",
-    "@graphql-codegen/plugin-helpers": "5.0.4",
-    "@graphql-codegen/visitor-plugin-common": "5.2.0",
-    "ts-deepmerge": "7.0.0",
-    "valibot": "0.31.1"
+    "@graphql-codegen/java-common": "3.0.1",
+    "@graphql-codegen/plugin-helpers": "5.1.1",
+    "@graphql-codegen/visitor-plugin-common": "5.8.0",
+    "ts-deepmerge": "7.0.3",
+    "valibot": "1.1.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "5.0.2",
-    "@total-typescript/ts-reset": "0.5.1",
-    "bun-types": "1.1.12",
-    "eslint": "9.4.0",
-    "husky": "9.0.11",
-    "prettier": "3.3.1",
-    "tsup": "8.1.0",
-    "typescript": "5.4.5",
-    "typescript-eslint": "7.12.0"
+    "@graphql-codegen/cli": "5.0.7",
+    "@total-typescript/ts-reset": "0.6.1",
+    "bun-types": "1.2.15",
+    "eslint": "9.28.0",
+    "husky": "9.1.7",
+    "prettier": "3.5.3",
+    "tsup": "8.5.0",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.34.0"
   },
   "scripts": {
     "build": "tsup src/plugin.ts --clean --dts --external graphql",

@@ -6,16 +6,13 @@ export default {
   directiveReplacements: [
     {
       directive: "directive1",
-      kotlinAnnotations: ["@SomeAnnotation2"],
-      definitionType: Kind.INPUT_OBJECT_TYPE_DEFINITION,
-    },
-    {
-      directive: "directive1",
       kotlinAnnotations: ["@SomeAnnotation1"],
+      definitionType: Kind.OBJECT_TYPE_DEFINITION,
     },
     {
       directive: "directive2",
-      kotlinAnnotations: ["@CommonAnnotation"],
+      kotlinAnnotations: ["@SomeAnnotation2"],
     },
   ],
+  classConsolidationEnabled: true,
 } satisfies GraphQLKotlinCodegenConfig;

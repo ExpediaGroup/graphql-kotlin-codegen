@@ -46,8 +46,6 @@ bun add -d @expediagroup/graphql-kotlin-codegen
 </TabItem>
 </Tabs>
 
-The configuration is a superset of the [existing configuration](https://the-guild.dev/graphql/codegen/docs/config-reference/codegen-config#configuration-options) in graphql-codegen.
-
 ## Usage
 
 Example `codegen.yml`:
@@ -58,7 +56,7 @@ schema:
 generates:
   output/Types.kt:
     plugins:
-      - /@expediagroup/graphql-kotlin-codegen:
+      - "@expediagroup/graphql-kotlin-codegen":
           namingConvention: "keep" # graphql-codegen config
           packageName: "com.example" # graphql-kotlin-codegen config
 ```

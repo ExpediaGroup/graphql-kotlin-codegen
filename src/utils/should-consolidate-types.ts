@@ -18,11 +18,17 @@ import {
   isObjectType,
 } from "graphql";
 import { getBaseTypeNode } from "@graphql-codegen/visitor-plugin-common";
+import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 
-export function inputTypeHasMatchingOutputType(
+export function shouldConsolidateTypes(
   inputNode: InputObjectTypeDefinitionNode,
   schema: GraphQLSchema,
+  config: CodegenConfigWithDefaults,
 ) {
+  if (!config.classConsolidationEnabled) {
+    return false;
+  }
+
   const inputName = inputNode.name.value;
   const typeNameWithoutInput = getTypeNameWithoutInput(inputName);
   const matchingTypeName =
@@ -65,7 +71,13 @@ function typesAreEquivalent(
     const matchingInputField = inputNode.astNode?.fields?.find(
       (inputField) => inputField.name.value === typeField.name.value,
     );
-    if (!matchingInputField?.type) return false;
+    if (
+      !matchingInputField?.type ||
+      typeField.type.kind !== matchingInputField.type.kind
+    ) {
+      return false;
+    }
+
     const baseTypeName = getBaseTypeNode(typeField.type).name.value;
     const baseInputTypeName = getBaseTypeNode(matchingInputField.type).name
       .value;

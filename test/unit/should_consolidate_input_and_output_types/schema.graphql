@@ -131,6 +131,8 @@ input MySuperSetTypeInput {
   field3: Int
 }
 
+# case where fields are different enum types
+
 type MyTypeWithEnums {
   field1: [Enum1!]
   field2: [Enum2!]
@@ -148,4 +150,22 @@ enum Enum1 {
 
 enum Enum2 {
   THE_OTHER
+}
+
+# case where fields have different nullability
+
+type MyNullabilityType {
+  field1: MyNestedNullabilityType!
+}
+
+input MyNullabilityTypeInput {
+  field1: MyNestedNullabilityTypeInput
+}
+
+type MyNestedNullabilityType {
+  field2: String!
+}
+
+input MyNestedNullabilityTypeInput {
+  field2: String!
 }

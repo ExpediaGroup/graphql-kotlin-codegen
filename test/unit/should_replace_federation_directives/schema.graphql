@@ -1,6 +1,9 @@
-directive @extends on OBJECT
-directive @external on FIELD_DEFINITION
-directive @key(fields: FieldSet!) repeatable on OBJECT | INTERFACE
+directive @extends on OBJECT | INTERFACE
+directive @external on OBJECT | FIELD_DEFINITION
+directive @key(
+  fields: FieldSet!
+  resolvable: Boolean = true
+) repeatable on OBJECT | INTERFACE
 scalar FieldSet
 
 type FederatedType @extends @key(fields: "some field") {

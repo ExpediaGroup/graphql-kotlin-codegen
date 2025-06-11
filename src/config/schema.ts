@@ -25,6 +25,24 @@ import { Kind } from "graphql";
 
 export const configSchema = object({
   /**
+   * Denotes whether to consolidate classes for input and output types whose fields are equivalent.
+   *
+   * @default true
+   *
+   * @link https://opensource.expediagroup.com/graphql-kotlin-codegen/docs/class-consolidation
+   */
+  classConsolidationEnabled: optional(boolean()),
+  /**
+   * Denotes directives to generate as @GraphQLDirective annotations.
+   *
+   * Directive arguments are not yet supported and will be ignored.
+   *
+   * @example ["myCustomDirective"]
+   *
+   * @link https://opensource.expediagroup.com/graphql-kotlin/docs/schema-generator/customizing-schemas/directives/#custom-directives
+   */
+  customDirectives: optional(array(string())),
+  /**
    * Limits dependent types to include from `onlyTypes` list. Can be used to exclude classes that are imported from external packages.
    *
    * If `MyType` depends on `MyDependentType1` and `MyDependentType2`, we can allow `MyDependentType2` to be imported
@@ -113,7 +131,8 @@ export const configSchema = object({
    *
    * Type names can be optionally passed with the classMethods config to generate the interface with `suspend` functions or
    * `java.util.concurrent.CompletableFuture` functions. Pass `nullableDataFetchingEnvironment: true` to make the
-   * `DataFetchingEnvironment` argument nullable in each resolver function for that class.
+   * `DataFetchingEnvironment` argument nullable in each resolver function for that class. Pass `dataFetcherResult: true`
+   * to make functions return `DataFetcherResult` to hold both data and errors.
    * @example
    * [
    *   {
@@ -130,6 +149,10 @@ export const configSchema = object({
    *   {
    *     typeName: "MyTypeWithNullableDataFetchingEnvironment",
    *     nullableDataFetchingEnvironment: true,
+   *   },
+   *   {
+   *     typeName: "MyTypeWithPartialData",
+   *     dataFetcherResult: true,
    *   }
    * ]
    * @link https://opensource.expediagroup.com/graphql-kotlin-codegen/docs/recommended-usage
@@ -142,6 +165,7 @@ export const configSchema = object({
           union([literal("SUSPEND"), literal("COMPLETABLE_FUTURE")]),
         ),
         nullableDataFetchingEnvironment: optional(boolean()),
+        dataFetcherResult: optional(boolean()),
       }),
     ),
   ),

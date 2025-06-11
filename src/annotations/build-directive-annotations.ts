@@ -14,12 +14,22 @@ limitations under the License.
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import { DefinitionNode } from "./build-annotations";
 import { ConstDirectiveNode } from "graphql/language";
-import { Kind } from "graphql";
+import { GraphQLSchema, isInputObjectType, Kind } from "graphql";
+import { shouldConsolidateTypes } from "../utils/should-consolidate-types";
+import { sanitizeName } from "../utils/sanitize-name";
+import { titleCase } from "../utils/title-case";
 
 export function buildDirectiveAnnotations(
   definitionNode: DefinitionNode,
   config: CodegenConfigWithDefaults,
+  schema: GraphQLSchema,
 ) {
+  const name = sanitizeName(definitionNode.name.value);
+  const potentialMatchingInputType = schema.getType(`${name}Input`);
+  const typeWillBeConsolidated =
+    isInputObjectType(potentialMatchingInputType) &&
+    potentialMatchingInputType.astNode &&
+    shouldConsolidateTypes(potentialMatchingInputType.astNode, schema, config);
   const directives = definitionNode.directives ?? [];
   return directives
     .map((directive) => {
@@ -29,21 +39,44 @@ export function buildDirectiveAnnotations(
       if (federationReplacement) return federationReplacement + "\n";
 
       const directiveReplacementFromConfig = config.directiveReplacements?.find(
-        ({ directive, definitionType }) =>
-          directive === directiveName &&
-          (!definitionType || definitionType === definitionNode.kind),
+        ({ directive, definitionType }) => {
+          if (directive !== directiveName) return false;
+          if (!definitionType) return true;
+          if (definitionType !== definitionNode.kind) return false;
+          if (
+            definitionType !== Kind.INPUT_OBJECT_TYPE_DEFINITION &&
+            definitionType !== Kind.OBJECT_TYPE_DEFINITION
+          )
+            return true;
+          return !typeWillBeConsolidated;
+        },
       );
-      if (!directiveReplacementFromConfig) return "";
-      const kotlinAnnotations = buildKotlinAnnotations(
-        directive,
-        directiveReplacementFromConfig.kotlinAnnotations,
+
+      if (directiveReplacementFromConfig) {
+        return (
+          buildKotlinAnnotationsFromConfig(
+            directive,
+            directiveReplacementFromConfig.kotlinAnnotations,
+          ).join("\n") + "\n"
+        );
+      }
+      const customDirectiveFromConfig = config.customDirectives?.find(
+        (directive) => directive === directiveName,
       );
-      return kotlinAnnotations.join("\n") + "\n";
+      if (customDirectiveFromConfig) {
+        return buildCustomDirective(directive);
+      }
+      return "";
     })
     .join("");
 }
 
-function buildKotlinAnnotations(
+function buildCustomDirective(directive: ConstDirectiveNode) {
+  const directiveName = directive.name.value;
+  return `@${titleCase(directiveName)}\n`;
+}
+
+function buildKotlinAnnotationsFromConfig(
   directive: ConstDirectiveNode,
   kotlinAnnotations: NonNullable<
     CodegenConfigWithDefaults["directiveReplacements"]
@@ -79,7 +112,7 @@ function getFederationDirectiveReplacement(directive: ConstDirectiveNode) {
   const federationDirectivePrefix =
     "com.expediagroup.graphql.generator.federation.directives.";
   switch (directive.name.value) {
-    case "key":
+    case FEDERATION_DIRECTIVES.key:
       if (
         directive.arguments?.[0] &&
         directive.arguments[0].value.kind === Kind.STRING
@@ -88,9 +121,15 @@ function getFederationDirectiveReplacement(directive: ConstDirectiveNode) {
         return `@${federationDirectivePrefix}KeyDirective(${federationDirectivePrefix}FieldSet("${fieldArg}"))`;
       }
       return undefined;
-    case "extends":
+    case FEDERATION_DIRECTIVES.extends:
       return `@${federationDirectivePrefix}ExtendsDirective`;
-    case "external":
+    case FEDERATION_DIRECTIVES.external:
       return `@${federationDirectivePrefix}ExternalDirective`;
   }
 }
+
+export const FEDERATION_DIRECTIVES = {
+  extends: "extends",
+  external: "external",
+  key: "key",
+} as const;

@@ -11,8 +11,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { UnionTypeDefinitionNode } from "graphql";
-import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-definition";
+import { GraphQLSchema, UnionTypeDefinitionNode } from "graphql";
+import { shouldIncludeTypeDefinition } from "../config/should-include-type-definition";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import {
   buildAnnotations,
@@ -22,12 +22,14 @@ import { sanitizeName } from "../utils/sanitize-name";
 
 export function buildUnionTypeDefinition(
   node: UnionTypeDefinitionNode,
+  schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  if (shouldExcludeTypeDefinition(node, config)) {
+  if (!shouldIncludeTypeDefinition(node.name.value, config)) {
     return "";
   }
   const annotations = buildAnnotations({
+    schema,
     config,
     definitionNode: node,
   });

@@ -12,8 +12,7 @@ limitations under the License.
 */
 
 import { CodegenConfigWithDefaults } from "./build-config-with-defaults";
-import { GraphQLSchema } from "graphql";
-import { TypeDefinitionNode } from "graphql/index";
+import { GraphQLSchema, TypeDefinitionNode } from "graphql";
 import {
   getDependentFieldTypeNames,
   getDependentInterfaceNames,
@@ -47,7 +46,7 @@ function getDependentTypeNames(
 ): string[] {
   const namedTypes = getDependentFieldTypeNames(node, config)
     .concat(getDependentUnionNames(node))
-    .concat(getDependentInterfaceNames(node));
+    .concat(getDependentInterfaceNames(node, config));
   const recursivelyFoundTypes = namedTypes
     .map((typeName) => schema.getType(typeName)?.astNode)
     .filter(Boolean)

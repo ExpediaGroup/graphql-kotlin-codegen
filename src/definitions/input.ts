@@ -12,12 +12,12 @@ limitations under the License.
 */
 
 import { GraphQLSchema, InputObjectTypeDefinitionNode } from "graphql";
-import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-definition";
+import { shouldIncludeTypeDefinition } from "../config/should-include-type-definition";
 import { buildTypeMetadata } from "../utils/build-type-metadata";
 import { buildAnnotations } from "../annotations/build-annotations";
 import { indent } from "@graphql-codegen/visitor-plugin-common";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
-import { inputTypeHasMatchingOutputType } from "../utils/input-type-has-matching-output-type";
+import { shouldConsolidateTypes } from "../utils/should-consolidate-types";
 import { sanitizeName } from "../utils/sanitize-name";
 
 export function buildInputObjectDefinition(
@@ -25,11 +25,11 @@ export function buildInputObjectDefinition(
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  if (shouldExcludeTypeDefinition(node, config)) {
+  if (!shouldIncludeTypeDefinition(node.name.value, config)) {
     return "";
   }
 
-  const typeWillBeConsolidated = inputTypeHasMatchingOutputType(node, schema);
+  const typeWillBeConsolidated = shouldConsolidateTypes(node, schema, config);
   if (typeWillBeConsolidated) {
     return "";
   }
@@ -40,6 +40,7 @@ export function buildInputObjectDefinition(
       const initial = typeToUse.isNullable ? " = null" : "";
 
       const annotations = buildAnnotations({
+        schema,
         config,
         definitionNode: field,
       });
@@ -53,6 +54,7 @@ export function buildInputObjectDefinition(
     .join(",\n");
 
   const annotations = buildAnnotations({
+    schema,
     config,
     definitionNode: node,
   });

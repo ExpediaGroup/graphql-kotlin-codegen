@@ -1,0 +1,24 @@
+"A description for myCustomDirective"
+directive @myCustomDirective on OBJECT | FIELD_DEFINITION | INPUT_OBJECT | INPUT_FIELD_DEFINITION
+directive @myCustomDirective2 on OBJECT | FIELD_DEFINITION | INPUT_OBJECT | INPUT_FIELD_DEFINITION
+
+directive @someDirective1 on OBJECT
+
+type MyTypeWithCustomDirectiveOnObject
+  @myCustomDirective
+  @myCustomDirective2
+  @someDirective1 {
+  field: String
+}
+
+type MyTypeWithCustomDirectiveOnField {
+  field: String @myCustomDirective
+}
+
+input MyInputWithCustomDirectiveOnObject @myCustomDirective {
+  field: String
+}
+
+input MyInputWithCustomDirectiveOnField {
+  field: String @myCustomDirective
+}

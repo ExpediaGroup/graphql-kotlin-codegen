@@ -25,8 +25,8 @@ import { wrapTypeWithModifiers } from "@graphql-codegen/java-common";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
 import {
   getTypeNameWithoutInput,
-  inputTypeHasMatchingOutputType,
-} from "./input-type-has-matching-output-type";
+  shouldConsolidateTypes,
+} from "./should-consolidate-types";
 
 export interface TypeMetadata {
   typeName: string;
@@ -78,9 +78,10 @@ export function buildTypeMetadata(
       ),
     };
   } else if (isInputObjectType(schemaType) && schemaType.astNode) {
-    const typeWillBeConsolidated = inputTypeHasMatchingOutputType(
+    const typeWillBeConsolidated = shouldConsolidateTypes(
       schemaType.astNode,
       schema,
+      config,
     );
     const typeName = typeWillBeConsolidated
       ? getTypeNameWithoutInput(schemaType.name)

@@ -18,7 +18,7 @@ import {
   ObjectTypeDefinitionNode,
 } from "graphql";
 import { buildAnnotations } from "../annotations/build-annotations";
-import { shouldExcludeTypeDefinition } from "../config/should-exclude-type-definition";
+import { shouldIncludeTypeDefinition } from "../config/should-include-type-definition";
 import {
   getDependentInterfaceNames,
   getDependentUnionsForType,
@@ -28,26 +28,27 @@ import {
   buildObjectFieldDefinition,
 } from "./field";
 import { CodegenConfigWithDefaults } from "../config/build-config-with-defaults";
-import { inputTypeHasMatchingOutputType } from "../utils/input-type-has-matching-output-type";
+import { shouldConsolidateTypes } from "../utils/should-consolidate-types";
 import { findTypeInResolverInterfacesConfig } from "../config/find-type-in-resolver-interfaces-config";
 import { sanitizeName } from "../utils/sanitize-name";
+import { titleCase } from "../utils/title-case";
 
 export function buildObjectTypeDefinition(
   node: ObjectTypeDefinitionNode,
   schema: GraphQLSchema,
   config: CodegenConfigWithDefaults,
 ) {
-  if (shouldExcludeTypeDefinition(node, config)) {
+  if (!shouldIncludeTypeDefinition(node.name.value, config)) {
     return "";
   }
 
   const annotations = buildAnnotations({
+    schema,
     config,
     definitionNode: node,
   });
-  const name = sanitizeName(node.name.value);
-  const dependentInterfaces = getDependentInterfaceNames(node);
-  const dependentUnions = getDependentUnionsForType(schema, node);
+  const dependentInterfaces = getDependentInterfaceNames(node, config);
+  const dependentUnions = getDependentUnionsForType(schema, node, config);
   const interfacesToInherit =
     config.unionGeneration === "MARKER_INTERFACE"
       ? dependentInterfaces.concat(dependentUnions)
@@ -57,11 +58,12 @@ export function buildObjectTypeDefinition(
   );
   const interfaceInheritance = `${interfacesToInherit.length ? ` : ${sanitizedInterfaceNames.join(", ")}` : ""}`;
 
+  const name = sanitizeName(node.name.value);
   const potentialMatchingInputType = schema.getType(`${name}Input`);
   const typeWillBeConsolidated =
     isInputObjectType(potentialMatchingInputType) &&
     potentialMatchingInputType.astNode &&
-    inputTypeHasMatchingOutputType(potentialMatchingInputType.astNode, schema);
+    shouldConsolidateTypes(potentialMatchingInputType.astNode, schema, config);
   const outputRestrictionAnnotation = typeWillBeConsolidated
     ? ""
     : "@GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])\n";
@@ -159,8 +161,4 @@ export function shouldGenerateFunctionsInClass(
     typeInResolverInterfacesConfig ||
       node.fields?.some((fieldNode) => fieldNode.arguments?.length),
   );
-}
-
-function titleCase(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
 }
