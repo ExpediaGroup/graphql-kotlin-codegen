@@ -13,7 +13,6 @@ limitations under the License.
 
 import {
   GraphQLSchema,
-  GraphQLUnionType,
   isUnionType,
   Kind,
   TypeDefinitionNode,
@@ -67,9 +66,7 @@ export function getDependentUnionsForType(
   config: CodegenConfigWithDefaults,
 ) {
   const typeMap = schema.getTypeMap();
-  const unions = Object.values(typeMap).filter((type) =>
-    isUnionType(type),
-  ) as GraphQLUnionType[];
+  const unions = Object.values(typeMap).filter((type) => isUnionType(type));
   return unions
     .filter((union) =>
       union.getTypes().some((type) => type.name === node.name.value),
