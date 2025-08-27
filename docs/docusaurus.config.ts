@@ -16,6 +16,7 @@ export default {
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
 
+  plugins: [require.resolve("docusaurus-lunr-search")],
   presets: [
     [
       "classic",
