@@ -33,10 +33,11 @@ jobs:
       - name: Unit Tests
         run: bun unit
 
-      - uses: actions/setup-java@v5
+      - name: Setup Java
+        uses: actions/setup-java@v5
         with:
           distribution: adopt
-          java-version: "17"
+          java-version: 24
 
       - name: Integration Test
         run: bun integration
