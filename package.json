@@ -21,20 +21,20 @@
   "dependencies": {
     "@graphql-codegen/java-common": "3.0.1",
     "@graphql-codegen/plugin-helpers": "6.0.0",
-    "@graphql-codegen/visitor-plugin-common": "6.0.0",
+    "@graphql-codegen/visitor-plugin-common": "6.1.0",
     "ts-deepmerge": "7.0.3",
     "valibot": "1.1.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "6.0.0",
+    "@graphql-codegen/cli": "6.0.1",
     "@total-typescript/ts-reset": "0.6.1",
-    "bun-types": "1.2.22",
-    "eslint": "9.36.0",
+    "bun-types": "1.3.1",
+    "eslint": "9.39.0",
     "husky": "9.1.7",
     "prettier": "3.6.2",
     "tsup": "8.5.0",
-    "typescript": "5.9.2",
-    "typescript-eslint": "8.44.0"
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.46.2"
   },
   "scripts": {
     "build": "tsup src/plugin.ts --clean --dts --external graphql",
