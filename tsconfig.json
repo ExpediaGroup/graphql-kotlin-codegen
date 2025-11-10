@@ -9,8 +9,7 @@
     "outDir": "dist",
     "skipLibCheck": true,
     "strict": true,
-    "target": "esnext",
-    "types": ["bun-types"]
+    "target": "esnext"
   },
   "include": ["./**/*"],
   "exclude": ["node_modules", "dist", "docs"]
