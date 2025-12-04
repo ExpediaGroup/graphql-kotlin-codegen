@@ -159,6 +159,6 @@ export function shouldGenerateFunctionsInClass(
 ) {
   return Boolean(
     typeInResolverInterfacesConfig ||
-      node.fields?.some((fieldNode) => fieldNode.arguments?.length),
+    node.fields?.some((fieldNode) => fieldNode.arguments?.length),
   );
 }
