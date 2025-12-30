@@ -13,6 +13,11 @@
     {
       "groupName": "dependencies",
       "matchPackageNames": ["/gradle/", "/com.expediagroup/"]
+    },
+    {
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": ["bun"],
+      "groupName": "dependencies"
     }
   ],
   "customManagers": [
