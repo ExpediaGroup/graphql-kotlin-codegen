@@ -38,11 +38,7 @@ export function buildDirectiveAnnotations(
       const federationReplacement =
         getFederationDirectiveReplacement(directive);
       if (federationReplacement) {
-        // Remove the leading @ from federation replacement and add the prefix
-        const replacementWithoutAt = federationReplacement.startsWith("@")
-          ? federationReplacement.substring(1)
-          : federationReplacement;
-        return `${annotationPrefix}${replacementWithoutAt}\n`;
+        return `${applyAnnotationPrefix(federationReplacement, annotationPrefix)}\n`;
       }
 
       const directiveReplacementFromConfig = config.directiveReplacements?.find(
@@ -63,13 +59,8 @@ export function buildDirectiveAnnotations(
         const annotations = buildKotlinAnnotationsFromConfig(
           directive,
           directiveReplacementFromConfig.kotlinAnnotations,
-        ).map((annotation) => {
-          // Remove the leading @ from annotation and add the prefix
-          const annotationWithoutAt = annotation.startsWith("@")
-            ? annotation.substring(1)
-            : annotation;
-          return `${annotationPrefix}${annotationWithoutAt}`;
-        });
+          annotationPrefix,
+        );
         return annotations.join("\n") + "\n";
       }
       const customDirectiveFromConfig = config.customDirectives?.find(
@@ -77,15 +68,18 @@ export function buildDirectiveAnnotations(
       );
       if (customDirectiveFromConfig) {
         const customDirective = buildCustomDirective(directive);
-        // Remove the leading @ from custom directive and add the prefix
-        const directiveWithoutAt = customDirective.startsWith("@")
-          ? customDirective.substring(1)
-          : customDirective;
-        return `${annotationPrefix}${directiveWithoutAt}`;
+        return applyAnnotationPrefix(customDirective, annotationPrefix);
       }
       return "";
     })
     .join("");
+}
+
+function applyAnnotationPrefix(annotation: string, prefix: string) {
+  const annotationWithoutAt = annotation.startsWith("@")
+    ? annotation.substring(1)
+    : annotation;
+  return `${prefix}${annotationWithoutAt}`;
 }
 
 function buildCustomDirective(directive: ConstDirectiveNode) {
@@ -98,9 +92,12 @@ function buildKotlinAnnotationsFromConfig(
   kotlinAnnotations: NonNullable<
     CodegenConfigWithDefaults["directiveReplacements"]
   >[number]["kotlinAnnotations"],
+  annotationPrefix: string,
 ) {
   return kotlinAnnotations.map((kotlinAnnotation) => {
-    if (typeof kotlinAnnotation === "string") return kotlinAnnotation;
+    if (typeof kotlinAnnotation === "string") {
+      return applyAnnotationPrefix(kotlinAnnotation, annotationPrefix);
+    }
     const directiveArguments = kotlinAnnotation.argumentsToRetain
       ?.map((argumentToRetain) => {
         const argumentValueNode = directive.arguments?.find(
@@ -121,7 +118,7 @@ function buildKotlinAnnotationsFromConfig(
         return `${argumentToRetain} = ${argumentValue}`;
       })
       .join(", ");
-    return `@${kotlinAnnotation.annotationName}(${directiveArguments})`;
+    return `${annotationPrefix}${kotlinAnnotation.annotationName}(${directiveArguments})`;
   });
 }
 
