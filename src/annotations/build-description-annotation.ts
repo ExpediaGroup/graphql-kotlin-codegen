@@ -22,6 +22,7 @@ export function buildDescriptionAnnotation(
   definitionNode: DefinitionNode,
   config: CodegenConfigWithDefaults,
   typeMetadata?: TypeMetadata,
+  isDataClassParameter = false,
 ) {
   const trimmedDescription = trimDescription(description);
   const isDeprecatedDescription = trimmedDescription.startsWith(
@@ -30,17 +31,20 @@ export function buildDescriptionAnnotation(
   const isRequiredInputField =
     definitionNode.kind === Kind.INPUT_VALUE_DEFINITION &&
     definitionNode.type.kind === Kind.NON_NULL_TYPE;
+  // @GraphQLDescription supports @param:, but @Deprecated does not
+  const graphqlDescriptionPrefix = isDataClassParameter ? "@param:" : "@";
+  const deprecatedPrefix = "@"; // @Deprecated doesn't support @param:
   if (
     isDeprecatedDescription &&
     (typeMetadata?.unionAnnotation || isRequiredInputField)
   ) {
-    return `@GraphQLDescription("${trimmedDescription}")\n`;
+    return `${graphqlDescriptionPrefix}GraphQLDescription("${trimmedDescription}")\n`;
   } else if (isDeprecatedDescription) {
     const descriptionValue = description.replace(
       deprecatedDescriptionPrefix,
       "",
     );
-    return `@Deprecated("${trimDescription(descriptionValue)}")\n`;
+    return `${deprecatedPrefix}Deprecated("${trimDescription(descriptionValue)}")\n`;
   }
 
   const deprecatedDirective = definitionNode.directives?.find(
@@ -56,12 +60,12 @@ export function buildDescriptionAnnotation(
   const trimmedDeprecatedReason = trimDescription(deprecatedReason);
 
   if (deprecatedDirective && typeMetadata?.unionAnnotation) {
-    return `@GraphQLDescription("${trimmedDeprecatedReason}")\n`;
+    return `${graphqlDescriptionPrefix}GraphQLDescription("${trimmedDeprecatedReason}")\n`;
   } else if (deprecatedDirective) {
     const graphqlDescription = trimmedDescription
-      ? `@GraphQLDescription("${trimmedDescription}")\n`
+      ? `${graphqlDescriptionPrefix}GraphQLDescription("${trimmedDescription}")\n`
       : "";
-    const deprecatedDescription = `@Deprecated("${trimmedDeprecatedReason}")\n`;
+    const deprecatedDescription = `${deprecatedPrefix}Deprecated("${trimmedDeprecatedReason}")\n`;
     return `${graphqlDescription}${graphqlDescription ? indent(deprecatedDescription, 2) : deprecatedDescription}`;
   }
 
@@ -70,7 +74,7 @@ export function buildDescriptionAnnotation(
     (config.unionGeneration === "MARKER_INTERFACE" ||
       definitionNode?.kind !== Kind.UNION_TYPE_DEFINITION)
   ) {
-    return `@GraphQLDescription("${trimmedDescription}")\n`;
+    return `${graphqlDescriptionPrefix}GraphQLDescription("${trimmedDescription}")\n`;
   }
 
   return "";

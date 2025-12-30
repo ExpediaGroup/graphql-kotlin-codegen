@@ -43,6 +43,7 @@ export function buildInputObjectDefinition(
         schema,
         config,
         definitionNode: field,
+        isDataClassParameter: true,
       });
       return `${annotations}${indent(
         `val ${sanitizeName(field.name.value)}: ${typeToUse.typeName}${

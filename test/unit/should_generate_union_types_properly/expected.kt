@@ -18,7 +18,7 @@ interface UnionForGeneratingUnionsProperly
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class MyUnionType(
-    @GraphQLDescription("A description for field")
+    @param:GraphQLDescription("A description for field")
     val field: UnionForGeneratingUnionsProperly? = null,
     val field2: String? = null
 )

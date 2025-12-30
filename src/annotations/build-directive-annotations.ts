@@ -23,6 +23,7 @@ export function buildDirectiveAnnotations(
   definitionNode: DefinitionNode,
   config: CodegenConfigWithDefaults,
   schema: GraphQLSchema,
+  isDataClassParameter = false,
 ) {
   const name = sanitizeName(definitionNode.name.value);
   const potentialMatchingInputType = schema.getType(`${name}Input`);
@@ -30,13 +31,20 @@ export function buildDirectiveAnnotations(
     isInputObjectType(potentialMatchingInputType) &&
     potentialMatchingInputType.astNode &&
     shouldConsolidateTypes(potentialMatchingInputType.astNode, schema, config);
+  const annotationPrefix = isDataClassParameter ? "@param:" : "@";
   const directives = definitionNode.directives ?? [];
   return directives
     .map((directive) => {
       const directiveName = directive.name.value;
       const federationReplacement =
         getFederationDirectiveReplacement(directive);
-      if (federationReplacement) return federationReplacement + "\n";
+      if (federationReplacement) {
+        // Remove the leading @ from federation replacement and add the prefix
+        const replacementWithoutAt = federationReplacement.startsWith("@")
+          ? federationReplacement.substring(1)
+          : federationReplacement;
+        return `${annotationPrefix}${replacementWithoutAt}\n`;
+      }
 
       const directiveReplacementFromConfig = config.directiveReplacements?.find(
         ({ directive, definitionType }) => {
@@ -53,18 +61,28 @@ export function buildDirectiveAnnotations(
       );
 
       if (directiveReplacementFromConfig) {
-        return (
-          buildKotlinAnnotationsFromConfig(
-            directive,
-            directiveReplacementFromConfig.kotlinAnnotations,
-          ).join("\n") + "\n"
-        );
+        const annotations = buildKotlinAnnotationsFromConfig(
+          directive,
+          directiveReplacementFromConfig.kotlinAnnotations,
+        ).map((annotation) => {
+          // Remove the leading @ from annotation and add the prefix
+          const annotationWithoutAt = annotation.startsWith("@")
+            ? annotation.substring(1)
+            : annotation;
+          return `${annotationPrefix}${annotationWithoutAt}`;
+        });
+        return annotations.join("\n") + "\n";
       }
       const customDirectiveFromConfig = config.customDirectives?.find(
         (directive) => directive === directiveName,
       );
       if (customDirectiveFromConfig) {
-        return buildCustomDirective(directive);
+        const customDirective = buildCustomDirective(directive);
+        // Remove the leading @ from custom directive and add the prefix
+        const directiveWithoutAt = customDirective.startsWith("@")
+          ? customDirective.substring(1)
+          : customDirective;
+        return `${annotationPrefix}${directiveWithoutAt}`;
       }
       return "";
     })
