@@ -23,7 +23,7 @@ export function buildDirectiveAnnotations(
   definitionNode: DefinitionNode,
   config: CodegenConfigWithDefaults,
   schema: GraphQLSchema,
-  isDataClassParameter = false,
+  annotationPrefix = "@",
 ) {
   const name = sanitizeName(definitionNode.name.value);
   const potentialMatchingInputType = schema.getType(`${name}Input`);
@@ -31,7 +31,6 @@ export function buildDirectiveAnnotations(
     isInputObjectType(potentialMatchingInputType) &&
     potentialMatchingInputType.astNode &&
     shouldConsolidateTypes(potentialMatchingInputType.astNode, schema, config);
-  const annotationPrefix = isDataClassParameter ? "@param:" : "@";
   const directives = definitionNode.directives ?? [];
   return directives
     .map((directive) => {

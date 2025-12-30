@@ -76,7 +76,7 @@ export function buildObjectFieldDefinition({
     config,
     definitionNode: fieldNode,
     typeMetadata,
-    isDataClassParameter: !shouldGenerateFunctions,
+    annotationPrefix: shouldGenerateFunctions ? "@" : "@param:",
   });
   return `${annotations}${field}${shouldGenerateFunctions || isLastFieldInType(node, fieldNode) ? "" : ","}`;
 }
@@ -118,7 +118,7 @@ export function buildConstructorFieldDefinition({
     config,
     definitionNode: fieldNode,
     typeMetadata,
-    isDataClassParameter: true, // Constructor parameters (both data class and regular class) need @param:
+    annotationPrefix: "@param:",
   });
   const shouldGenerateFunctions = shouldGenerateFunctionsInClass(
     node,

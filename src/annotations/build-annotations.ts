@@ -36,13 +36,13 @@ export function buildAnnotations({
   config,
   definitionNode,
   typeMetadata,
-  isDataClassParameter = false,
+  annotationPrefix = "@",
 }: {
   schema: GraphQLSchema;
   config: CodegenConfigWithDefaults;
   definitionNode: DefinitionNode;
   typeMetadata?: TypeMetadata;
-  isDataClassParameter?: boolean;
+  annotationPrefix?: string;
 }) {
   const description = definitionNode?.description?.value ?? "";
   const descriptionAnnotation = buildDescriptionAnnotation(
@@ -50,16 +50,16 @@ export function buildAnnotations({
     definitionNode,
     config,
     typeMetadata,
-    isDataClassParameter,
+    annotationPrefix,
   );
   const directiveAnnotations = buildDirectiveAnnotations(
     definitionNode,
     config,
     schema,
-    isDataClassParameter,
+    annotationPrefix,
   );
   const unionAnnotation = typeMetadata?.unionAnnotation
-    ? `${isDataClassParameter ? "@param:" : "@"}${typeMetadata.unionAnnotation}\n`
+    ? `${annotationPrefix}${typeMetadata.unionAnnotation}\n`
     : "";
 
   const annotations = [

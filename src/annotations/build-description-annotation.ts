@@ -22,7 +22,7 @@ export function buildDescriptionAnnotation(
   definitionNode: DefinitionNode,
   config: CodegenConfigWithDefaults,
   typeMetadata?: TypeMetadata,
-  isDataClassParameter = false,
+  annotationPrefix = "@",
 ) {
   const trimmedDescription = trimDescription(description);
   const isDeprecatedDescription = trimmedDescription.startsWith(
@@ -31,20 +31,17 @@ export function buildDescriptionAnnotation(
   const isRequiredInputField =
     definitionNode.kind === Kind.INPUT_VALUE_DEFINITION &&
     definitionNode.type.kind === Kind.NON_NULL_TYPE;
-  // @GraphQLDescription supports @param:, but @Deprecated does not
-  const graphqlDescriptionPrefix = isDataClassParameter ? "@param:" : "@";
-  const deprecatedPrefix = "@"; // @Deprecated doesn't support @param:
   if (
     isDeprecatedDescription &&
     (typeMetadata?.unionAnnotation || isRequiredInputField)
   ) {
-    return `${graphqlDescriptionPrefix}GraphQLDescription("${trimmedDescription}")\n`;
+    return `${annotationPrefix}GraphQLDescription("${trimmedDescription}")\n`;
   } else if (isDeprecatedDescription) {
     const descriptionValue = description.replace(
       deprecatedDescriptionPrefix,
       "",
     );
-    return `${deprecatedPrefix}Deprecated("${trimDescription(descriptionValue)}")\n`;
+    return `@Deprecated("${trimDescription(descriptionValue)}")\n`;
   }
 
   const deprecatedDirective = definitionNode.directives?.find(
