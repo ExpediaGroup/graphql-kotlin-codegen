@@ -185,9 +185,10 @@ function buildField(
   );
   const isCompletableFuture =
     typeInResolverInterfacesConfig?.classMethods === "COMPLETABLE_FUTURE";
+  const isDataFetcherResult = typeInResolverInterfacesConfig?.dataFetcherResult;
   let typeDefinition = `${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}`;
   let defaultDefinition = `${typeMetadata.typeName}${defaultDefinitionValue}`;
-  if (typeInResolverInterfacesConfig?.dataFetcherResult) {
+  if (isDataFetcherResult) {
     typeDefinition = `graphql.execution.DataFetcherResult<${typeDefinition}>`;
     defaultDefinition = `${typeDefinition} = ${defaultImplementation}`;
   }
@@ -331,18 +332,45 @@ function getDefaultImplementation(
 ) {
   const notImplementedError = `throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`;
 
-  if (typeInResolverInterfacesConfig) {
-    return typeMetadata.isNullable ? "null" : notImplementedError;
+  if (!typeInResolverInterfacesConfig) {
+    const atLeastOneFieldHasNoArguments = node.fields?.some(
+      (fieldNode) => !fieldNode.arguments?.length,
+    );
+    if (atLeastOneFieldHasNoArguments) {
+      return sanitizeName(fieldNode.name.value);
+    }
+    return notImplementedError;
   }
 
-  const atLeastOneFieldHasNoArguments = node.fields?.some(
-    (fieldNode) => !fieldNode.arguments?.length,
-  );
-  if (atLeastOneFieldHasNoArguments) {
-    return sanitizeName(fieldNode.name.value);
+  if (typeMetadata.isNullable) {
+    return getNullableFieldDefaultValue(
+      typeInResolverInterfacesConfig,
+      typeMetadata,
+    );
   }
-
   return notImplementedError;
+}
+
+function getNullableFieldDefaultValue(
+  typeInResolverInterfacesConfig: NonNullable<
+    ReturnType<typeof findTypeInResolverInterfacesConfig>
+  >,
+  typeMetadata: TypeMetadata,
+) {
+  const isCompletableFuture =
+    typeInResolverInterfacesConfig.classMethods === "COMPLETABLE_FUTURE";
+  const isDataFetcherResult = typeInResolverInterfacesConfig.dataFetcherResult;
+
+  if (isCompletableFuture && isDataFetcherResult) {
+    return `java.util.concurrent.CompletableFuture.completedFuture(graphql.execution.DataFetcherResult.newResult<${typeMetadata.typeName}?>().data(null).build())`;
+  }
+  if (isCompletableFuture) {
+    return `java.util.concurrent.CompletableFuture.completedFuture(null)`;
+  }
+  if (isDataFetcherResult) {
+    return `graphql.execution.DataFetcherResult.newResult<${typeMetadata.typeName}?>().data(null).build()`;
+  }
+  return "null";
 }
 
 function isLastFieldInType(
