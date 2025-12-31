@@ -54,6 +54,7 @@ export function buildObjectFieldDefinition({
     node,
     fieldNode,
     typeInResolverInterfacesConfig,
+    typeMetadata,
   );
   const defaultFunctionValue = `${typeMetadata.isNullable ? "?" : ""} = ${defaultImplementation}`;
   const shouldGenerateFunctions = shouldGenerateFunctionsInClass(
@@ -180,6 +181,7 @@ function buildField(
     node,
     fieldNode,
     typeInResolverInterfacesConfig,
+    typeMetadata,
   );
   const isCompletableFuture =
     typeInResolverInterfacesConfig?.classMethods === "COMPLETABLE_FUTURE";
@@ -325,14 +327,22 @@ function getDefaultImplementation(
   typeInResolverInterfacesConfig: ReturnType<
     typeof findTypeInResolverInterfacesConfig
   >,
+  typeMetadata: TypeMetadata,
 ) {
   const notImplementedError = `throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`;
+
+  if (typeInResolverInterfacesConfig) {
+    return typeMetadata.isNullable ? "null" : notImplementedError;
+  }
+
   const atLeastOneFieldHasNoArguments = node.fields?.some(
     (fieldNode) => !fieldNode.arguments?.length,
   );
-  return !typeInResolverInterfacesConfig && atLeastOneFieldHasNoArguments
-    ? sanitizeName(fieldNode.name.value)
-    : notImplementedError;
+  if (atLeastOneFieldHasNoArguments) {
+    return sanitizeName(fieldNode.name.value);
+  }
+
+  return notImplementedError;
 }
 
 function isLastFieldInType(
