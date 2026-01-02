@@ -6,9 +6,9 @@ import com.expediagroup.graphql.generator.annotations.*
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class TypeThatShouldBeProperlyAnnotated(
     val field: String? = null,
-    @GraphQLDescription("A description for fieldWithDescription")
+    @param:GraphQLDescription("A description for fieldWithDescription")
     val fieldWithDescription: String? = null,
-    @GraphQLDescription("A `weird` description for weirdDescription")
+    @param:GraphQLDescription("A `weird` description for weirdDescription")
     val weirdDescription: String? = null,
     @Deprecated("Use something else instead")
     val deprecated1: String? = null,
@@ -22,7 +22,7 @@ data class TypeThatShouldBeProperlyAnnotated(
     val deprecated5: UnionThatShouldBeProperlyAnnotated? = null,
     @Deprecated("It uses the GraphQLDescription annotation for union types")
     val deprecated6: UnionThatShouldBeProperlyAnnotated? = null,
-    @GraphQLDescription("When there is a description")
+    @param:GraphQLDescription("When there is a description")
     @Deprecated("It uses the @Deprecated annotation for the reason")
     val deprecated7: UnionThatShouldBeProperlyAnnotated? = null,
     @Deprecated("Multiline reason")
@@ -35,6 +35,6 @@ interface UnionThatShouldBeProperlyAnnotated
 data class InputTypeThatShouldBeProperlyAnnotated(
     @Deprecated("this field is deprecated")
     val optionalField: String? = null,
-    @GraphQLDescription("DEPRECATED: this field is deprecated")
+    @param:GraphQLDescription("DEPRECATED: this field is deprecated")
     val requiredField: String
 )

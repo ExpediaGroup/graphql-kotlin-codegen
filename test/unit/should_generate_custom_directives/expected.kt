@@ -27,7 +27,7 @@ data class MyTypeWithCustomDirectiveOnObject(
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class MyTypeWithCustomDirectiveOnField(
-    @MyCustomDirective
+    @param:MyCustomDirective
     val field: String? = null
 )
 
@@ -39,6 +39,6 @@ data class MyInputWithCustomDirectiveOnObject(
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
 data class MyInputWithCustomDirectiveOnField(
-    @MyCustomDirective
+    @param:MyCustomDirective
     val field: String? = null
 )

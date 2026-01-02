@@ -22,6 +22,7 @@ export function buildDescriptionAnnotation(
   definitionNode: DefinitionNode,
   config: CodegenConfigWithDefaults,
   typeMetadata?: TypeMetadata,
+  annotationPrefix = "@",
 ) {
   const trimmedDescription = trimDescription(description);
   const isDeprecatedDescription = trimmedDescription.startsWith(
@@ -30,11 +31,12 @@ export function buildDescriptionAnnotation(
   const isRequiredInputField =
     definitionNode.kind === Kind.INPUT_VALUE_DEFINITION &&
     definitionNode.type.kind === Kind.NON_NULL_TYPE;
+  const deprecatedPrefix = "@"; // @Deprecated doesn't support @param:
   if (
     isDeprecatedDescription &&
     (typeMetadata?.unionAnnotation || isRequiredInputField)
   ) {
-    return `@GraphQLDescription("${trimmedDescription}")\n`;
+    return `${annotationPrefix}GraphQLDescription("${trimmedDescription}")\n`;
   } else if (isDeprecatedDescription) {
     const descriptionValue = description.replace(
       deprecatedDescriptionPrefix,
@@ -56,12 +58,12 @@ export function buildDescriptionAnnotation(
   const trimmedDeprecatedReason = trimDescription(deprecatedReason);
 
   if (deprecatedDirective && typeMetadata?.unionAnnotation) {
-    return `@GraphQLDescription("${trimmedDeprecatedReason}")\n`;
+    return `${annotationPrefix}GraphQLDescription("${trimmedDeprecatedReason}")\n`;
   } else if (deprecatedDirective) {
     const graphqlDescription = trimmedDescription
-      ? `@GraphQLDescription("${trimmedDescription}")\n`
+      ? `${annotationPrefix}GraphQLDescription("${trimmedDescription}")\n`
       : "";
-    const deprecatedDescription = `@Deprecated("${trimmedDeprecatedReason}")\n`;
+    const deprecatedDescription = `${deprecatedPrefix}Deprecated("${trimmedDeprecatedReason}")\n`;
     return `${graphqlDescription}${graphqlDescription ? indent(deprecatedDescription, 2) : deprecatedDescription}`;
   }
 
@@ -70,7 +72,7 @@ export function buildDescriptionAnnotation(
     (config.unionGeneration === "MARKER_INTERFACE" ||
       definitionNode?.kind !== Kind.UNION_TYPE_DEFINITION)
   ) {
-    return `@GraphQLDescription("${trimmedDescription}")\n`;
+    return `${annotationPrefix}GraphQLDescription("${trimmedDescription}")\n`;
   }
 
   return "";

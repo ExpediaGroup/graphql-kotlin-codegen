@@ -6,6 +6,6 @@ import com.expediagroup.graphql.generator.annotations.*
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.INPUT_OBJECT])
 data class InputTypeThatShouldBeGeneratedProperly(
     val field1: String? = null,
-    @GraphQLDescription("A description for field2")
+    @param:GraphQLDescription("A description for field2")
     val field2: String? = null
 )
