@@ -22,19 +22,19 @@ annotation class UnionAsAnnotation
 
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class UnionForHonoringUnionGenerationConfig(
-    @UnionAsAnnotation
-    @GraphQLDescription("A description for field")
+    @param:UnionAsAnnotation
+    @param:GraphQLDescription("A description for field")
     val field: Any? = null,
-    @UnionAsAnnotation
-    @GraphQLDescription("DEPRECATED: It uses the GraphQLDescription annotation for union annotations")
+    @param:UnionAsAnnotation
+    @param:GraphQLDescription("DEPRECATED: It uses the GraphQLDescription annotation for union annotations")
     val deprecated1: Any? = null,
-    @UnionAsAnnotation
-    @GraphQLDescription("DEPRECATED: It uses the GraphQLDescription annotation for union types")
+    @param:UnionAsAnnotation
+    @param:GraphQLDescription("DEPRECATED: It uses the GraphQLDescription annotation for union types")
     val deprecated2: Any? = null,
-    @UnionAsAnnotation
-    @GraphQLDescription("It uses the GraphQLDescription annotation for union types")
+    @param:UnionAsAnnotation
+    @param:GraphQLDescription("It uses the GraphQLDescription annotation for union types")
     val deprecated3: Any? = null,
-    @UnionAsAnnotation
-    @GraphQLDescription("It omits the @Deprecated annotation for now")
+    @param:UnionAsAnnotation
+    @param:GraphQLDescription("It omits the @Deprecated annotation for now")
     val deprecated4: Any? = null
 )

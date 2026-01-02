@@ -5,9 +5,9 @@ import com.expediagroup.graphql.generator.annotations.*
 @GraphQLValidObjectLocations(locations = [GraphQLValidObjectLocations.Locations.OBJECT])
 data class TypeHonoringOnlyTypesConfig(
     val field1: String? = null,
-    @GraphQLDescription("A description for field2")
+    @param:GraphQLDescription("A description for field2")
     val field2: String? = null,
-    @GraphQLDescription("A `weird` description for name")
+    @param:GraphQLDescription("A `weird` description for name")
     val field3: String? = null
 )
 

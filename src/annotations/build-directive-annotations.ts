@@ -23,6 +23,7 @@ export function buildDirectiveAnnotations(
   definitionNode: DefinitionNode,
   config: CodegenConfigWithDefaults,
   schema: GraphQLSchema,
+  annotationPrefix = "@",
 ) {
   const name = sanitizeName(definitionNode.name.value);
   const potentialMatchingInputType = schema.getType(`${name}Input`);
@@ -36,7 +37,9 @@ export function buildDirectiveAnnotations(
       const directiveName = directive.name.value;
       const federationReplacement =
         getFederationDirectiveReplacement(directive);
-      if (federationReplacement) return federationReplacement + "\n";
+      if (federationReplacement) {
+        return `${applyAnnotationPrefix(federationReplacement, annotationPrefix)}\n`;
+      }
 
       const directiveReplacementFromConfig = config.directiveReplacements?.find(
         ({ directive, definitionType }) => {
@@ -53,22 +56,30 @@ export function buildDirectiveAnnotations(
       );
 
       if (directiveReplacementFromConfig) {
-        return (
-          buildKotlinAnnotationsFromConfig(
-            directive,
-            directiveReplacementFromConfig.kotlinAnnotations,
-          ).join("\n") + "\n"
+        const annotations = buildKotlinAnnotationsFromConfig(
+          directive,
+          directiveReplacementFromConfig.kotlinAnnotations,
+          annotationPrefix,
         );
+        return annotations.join("\n") + "\n";
       }
       const customDirectiveFromConfig = config.customDirectives?.find(
         (directive) => directive === directiveName,
       );
       if (customDirectiveFromConfig) {
-        return buildCustomDirective(directive);
+        const customDirective = buildCustomDirective(directive);
+        return applyAnnotationPrefix(customDirective, annotationPrefix);
       }
       return "";
     })
     .join("");
+}
+
+function applyAnnotationPrefix(annotation: string, prefix: string) {
+  const annotationWithoutAt = annotation.startsWith("@")
+    ? annotation.substring(1)
+    : annotation;
+  return `${prefix}${annotationWithoutAt}`;
 }
 
 function buildCustomDirective(directive: ConstDirectiveNode) {
@@ -81,9 +92,12 @@ function buildKotlinAnnotationsFromConfig(
   kotlinAnnotations: NonNullable<
     CodegenConfigWithDefaults["directiveReplacements"]
   >[number]["kotlinAnnotations"],
+  annotationPrefix: string,
 ) {
   return kotlinAnnotations.map((kotlinAnnotation) => {
-    if (typeof kotlinAnnotation === "string") return kotlinAnnotation;
+    if (typeof kotlinAnnotation === "string") {
+      return applyAnnotationPrefix(kotlinAnnotation, annotationPrefix);
+    }
     const directiveArguments = kotlinAnnotation.argumentsToRetain
       ?.map((argumentToRetain) => {
         const argumentValueNode = directive.arguments?.find(
@@ -104,7 +118,7 @@ function buildKotlinAnnotationsFromConfig(
         return `${argumentToRetain} = ${argumentValue}`;
       })
       .join(", ");
-    return `@${kotlinAnnotation.annotationName}(${directiveArguments})`;
+    return `${annotationPrefix}${kotlinAnnotation.annotationName}(${directiveArguments})`;
   });
 }
 

@@ -43,6 +43,7 @@ export function buildInputObjectDefinition(
         schema,
         config,
         definitionNode: field,
+        annotationPrefix: "@param:",
       });
       return `${annotations}${indent(
         `val ${sanitizeName(field.name.value)}: ${typeToUse.typeName}${
