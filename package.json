@@ -20,8 +20,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@graphql-codegen/java-common": "4.0.0",
-    "@graphql-codegen/plugin-helpers": "6.1.0",
-    "@graphql-codegen/visitor-plugin-common": "6.2.3",
     "ts-deepmerge": "7.0.3",
     "valibot": "1.2.0"
   },
