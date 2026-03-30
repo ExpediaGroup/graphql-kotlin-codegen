@@ -2,7 +2,7 @@
   "compilerOptions": {
     "declaration": true,
     "module": "esnext",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "noImplicitAny": true,
     "noUncheckedIndexedAccess": true,
