@@ -28,7 +28,7 @@ import { buildInterfaceDefinition } from "./definitions/interface";
 import { buildInputObjectDefinition } from "./definitions/input";
 import { buildObjectTypeDefinition } from "./definitions/object";
 import { buildUnionTypeDefinition } from "./definitions/union";
-import { ParsedConfig } from "@graphql-codegen/visitor-plugin-common/typings/base-visitor";
+import { ParsedConfig } from "@graphql-codegen/visitor-plugin-common";
 
 export class KotlinVisitor extends BaseVisitor<
   RawConfig,
