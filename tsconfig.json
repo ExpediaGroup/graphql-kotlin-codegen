@@ -2,7 +2,7 @@
   "compilerOptions": {
     "declaration": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "node24",
     "noEmit": true,
     "noImplicitAny": true,
     "noUncheckedIndexedAccess": true,
