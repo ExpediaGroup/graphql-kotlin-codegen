@@ -35,7 +35,7 @@
     "typescript-eslint": "8.58.1"
   },
   "scripts": {
-    "build": "tsdown src/plugin.ts --dts --deps.neverBundle graphql",
+    "build": "tsdown src/plugin.ts --deps.neverBundle graphql",
     "docs:build": "bun run build && bun --filter docs build",
     "docs:start": "bun --filter docs start",
     "format": "prettier --write .",
