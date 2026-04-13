@@ -2,7 +2,7 @@ import { buildSchema } from "graphql";
 import { GraphQLKotlinCodegenConfig, plugin } from "../src/plugin";
 import { describe, expect, it } from "bun:test";
 import { Types } from "@graphql-codegen/plugin-helpers";
-import * as glob from "glob";
+import { globSync } from "glob";
 
 function buildUnitTest({
   testName,
@@ -33,14 +33,14 @@ function buildUnitTest({
   });
 }
 
-const testDirectories = glob.sync("./test/unit/*");
+const testDirectories = globSync("./test/unit/*");
 const testCases = await Promise.all(
   testDirectories.map(async (testPath) => {
     const testName = testPath.split("/").findLast(Boolean);
     if (!testName) throw new Error("Test name not found");
     const absolutePath = `${process.cwd()}/${testPath}`;
     const configExists =
-      glob.sync(`${absolutePath}/codegen.config.ts`).length > 0;
+      globSync(`${absolutePath}/codegen.config.ts`).length > 0;
     if (!configExists) {
       return {
         testName,

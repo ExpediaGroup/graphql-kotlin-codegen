@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "tsc && bun generate && docusaurus build",
-    "generate": "jsdoc2md --files ../dist/plugin.cjs --partial partials/main.hbs --partial partials/scope.hbs -c jsdoc.conf > docs/configuration.md",
+    "generate": "jsdoc2md --files ../dist/plugin.mjs --partial partials/main.hbs --partial partials/scope.hbs -c jsdoc.conf > docs/configuration.md",
     "start": "docusaurus start"
   },
   "devDependencies": {
