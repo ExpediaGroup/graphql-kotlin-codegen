@@ -8,7 +8,7 @@ export default {
   },
   generates: {
     "test/integration/Types.kt": {
-      plugins: ["dist/plugin.cjs"],
+      plugins: ["dist/plugin.mjs"],
     },
   },
 } satisfies CodegenConfig;
