@@ -2,7 +2,7 @@
   "name": "@expediagroup/graphql-kotlin-codegen",
   "packageManager": "bun@1.3.12",
   "main": "dist/plugin.mjs",
-  "types": "dist/plugin.d.cts",
+  "types": "dist/plugin.d.mts",
   "files": [
     "dist",
     "README.md"
