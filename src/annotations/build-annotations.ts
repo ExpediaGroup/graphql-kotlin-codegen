@@ -86,6 +86,6 @@ export function trimDescription(description?: string) {
     description
       ?.split("\n")
       .map((str) => str.trim().replaceAll('"', "").replaceAll("\\", ""))
-      .find((str) => str.match(/^[a-zA-Z]/)) ?? ""
+      .find((str) => str.length > 0) ?? ""
   );
 }

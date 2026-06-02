@@ -1,0 +1,27 @@
+type Payment {
+  """
+  3D Secure verification status returned by the PSP.
+  """
+  threeDsStatus: String
+
+  """
+  (Deprecated) Use paymentVerification instead.
+  """
+  legacyVerification: String
+    @deprecated(reason: "(internal) replaced by paymentVerification in v3")
+
+  """
+  `booking.id` of the parent itinerary.
+  """
+  bookingRef: String!
+
+  """
+  42 is the answer.
+  """
+  numericDescription: String
+
+  """
+  @some annotation style description.
+  """
+  annotationDescription: String
+}
