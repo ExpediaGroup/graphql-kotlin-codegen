@@ -26,7 +26,16 @@ data class TypeThatShouldBeProperlyAnnotated(
     @Deprecated("It uses the @Deprecated annotation for the reason")
     val deprecated7: UnionThatShouldBeProperlyAnnotated? = null,
     @Deprecated("Multiline reason")
-    val deprecated8: String? = null
+    val deprecated8: String? = null,
+    @param:GraphQLDescription("(parenthesis) description.")
+    val nonLetterDescription1: String? = null,
+    @param:GraphQLDescription("`backtick` description.")
+    val nonLetterDescription2: String? = null,
+    @param:GraphQLDescription("42 numeric description.")
+    val nonLetterDescription3: String? = null,
+    @param:GraphQLDescription("(Deprecated) Use something else.")
+    @Deprecated("(internal) replaced in v3")
+    val nonLetterDeprecated: String? = null
 ) : UnionThatShouldBeProperlyAnnotated
 
 interface UnionThatShouldBeProperlyAnnotated

@@ -31,6 +31,22 @@ type TypeThatShouldBeProperlyAnnotated {
     @deprecated(
       reason: "\n        Multiline reason\n        with spaces\n        "
     )
+  """
+  (parenthesis) description.
+  """
+  nonLetterDescription1: String
+  """
+  `backtick` description.
+  """
+  nonLetterDescription2: String
+  """
+  42 numeric description.
+  """
+  nonLetterDescription3: String
+  """
+  (Deprecated) Use something else.
+  """
+  nonLetterDeprecated: String @deprecated(reason: "(internal) replaced in v3")
 }
 
 union UnionThatShouldBeProperlyAnnotated = TypeThatShouldBeProperlyAnnotated
