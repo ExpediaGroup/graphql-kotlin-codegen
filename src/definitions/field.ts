@@ -191,7 +191,7 @@ function buildField(
   let typeDefinition = `${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}`;
   let defaultDefinition = `${typeMetadata.typeName}${defaultDefinitionValue}`;
   if (isDataFetcherResult) {
-    typeDefinition = `graphql.execution.DataFetcherResult<${typeDefinition}>`;
+    typeDefinition = `graphql.execution.DataFetcherResult<${typeMetadata.typeName}>`;
     defaultDefinition = `${typeDefinition} = ${defaultImplementation}`;
   }
   const completableFutureDefinition = `java.util.concurrent.CompletableFuture<${typeDefinition}> = ${defaultImplementation}`;
@@ -364,13 +364,13 @@ function getNullableFieldDefaultValue(
   const isDataFetcherResult = typeInResolverInterfacesConfig.dataFetcherResult;
 
   if (isCompletableFuture && isDataFetcherResult) {
-    return `java.util.concurrent.CompletableFuture.completedFuture(graphql.execution.DataFetcherResult.newResult<${typeMetadata.typeName}?>().data(null).build())`;
+    return `java.util.concurrent.CompletableFuture.completedFuture(graphql.execution.DataFetcherResult.newResult<${typeMetadata.typeName}>().data(null).build())`;
   }
   if (isCompletableFuture) {
     return `java.util.concurrent.CompletableFuture.completedFuture(null)`;
   }
   if (isDataFetcherResult) {
-    return `graphql.execution.DataFetcherResult.newResult<${typeMetadata.typeName}?>().data(null).build()`;
+    return `graphql.execution.DataFetcherResult.newResult<${typeMetadata.typeName}>().data(null).build()`;
   }
   return "null";
 }
