@@ -185,8 +185,12 @@ function buildField(
     typeInResolverInterfacesConfig,
     typeMetadata,
   );
+  const configFields = typeInResolverInterfacesConfig?.fields;
+  const isFieldInScope =
+    !configFields?.length || configFields.includes(fieldNode.name.value);
   const isCompletableFuture =
-    typeInResolverInterfacesConfig?.classMethods === "COMPLETABLE_FUTURE";
+    typeInResolverInterfacesConfig?.classMethods === "COMPLETABLE_FUTURE" &&
+    isFieldInScope;
   const isDataFetcherResult = typeInResolverInterfacesConfig?.dataFetcherResult;
   let typeDefinition = `${typeMetadata.typeName}${typeMetadata.isNullable ? "?" : ""}`;
   let defaultDefinition = `${typeMetadata.typeName}${defaultDefinitionValue}`;
