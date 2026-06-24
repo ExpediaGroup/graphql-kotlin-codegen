@@ -352,10 +352,15 @@ function getDefaultImplementation(
     return notImplementedError;
   }
 
+  const configFields = typeInResolverInterfacesConfig?.fields;
+  const isFieldInScope =
+    !configFields?.length || configFields.includes(fieldNode.name.value);
+
   if (typeMetadata.isNullable) {
     return getNullableFieldDefaultValue(
       typeInResolverInterfacesConfig,
       typeMetadata,
+      isFieldInScope,
     );
   }
   return notImplementedError;
@@ -366,9 +371,11 @@ function getNullableFieldDefaultValue(
     ReturnType<typeof findTypeInResolverInterfacesConfig>
   >,
   typeMetadata: TypeMetadata,
+  isFieldInScope: boolean,
 ) {
   const isCompletableFuture =
-    typeInResolverInterfacesConfig.classMethods === "COMPLETABLE_FUTURE";
+    typeInResolverInterfacesConfig.classMethods === "COMPLETABLE_FUTURE" &&
+    isFieldInScope;
   const isDataFetcherResult = typeInResolverInterfacesConfig.dataFetcherResult;
 
   if (isCompletableFuture && isDataFetcherResult) {

@@ -6,4 +6,5 @@ import com.expediagroup.graphql.generator.annotations.*
 open class MyCompletableFutureFieldsType {
     open fun completableFutureField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): java.util.concurrent.CompletableFuture<String?> = java.util.concurrent.CompletableFuture.completedFuture(null)
     open fun normalField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String = throw NotImplementedError("MyCompletableFutureFieldsType.normalField must be implemented.")
+    open fun outOfScopeNullableField(dataFetchingEnvironment: graphql.schema.DataFetchingEnvironment): String? = null
 }
