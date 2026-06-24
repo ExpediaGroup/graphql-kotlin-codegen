@@ -1,0 +1,6 @@
+type MyCompletableFutureFieldsType {
+  completableFutureField: String!
+  normalField: String!
+  normalNullableField: String
+  nullableCompletableFutureField: String
+}

@@ -72,11 +72,14 @@ export function buildObjectTypeDefinition(
     node,
     config,
   );
+  const resolverFields = typeInResolverInterfacesConfig?.fields;
   const fieldsWithArguments = node.fields?.filter(
     (fieldNode) => fieldNode.arguments?.length,
   );
   const fieldNodes = typeInResolverInterfacesConfig
-    ? node.fields
+    ? resolverFields
+      ? node.fields?.filter((f) => resolverFields.includes(f.name.value))
+      : node.fields
     : fieldsWithArguments;
 
   const isTopLevelType =
@@ -101,22 +104,46 @@ ${getClassMembers({ node, fieldNodes, schema, config })}
     typeInResolverInterfacesConfig,
   );
   if (shouldGenerateFunctions) {
-    const atLeastOneFieldHasNoArguments = node.fields?.some(
-      (fieldNode) => !fieldNode.arguments?.length,
-    );
-    const constructor =
-      !typeInResolverInterfacesConfig && atLeastOneFieldHasNoArguments
-        ? `(\n${node.fields
-            ?.map((fieldNode) => {
-              return buildConstructorFieldDefinition({
-                node,
-                fieldNode,
-                schema,
-                config,
-              });
-            })
-            .join(",\n")}\n)`
-        : "";
+    let constructor = "";
+    if (resolverFields) {
+      const nonResolverFields = node.fields?.filter(
+        (f) => !resolverFields.includes(f.name.value),
+      );
+      if (nonResolverFields?.length) {
+        const configWithoutResolver = {
+          ...config,
+          resolverInterfaces: config.resolverInterfaces.filter(
+            (r) => r.typeName !== node.name.value,
+          ),
+        } as typeof config;
+        constructor = `(\n${nonResolverFields
+          .map((fieldNode) =>
+            buildConstructorFieldDefinition({
+              node,
+              fieldNode,
+              schema,
+              config: configWithoutResolver,
+            }),
+          )
+          .join("\n")}\n)`;
+      }
+    } else {
+      const atLeastOneFieldHasNoArguments = node.fields?.some(
+        (fieldNode) => !fieldNode.arguments?.length,
+      );
+      if (!typeInResolverInterfacesConfig && atLeastOneFieldHasNoArguments) {
+        constructor = `(\n${node.fields
+          ?.map((fieldNode) => {
+            return buildConstructorFieldDefinition({
+              node,
+              fieldNode,
+              schema,
+              config,
+            });
+          })
+          .join(",\n")}\n)`;
+      }
+    }
 
     return `${annotations}${outputRestrictionAnnotation}open class ${name}${constructor}${interfaceInheritance} {
 ${getClassMembers({ node, fieldNodes, schema, config })}

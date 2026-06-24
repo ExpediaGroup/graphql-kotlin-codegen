@@ -161,6 +161,7 @@ export const configSchema = object({
     array(
       object({
         typeName: string(),
+        fields: optional(array(string())),
         classMethods: optional(
           union([literal("SUSPEND"), literal("COMPLETABLE_FUTURE")]),
         ),
