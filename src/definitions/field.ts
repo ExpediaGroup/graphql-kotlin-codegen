@@ -263,15 +263,19 @@ function buildFieldModifier(
   if (!typeInResolverInterfacesConfig && !fieldNode.arguments?.length) {
     return shouldOverrideField ? "override val" : "val";
   }
+  const configFields = typeInResolverInterfacesConfig?.fields;
+  const isFieldInScope =
+    !configFields?.length || configFields.includes(fieldNode.name.value);
   const functionModifier =
-    typeInResolverInterfacesConfig?.classMethods === "SUSPEND"
+    typeInResolverInterfacesConfig?.classMethods === "SUSPEND" && isFieldInScope
       ? "suspend "
       : "";
   if (node.kind === Kind.INTERFACE_TYPE_DEFINITION) {
     return `${functionModifier}fun`;
   }
   const isCompletableFuture =
-    typeInResolverInterfacesConfig?.classMethods === "COMPLETABLE_FUTURE";
+    typeInResolverInterfacesConfig?.classMethods === "COMPLETABLE_FUTURE" &&
+    isFieldInScope;
   if (shouldOverrideField && !isCompletableFuture) {
     return "override fun";
   }
