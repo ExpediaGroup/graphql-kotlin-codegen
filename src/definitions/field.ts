@@ -27,6 +27,16 @@ import { findTypeInResolverInterfacesConfig } from "../config/find-type-in-resol
 import { shouldGenerateFunctionsInClass } from "./object";
 import { sanitizeName } from "../utils/sanitize-name";
 
+function computeIsFieldInScope(
+  typeInResolverInterfacesConfig: ReturnType<
+    typeof findTypeInResolverInterfacesConfig
+  >,
+  fieldNode: FieldDefinitionNode,
+): boolean {
+  const configFields = typeInResolverInterfacesConfig?.fields;
+  return !configFields?.length || configFields.includes(fieldNode.name.value);
+}
+
 export function buildObjectFieldDefinition({
   node,
   fieldNode,
@@ -50,11 +60,16 @@ export function buildObjectFieldDefinition({
     config,
   );
   const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
+  const isFieldInScope = computeIsFieldInScope(
+    typeInResolverInterfacesConfig,
+    fieldNode,
+  );
   const defaultImplementation = getDefaultImplementation(
     node,
     fieldNode,
     typeInResolverInterfacesConfig,
     typeMetadata,
+    isFieldInScope,
   );
   const defaultFunctionValue = `${typeMetadata.isNullable ? "?" : ""} = ${defaultImplementation}`;
   const shouldGenerateFunctions = shouldGenerateFunctionsInClass(
@@ -71,6 +86,7 @@ export function buildObjectFieldDefinition({
     defaultValue,
     typeInResolverInterfacesConfig,
     typeMetadata,
+    isFieldInScope,
   );
   const annotations = buildAnnotations({
     schema,
@@ -105,6 +121,10 @@ export function buildConstructorFieldDefinition({
   );
   const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
   const defaultDefinitionValue = typeMetadata.defaultValue;
+  const isFieldInScope = computeIsFieldInScope(
+    typeInResolverInterfacesConfig,
+    fieldNode,
+  );
 
   const field = buildField(
     node,
@@ -113,6 +133,7 @@ export function buildConstructorFieldDefinition({
     defaultDefinitionValue,
     typeInResolverInterfacesConfig,
     typeMetadata,
+    isFieldInScope,
   );
   const annotations = buildAnnotations({
     schema,
@@ -152,6 +173,10 @@ export function buildInterfaceFieldDefinition({
   );
   const typeMetadata = buildTypeMetadata(fieldNode.type, schema, config);
   const defaultDefinitionValue = typeMetadata.isNullable ? "?" : "";
+  const isFieldInScope = computeIsFieldInScope(
+    typeInResolverInterfacesConfig,
+    fieldNode,
+  );
   const field = buildField(
     node,
     fieldNode,
@@ -159,6 +184,7 @@ export function buildInterfaceFieldDefinition({
     defaultDefinitionValue,
     typeInResolverInterfacesConfig,
     typeMetadata,
+    isFieldInScope,
   );
   const annotations = buildAnnotations({
     schema,
@@ -178,16 +204,15 @@ function buildField(
     typeof findTypeInResolverInterfacesConfig
   >,
   typeMetadata: TypeMetadata,
+  isFieldInScope: boolean,
 ) {
   const defaultImplementation = getDefaultImplementation(
     node,
     fieldNode,
     typeInResolverInterfacesConfig,
     typeMetadata,
+    isFieldInScope,
   );
-  const configFields = typeInResolverInterfacesConfig?.fields;
-  const isFieldInScope =
-    !configFields?.length || configFields.includes(fieldNode.name.value);
   const isCompletableFuture =
     typeInResolverInterfacesConfig?.classMethods === "COMPLETABLE_FUTURE" &&
     isFieldInScope;
@@ -267,9 +292,10 @@ function buildFieldModifier(
   if (!typeInResolverInterfacesConfig && !fieldNode.arguments?.length) {
     return shouldOverrideField ? "override val" : "val";
   }
-  const configFields = typeInResolverInterfacesConfig?.fields;
-  const isFieldInScope =
-    !configFields?.length || configFields.includes(fieldNode.name.value);
+  const isFieldInScope = computeIsFieldInScope(
+    typeInResolverInterfacesConfig,
+    fieldNode,
+  );
   const functionModifier =
     typeInResolverInterfacesConfig?.classMethods === "SUSPEND" && isFieldInScope
       ? "suspend "
@@ -339,6 +365,7 @@ function getDefaultImplementation(
     typeof findTypeInResolverInterfacesConfig
   >,
   typeMetadata: TypeMetadata,
+  isFieldInScope: boolean,
 ) {
   const notImplementedError = `throw NotImplementedError("${node.name.value}.${fieldNode.name.value} must be implemented.")`;
 
@@ -351,10 +378,6 @@ function getDefaultImplementation(
     }
     return notImplementedError;
   }
-
-  const configFields = typeInResolverInterfacesConfig?.fields;
-  const isFieldInScope =
-    !configFields?.length || configFields.includes(fieldNode.name.value);
 
   if (typeMetadata.isNullable) {
     return getNullableFieldDefaultValue(
