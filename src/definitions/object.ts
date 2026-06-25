@@ -123,9 +123,9 @@ ${getClassMembers({ node, fieldNodes, schema, config })}
               fieldNode,
               schema,
               config: configWithoutResolver,
-            }),
+            }).replace(/,$/, ""),
           )
-          .join("\n")}\n)`;
+          .join(",\n")}\n)`;
       }
     } else {
       const atLeastOneFieldHasNoArguments = node.fields?.some(
