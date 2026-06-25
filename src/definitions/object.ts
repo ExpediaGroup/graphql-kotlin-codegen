@@ -76,11 +76,11 @@ export function buildObjectTypeDefinition(
   const fieldsWithArguments = node.fields?.filter(
     (fieldNode) => fieldNode.arguments?.length,
   );
-  const fieldNodes = typeInResolverInterfacesConfig
-    ? resolverFields
+  const fieldNodes = !typeInResolverInterfacesConfig
+    ? fieldsWithArguments
+    : resolverFields
       ? node.fields?.filter((f) => resolverFields.includes(f.name.value))
-      : node.fields
-    : fieldsWithArguments;
+      : node.fields;
 
   const isTopLevelType =
     node.name.value === "Query" || node.name.value === "Mutation";
