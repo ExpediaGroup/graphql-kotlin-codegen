@@ -104,47 +104,12 @@ ${getClassMembers({ node, fieldNodes, schema, config })}
     typeInResolverInterfacesConfig,
   );
   if (shouldGenerateFunctions) {
-    let constructor = "";
-    if (resolverFields) {
-      const nonResolverFields = node.fields?.filter(
-        (f) => !resolverFields.includes(f.name.value),
-      );
-      if (nonResolverFields?.length) {
-        const configWithoutResolver = {
-          ...config,
-          resolverInterfaces: config.resolverInterfaces.filter(
-            (r) => r.typeName !== node.name.value,
-          ),
-        } as typeof config;
-        constructor = `(\n${nonResolverFields
-          .map((fieldNode) =>
-            buildConstructorFieldDefinition({
-              node,
-              fieldNode,
-              schema,
-              config: configWithoutResolver,
-            }).replace(/,$/, ""),
-          )
-          .join(",\n")}\n)`;
-      }
-    } else {
-      const atLeastOneFieldHasNoArguments = node.fields?.some(
-        (fieldNode) => !fieldNode.arguments?.length,
-      );
-      if (!typeInResolverInterfacesConfig && atLeastOneFieldHasNoArguments) {
-        constructor = `(\n${node.fields
-          ?.map((fieldNode) => {
-            return buildConstructorFieldDefinition({
-              node,
-              fieldNode,
-              schema,
-              config,
-            });
-          })
-          .join(",\n")}\n)`;
-      }
-    }
-
+    const constructor = buildConstructor(
+      node,
+      typeInResolverInterfacesConfig,
+      schema,
+      config,
+    );
     return `${annotations}${outputRestrictionAnnotation}open class ${name}${constructor}${interfaceInheritance} {
 ${getClassMembers({ node, fieldNodes, schema, config })}
 }`;
@@ -153,6 +118,55 @@ ${getClassMembers({ node, fieldNodes, schema, config })}
   return `${annotations}${outputRestrictionAnnotation}data class ${name}(
 ${getClassMembers({ node, schema, config })}
 )${interfaceInheritance}`;
+}
+
+function buildConstructor(
+  node: ObjectTypeDefinitionNode,
+  typeInResolverInterfacesConfig: ReturnType<
+    typeof findTypeInResolverInterfacesConfig
+  >,
+  schema: GraphQLSchema,
+  config: CodegenConfigWithDefaults,
+): string {
+  const resolverFields = typeInResolverInterfacesConfig?.fields;
+
+  if (resolverFields) {
+    const nonResolverFields = node.fields?.filter(
+      (f) => !resolverFields.includes(f.name.value),
+    );
+    if (!nonResolverFields?.length) return "";
+    const configWithoutResolver = {
+      ...config,
+      resolverInterfaces: config.resolverInterfaces.filter(
+        (r) => r.typeName !== node.name.value,
+      ),
+    } as typeof config;
+    return `(\n${nonResolverFields
+      .map((fieldNode) =>
+        buildConstructorFieldDefinition({
+          node,
+          fieldNode,
+          schema,
+          config: configWithoutResolver,
+        }).replace(/,$/, ""),
+      )
+      .join(",\n")}\n)`;
+  }
+
+  if (typeInResolverInterfacesConfig) return "";
+
+  const fieldsForConstructor = node.fields?.filter((f) => !f.arguments?.length);
+  if (!fieldsForConstructor?.length) return "";
+  return `(\n${node.fields
+    ?.map((fieldNode) =>
+      buildConstructorFieldDefinition({
+        node,
+        fieldNode,
+        schema,
+        config,
+      }),
+    )
+    .join(",\n")}\n)`;
 }
 
 function getClassMembers({
