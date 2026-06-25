@@ -1,0 +1,6 @@
+type MySuspendFieldsType {
+  suspendField(input: String): String!
+  nullableSuspendField(input: String): String
+  normalField: String!
+  nullableNormalField: String
+}

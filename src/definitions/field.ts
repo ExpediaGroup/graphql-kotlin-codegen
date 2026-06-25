@@ -87,16 +87,22 @@ export function buildConstructorFieldDefinition({
   fieldNode,
   schema,
   config,
+  typeInResolverInterfacesConfigOverride,
 }: {
   node: ObjectTypeDefinitionNode;
   fieldNode: FieldDefinitionNode;
   schema: GraphQLSchema;
   config: CodegenConfigWithDefaults;
+  typeInResolverInterfacesConfigOverride?: ReturnType<
+    typeof findTypeInResolverInterfacesConfig
+  > | null;
 }) {
-  const typeInResolverInterfacesConfig = findTypeInResolverInterfacesConfig(
-    node,
-    config,
-  );
+  const typeInResolverInterfacesConfig: ReturnType<
+    typeof findTypeInResolverInterfacesConfig
+  > =
+    typeInResolverInterfacesConfigOverride === undefined
+      ? findTypeInResolverInterfacesConfig(node, config)
+      : (typeInResolverInterfacesConfigOverride ?? undefined);
   const functionDefinition = buildConstructorFunctionDefinition(
     node,
     fieldNode,
