@@ -135,19 +135,14 @@ function buildConstructor(
       (f) => !resolverFields.includes(f.name.value),
     );
     if (!nonResolverFields?.length) return "";
-    const configWithoutResolver = {
-      ...config,
-      resolverInterfaces: config.resolverInterfaces.filter(
-        (r) => r.typeName !== node.name.value,
-      ),
-    } as typeof config;
     return `(\n${nonResolverFields
       .map((fieldNode) =>
         buildConstructorFieldDefinition({
           node,
           fieldNode,
           schema,
-          config: configWithoutResolver,
+          config,
+          typeInResolverInterfacesConfigOverride: null,
         }).replace(/,$/, ""),
       )
       .join(",\n")}\n)`;
