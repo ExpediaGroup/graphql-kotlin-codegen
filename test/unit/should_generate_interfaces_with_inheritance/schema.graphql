@@ -25,7 +25,8 @@ interface InheritedInterface2 {
   field2: String!
 }
 
-type MyMergedInterfaceImplementation implements InheritedInterface1 & InheritedInterface2 {
+type MyMergedInterfaceImplementation implements InheritedInterface1 &
+  InheritedInterface2 {
   field: String
   field2: String!
 }
