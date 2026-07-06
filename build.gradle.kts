@@ -6,13 +6,13 @@ repositories {
 
 plugins {
     kotlin("jvm") version "2.4.0"
-    id("com.expediagroup.graphql") version "10.0.1"
+    id("com.expediagroup.graphql") version "10.1.2"
 }
 
 dependencies {
-    implementation("com.expediagroup", "graphql-kotlin-schema-generator", "10.0.1")
-    implementation("com.expediagroup", "graphql-kotlin-server", "10.0.1")
-    implementation("com.expediagroup", "graphql-kotlin-federation", "10.0.1")
+    implementation("com.expediagroup", "graphql-kotlin-schema-generator", "10.1.2")
+    implementation("com.expediagroup", "graphql-kotlin-server", "10.1.2")
+    implementation("com.expediagroup", "graphql-kotlin-federation", "10.1.2")
 }
 
 sourceSets {
